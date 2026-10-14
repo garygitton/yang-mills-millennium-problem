@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you cite or review this formal verification library, please cite it using the metadata below."
+title: "Resolution of the 4D Yang-Mills Millennium Problem: Constructive Existence and Mass Gap (Lean 4 Formal Verification)"
+authors:
+  - family-names: "Gitton"
+    given-names: "Gary"
+    email: "gary.gitton@gmail.com"
+    affiliation: "Independent Researcher, Paris, France"
+version: 1.0.0
+date-released: 2026-10-12
+license: CC-BY-NC-SA-4.0
+repository-code: "https://github.com/garygitton/yang-mills-millennium-problem"
+keywords:
+  - "yang-mills"
+  - "mass-gap"
+  - "clay-millennium-prize"
+  - "formal-verification"
+  - "lean-4"
+  - "constructive-quantum-field-theory"
+  - "osterwalder-schrader"
+  - "haag-ruelle"
+  - "balaban-renormalization"
+  - "bochner-ricci-curvature"
+type: software
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Gitton"
+      given-names: "Gary"
+  title: "Resolution of the 4D Yang-Mills Millennium Problem: Constructive Existence and Mass Gap"
+  year: 2026
+  status: preprint

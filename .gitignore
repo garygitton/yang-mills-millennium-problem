@@ -1,0 +1,54 @@
+# Lean 4 build artifacts
+.lake/
+lake-packages/
+
+# Rust build artifacts
+target/
+**/*.rs.bk
+
+# System & editor artifacts
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Temporary databases and logs
+*.redb.lock
+*.log
+
+# LaTeX intermediate build artifacts & outputs
+*.aux
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.idx
+*.ilg
+*.ind
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*-blx.bib
+
+# Security, credentials & environments (strict zero key/secret leakage mandate)
+.env*
+*.env
+*.vault
+*.key
+*.token
+*secret*
+*apikey*
+*api_key*
+*api-key*
+*credential*
+*.pem
+*.pfx
+*.p12
+
+
