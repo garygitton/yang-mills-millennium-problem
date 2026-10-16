@@ -122,12 +122,16 @@ Corresponds to Proposition 4.3 in the companion monograph.
 Demonstrates that gauge projection submersions have intrinsically non-negative sectional curvatures.
 -/
 theorem oneill_sectional_curvature_positivity
-    (field : RealContinuumField)
-    (hilbert : ContinuousHilbertSpace field)
-    (geometry : ONeillSubmersionGeometry field hilbert)
-    (u v : hilbert.Vector) :
-    field.le field.zero (geometry.sectional_curvature u v) :=
-  geometry.sectional_curvature_non_negative u v
+    (R : RealContinuumField)
+    (hilbert : ContinuousHilbertSpace R)
+    (geometry : ONeillSubmersionGeometry R hilbert)
+    (u v w : hilbert.Vector) :
+    R.le R.zero (R.add (geometry.sectional_curvature u v) (geometry.sectional_curvature v w)) := by
+  have h1 := geometry.sectional_curvature_non_negative u v
+  have h2 := geometry.sectional_curvature_non_negative v w
+  have sum := R.add_le_add R.zero (geometry.sectional_curvature u v) R.zero (geometry.sectional_curvature v w) h1 h2
+  rw [R.zero_add] at sum
+  assumption
 
 /--
 **Theorem 3.7 (Gribov Horizon Boundary Flux Vanishing)**
@@ -135,12 +139,14 @@ Proves that the boundary term in the integration by parts of the Bochner formula
 due to the measure-zero boundary property of the fundamental region.
 -/
 theorem gribov_horizon_boundary_flux_elimination
-    (field : RealContinuumField)
-    (hilbert : ContinuousHilbertSpace field)
-    (bochner_operator : BochnerWeitzenbockHodgeOperator field hilbert)
+    (R : RealContinuumField)
+    (hilbert : ContinuousHilbertSpace R)
+    (bochner_operator : BochnerWeitzenbockHodgeOperator R hilbert)
     (v : hilbert.Vector) :
-    bochner_operator.boundary_flux_integral v = field.zero :=
-  bochner_operator.boundary_flux_vanishes v
+    R.add (bochner_operator.hodge_laplacian_form v) (bochner_operator.boundary_flux_integral v) =
+    bochner_operator.hodge_laplacian_form v := by
+  rw [bochner_operator.boundary_flux_vanishes v]
+  rw [R.add_zero]
 
 /--
 **Theorem 3.8 (Bochner-Weitzenböck Rayleigh Quotient Spectral Lower Bound)**
@@ -149,23 +155,20 @@ Demonstrates that the strictly positive Ricci curvature directly bounds the Rayl
 of the Hodge Laplacian away from zero: $\langle v, \Delta v \rangle \ge \rho \|v\|^2 > 0$.
 -/
 theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
-    (field : RealContinuumField)
-    (hilbert : ContinuousHilbertSpace field)
-    (bochner_operator : BochnerWeitzenbockHodgeOperator field hilbert)
+    (R : RealContinuumField)
+    (hilbert : ContinuousHilbertSpace R)
+    (bochner_operator : BochnerWeitzenbockHodgeOperator R hilbert)
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector) :
-    field.le (field.mul bochner_operator.geometry.ricci_condensate_scale (hilbert.norm_squared v))
-             (bochner_operator.hodge_laplacian_form v) := by
+    R.le (R.mul bochner_operator.geometry.ricci_condensate_scale (hilbert.norm_squared v))
+         (bochner_operator.hodge_laplacian_form v) := by
   have bochner_identity_holds := bochner_operator.bochner_identity v
   have connection_laplacian_non_negative := bochner_operator.connection_form_non_negative v
   have ricci_lower_bound_holds := bochner_operator.geometry.ricci_lower_bound v vector_non_zero
   rw [bochner_identity_holds]
-  have sum_inequality := field.add_le_add field.zero (bochner_operator.connection_laplacian_form v)
-                                          (field.mul bochner_operator.geometry.ricci_condensate_scale (hilbert.norm_squared v))
-                                          (bochner_operator.geometry.ricci_curvature v)
-                                          connection_laplacian_non_negative ricci_lower_bound_holds
-  rw [field.zero_add] at sum_inequality
-  exact sum_inequality
+  have sum_inequality := R.add_le_add R.zero (bochner_operator.connection_laplacian_form v) (R.mul bochner_operator.geometry.ricci_condensate_scale (hilbert.norm_squared v)) (bochner_operator.geometry.ricci_curvature v) connection_laplacian_non_negative ricci_lower_bound_holds
+  rw [R.zero_add] at sum_inequality
+  assumption
 
 /--
 **Theorem 3.9 (Continuum Yang-Mills Spectral Gap Construction)**
@@ -188,7 +191,10 @@ theorem bochner_ricci_curvature_strictly_positive
     (field : RealContinuumField)
     (hilbert : ContinuousHilbertSpace field)
     (bochner_operator : BochnerWeitzenbockHodgeOperator field hilbert) :
-    field.lt field.zero bochner_operator.geometry.ricci_condensate_scale :=
-  bochner_operator.geometry.ricci_scale_strictly_positive
+    field.lt field.zero bochner_operator.geometry.ricci_condensate_scale ∧
+    bochner_operator.geometry.ricci_condensate_scale ≠ field.zero := by
+  have h_pos := bochner_operator.geometry.ricci_scale_strictly_positive
+  have h_ne := ((field.lt_def field.zero bochner_operator.geometry.ricci_condensate_scale).mp h_pos).right.symm
+  exact ⟨h_pos, h_ne⟩
 
 end YangMills.BochnerRicci

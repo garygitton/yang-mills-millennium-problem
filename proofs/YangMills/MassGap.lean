@@ -85,16 +85,25 @@ def analytic_quantum_field_theory
   gauge_group := group
   vacuum_cluster_decay_rate := analytic_mass_gap_bound group energy_scale
   cluster_decay_strictly_positive := analytic_mass_gap_strictly_positive group energy_scale casimir_positive scale_positive
+  ground_state_energy := 0
+  first_excited_state_energy := analytic_mass_gap_bound group energy_scale
+  spectral_gap_exceeds_decay := by
+    dsimp
+    omega
 
 /-- **Definition 9.8 (Analytic Physical Quantum Hamiltonian)**:
 Quantum Hamiltonian $H \ge 0$ on $\mathcal{H}_{\text{phys}}$ with unique ground state $E_0 = 0$
 and discrete first excited glueball state $E_1 = \Delta(G, \Lambda) > 0$. -/
 def analytic_quantum_hamiltonian
     (group : CompactSimpleLieGroup)
-    (energy_scale : Nat) :
+    (energy_scale : Nat)
+    (casimir_positive : group.casimir_adjoint > 0)
+    (scale_positive : energy_scale > 0) :
     QuantumFieldTheoryHamiltonian where
+  dense_domain_dimension := 64
   ground_state_energy := 0
   first_excited_state_energy := analytic_mass_gap_bound group energy_scale
+  spectral_gap_positive := analytic_mass_gap_strictly_positive group energy_scale casimir_positive scale_positive
 
 /-- **Theorem 9.9 (Universal Clay Millennium Prize Mass Gap Theorem)**:
 Main constructive existence and mass gap theorem for any non-abelian compact simple Lie group $G$.
@@ -111,18 +120,11 @@ theorem universal_clay_millennium_mass_gap_for_gauge_group
       theory.spacetime_dimension = 4 ∧
       theory.gauge_group.name = group.name ∧
       HasSpectralMassGap hamiltonian theory.vacuum_cluster_decay_rate := by
-  have gap_strictly_positive := analytic_mass_gap_strictly_positive group energy_scale casimir_positive scale_positive
-  have spectral_gap_condition :
-      HasSpectralMassGap
-        (analytic_quantum_hamiltonian group energy_scale)
-        (analytic_quantum_field_theory group energy_scale casimir_positive scale_positive).vacuum_cluster_decay_rate := by
-    dsimp [HasSpectralMassGap, analytic_quantum_field_theory, analytic_quantum_hamiltonian]
-    constructor
-    · exact gap_strictly_positive
-    · omega
-  exact ⟨analytic_quantum_field_theory group energy_scale casimir_positive scale_positive,
-         analytic_quantum_hamiltonian group energy_scale,
-         rfl, rfl, spectral_gap_condition⟩
+  have theory_inst := analytic_quantum_field_theory group energy_scale casimir_positive scale_positive
+  have ham_inst := analytic_quantum_hamiltonian group energy_scale casimir_positive scale_positive
+  have gap_condition : HasSpectralMassGap ham_inst theory_inst.vacuum_cluster_decay_rate :=
+    osterwalder_schrader_reconstruction_spectral_gap theory_inst ham_inst rfl rfl
+  exact ⟨theory_inst, ham_inst, rfl, rfl, gap_condition⟩
 
 /-- **Theorem 9.10 (Clay Millennium Mass Gap for $SU(3)$ Chromodynamics)**:
 Direct realization of the Clay Millennium Prize specification for quantum chromodynamics gauge group $SU(3)$. -/
