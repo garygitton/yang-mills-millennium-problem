@@ -164,8 +164,9 @@ theorem friedrichs_extension_preserves_spectral_bound
 theorem spectral_gap_strictly_positive
     (lower_bound threshold : Nat)
     (spectral_condition : SpectralGapCondition lower_bound threshold) :
-    lower_bound > 0 :=
-  spectral_condition.right
+    lower_bound > 0 := by
+  dsimp [SpectralGapCondition] at spectral_condition
+  omega
 
 def canonical_hilbert_space : HilbertPreSpace := {}
 
