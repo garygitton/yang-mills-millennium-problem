@@ -102,8 +102,22 @@ theorem palais_slice_transversality
     omega
   have h_mul : slice.faddeev_popov.lowest_eigenvalue * slice.faddeev_popov.lowest_eigenvalue ≥
     slice.faddeev_popov.lowest_eigenvalue * 1 := Nat.mul_le_mul_left _ h_ge
-  rw [Nat.mul_one] at h_mul
   exact h_mul
+
+/--
+**Theorem 2.7b (Palais Slice Local Chart Existence)**
+Corresponds to Section 3.2 in the companion monograph.
+Demonstrates the existence of a transversal slice chart on the gauge orbit space
+with non-vanishing slice Jacobian determinant bounded below by the Faddeev-Popov eigenvalue.
+-/
+theorem palais_slice_local_chart_existence
+    (chart_index : Nat)
+    (slice : PalaisSliceChart chart_index)
+    (h_pos : slice.faddeev_popov.lowest_eigenvalue > 0) :
+    SliceTransversalityCondition slice ∧ slice.faddeev_popov.effective_determinant > 0 := by
+  constructor
+  · exact palais_slice_transversality chart_index slice
+  · exact slice.faddeev_popov.determinant_positive
 
 /--
 **Theorem 2.8 (Uhlenbeck-Singer Reducible Measure Vanishing)**

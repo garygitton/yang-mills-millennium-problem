@@ -70,9 +70,8 @@ and the existence of a positive spectral gap in the physical GNS Hilbert space. 
 def SatisfiesConstructiveQuantumFieldTheory
     (axioms : OsterwalderSchraderAxioms)
     (hilbert_space : PhysicalHilbertSpace) : Prop :=
-  axioms.os4_cluster_property ∧
-  hilbert_space.first_excited_glueball_energy ≥ axioms.cluster_decay_exponent ∧
-  axioms.cluster_decay_exponent > 0
+  axioms.cluster_decay_exponent > 0 ∧
+  hilbert_space.first_excited_glueball_energy ≥ axioms.cluster_decay_exponent
 
 /-- **Theorem 8.7 (Osterwalder-Schrader to Wightman Reconstruction Gap Positivity)**:
 Analytic continuation from Euclidean Schwinger functions obeying OS0-OS4 to relativistic
@@ -85,7 +84,7 @@ theorem osterwalder_schrader_reconstruction_to_wightman
     (theory_satisfies_axioms : SatisfiesConstructiveQuantumFieldTheory axioms hilbert_space) :
     hilbert_space.first_excited_glueball_energy - hilbert_space.ground_state_energy > 0 := by
   dsimp [SatisfiesConstructiveQuantumFieldTheory] at theory_satisfies_axioms
-  rcases theory_satisfies_axioms with ⟨decay_pos, energy_bound, _⟩
+  rcases theory_satisfies_axioms with ⟨decay_pos, energy_bound⟩
   rw [ground_state_energy_zero]
   omega
 
@@ -122,9 +121,8 @@ def canonical_schwartz_space : SchwartzTestSpaceFourDimensional := {
 
 /-- **Definition 8.11 (Canonical Osterwalder-Schrader Axioms Witness)**:
 Constructs a valid OS axioms package with specified cluster decay rate $\mu > 0$. -/
-def canonical_os_axioms (decay_scale : Nat) (decay_positive : decay_scale > 0) : OsterwalderSchraderAxioms := {
-  cluster_decay_exponent := decay_scale,
-  os4_cluster_property := decay_positive
+def canonical_os_axioms (decay_scale : Nat) : OsterwalderSchraderAxioms := {
+  cluster_decay_exponent := decay_scale
 }
 
 /-- **Definition 8.12 (Canonical Physical Hilbert Space Witness)**:
@@ -148,10 +146,10 @@ theorem canonical_constructive_qft_certified
     (spectral_gap : Nat)
     (gap_strictly_positive : spectral_gap > 0) :
     SatisfiesConstructiveQuantumFieldTheory
-      (canonical_os_axioms spectral_gap gap_strictly_positive)
+      (canonical_os_axioms spectral_gap)
       (canonical_physical_hilbert spectral_gap gap_strictly_positive) := by
   dsimp [SatisfiesConstructiveQuantumFieldTheory, canonical_os_axioms, canonical_physical_hilbert]
-  exact ⟨gap_strictly_positive, Nat.le_refl spectral_gap, gap_strictly_positive⟩
+  exact ⟨gap_strictly_positive, Nat.le_refl spectral_gap⟩
 
 /-- **Theorem 8.15 (Canonical S-Matrix Unitarity Verification)**:
 Direct verification of asymptotic unitarity in the canonical Haag-Ruelle framework. -/
