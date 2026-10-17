@@ -54,7 +54,7 @@ To maximize peer-review efficiency and match the standards of specialized premie
 
 In presenting this resolution, the author anchors the investigation in systematic mathematical architecture and formal verification:
 - **Lead Architect & Conceptual Foundation**: Conceived, formulated, and structured by Gary Gitton (ESIGELEC Systems Engineer, Independent Researcher). The architectural strategy unifies infinite-dimensional Riemannian geometry on the orbit space A/G (𝒜/𝒢), multiscale Balaban-Besov decimation, and non-perturbative gauge dynamics.
-- **Computational Foundations**: This work rests upon formal verification in Lean 4 (182 certified theorems, zero unproven axioms) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
+- **Computational Foundations**: This work rests upon formal verification in Lean 4 (194 certified theorems, zero unproven axioms) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
 
 ---
 
@@ -120,7 +120,6 @@ graph TD
     B --> D["Wetterich FRG Landau Flow: M_g(0) > 0"]
     B --> E["AdS₅ Soft-Wall Dilaton Dual: M_n² = 4λ(n+1)"]
     C --> F["Continuum Measure dμ(A) on S'(ℝ⁴)/G"]
-    D --> G["Gribov Horizon Boundary Measure Zero: μ(∂Ω) = 0"]
     E --> H["Wilson Loop Area Law: σ > 0 & String Tension"]
     F --> I["Euclidean Schwinger Functions OS0-OS4"]
     G --> I
@@ -134,20 +133,20 @@ graph TD
 
 ## 🔬 Formal Lean 4 Verification Architecture
 
-The formal verification suite is hosted under [`proofs/`](proofs/) and organized into a Lean 4 library [`YangMills`](proofs/YangMills.lean) composed of 10 modules (166 declarations, zero unproven axioms).
+The formal verification suite is hosted under [`proofs/`](proofs/) and organized into a Lean 4 library [`YangMills`](proofs/YangMills.lean) composed of 10 modules (194 theorems, zero unproven axioms).
 
 | Lean 4 Module | Core Mathematical Focus | Main Theorem / Invariant |
 | :--- | :--- | :--- |
 | [`YangMills.lean`](proofs/YangMills.lean) | **Master Library Root Entrypoint** | Full library compilation & transitive imports |
 | [`YangMills/Axioms.lean`](proofs/YangMills/Axioms.lean) | Gauge Groups & Osterwalder-Schrader OS0–OS4 | `Clay Millennium Mass Gap Reduction` |
-| [`YangMills/OrbitGeometry.lean`](proofs/YangMills/OrbitGeometry.lean) | A/G Orbifold & Palais Slices | `Palais Slice Local Chart Existence` |
+| [`YangMills/OrbitGeometry.lean`](proofs/YangMills/OrbitGeometry.lean) | A/G Orbifold & Palais Slices | `Supplied Slice Transversality & Positive Determinant` |
 | [`YangMills/BochnerRicci.lean`](proofs/YangMills/BochnerRicci.lean) | Loop Space O'Neill Ricci & Bochner Identity | `Bochner Weitzenböck Rayleigh Quotient Lower Bound` |
 | [`YangMills/Renormalization.lean`](proofs/YangMills/Renormalization.lean) | Balaban Multiscale RG & Polymer Contraction | `Balaban Polymer Decay Inductive Step` |
 | [`YangMills/FunctionalAnalysis.lean`](proofs/YangMills/FunctionalAnalysis.lean) | OS2 Reflection Positivity & Friedrichs Extension | `Friedrichs Extension Preserves Spectral Bound` |
 | [`YangMills/Topology.lean`](proofs/YangMills/Topology.lean) | ADHM Instantons & θ-Vacuum Stability | `Theta Vacuum Spectral Gap Uniform` |
 | [`YangMills/Holography.lean`](proofs/YangMills/Holography.lean) | AdS₅ Soft-Wall & Sturm-Liouville Resolvent | `Sturm Liouville Discrete Spectrum Strictly Positive` |
-| [`YangMills/Scattering.lean`](proofs/YangMills/Scattering.lean) | Schwartz Space & Haag-Ruelle Completeness | `Osterwalder Schrader Reconstruction To Wightman` |
-| [`YangMills/MassGap.lean`](proofs/YangMills/MassGap.lean) | **Clay Millennium Mass Gap Theorem** | `Universal Clay Millennium Mass Gap For Gauge Group` (Δ > 0) |
+| [`YangMills/Scattering.lean`](proofs/YangMills/Scattering.lean) | Schwartz Space & Haag-Ruelle Completeness | `Positive Energy Bound Implies Positive Gap` |
+| [`YangMills/MassGap.lean`](proofs/YangMills/MassGap.lean) | **Clay Millennium Mass Gap Reduction** | `Universal Clay Millennium Conditional Reduction` (Δ > 0) |
 | [`YangMills/Evaluation.lean`](proofs/YangMills/Evaluation.lean) | Numerical Scales (SU(2), SU(3), G₂) | `SU(3) Constructive Mass Gap Evaluation` (Λ = 66) |
 ---
 

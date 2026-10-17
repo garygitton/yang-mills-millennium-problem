@@ -56,7 +56,7 @@ def HasConstructiveMassGap
   transfer_matrix.first_excited_eigenvalue < transfer_matrix.ground_state_eigenvalue ∧
   transfer_matrix.ground_state_eigenvalue - transfer_matrix.first_excited_eigenvalue > 0
 
-theorem transfer_matrix_spectral_gap_positive
+theorem contractivity_hypothesis_implies_gap
     (algebra : WilsonLoopAlgebra)
     (form : ReflectionPositiveForm algebra)
     (hilbert_space : GnsPhysicalHilbertSpace algebra form)
@@ -122,7 +122,7 @@ def IsSelfAdjointExtension
     (extension : FriedrichsExtension hilbert_space hamiltonian) : Prop :=
   extension.deficiency_index_plus = 0 ∧ extension.deficiency_index_minus = 0
 
-theorem canonical_friedrichs_self_adjoint
+theorem vanishing_deficiency_indices_imply_self_adjoint
     (hilbert_space : HilbertPreSpace)
     (hamiltonian : SymmetricHamiltonianOperator hilbert_space)
     (extension : FriedrichsExtension hilbert_space hamiltonian)

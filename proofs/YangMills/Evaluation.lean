@@ -64,10 +64,10 @@ theorem su3_clay_millennium_conditional_reduction
   clay_millennium_reduction_su3 theory hamiltonian h_dim h_group h_ground h_excited cluster_decay_obligation
 
 /--
-**Evaluation 10.4a (SU(3) Certified Clay Millennium Evaluation Alias)**
-Canonical certified entrypoint for the SU(3) Millennium Problem reduction.
+**Evaluation 10.4a (SU(3) Conditional Clay Millennium Reduction Entrypoint)**
+Canonical conditional entrypoint for the SU(3) Millennium Problem reduction.
 -/
-def su3_clay_millennium_certified := @su3_clay_millennium_conditional_reduction
+def su3_clay_millennium_conditional_entrypoint := @su3_clay_millennium_conditional_reduction
 
 /--
 **Theorem 10.5 (SU(2) Conditional Clay Millennium Reduction)**
@@ -87,10 +87,10 @@ theorem su2_clay_millennium_conditional_reduction
   clay_millennium_reduction_su2 theory hamiltonian h_dim h_group h_ground h_excited cluster_decay_obligation
 
 /--
-**Evaluation 10.5a (SU(2) Certified Clay Millennium Evaluation Alias)**
-Canonical certified entrypoint for the SU(2) Millennium Problem reduction.
+**Evaluation 10.5a (SU(2) Conditional Clay Millennium Reduction Entrypoint)**
+Canonical conditional entrypoint for the SU(2) Millennium Problem reduction.
 -/
-def su2_clay_millennium_certified := @su2_clay_millennium_conditional_reduction
+def su2_clay_millennium_conditional_entrypoint := @su2_clay_millennium_conditional_reduction
 
 /--
 **Theorem 10.6 (G2 Conditional Clay Millennium Reduction)**
@@ -110,10 +110,10 @@ theorem g2_clay_millennium_conditional_reduction
   clay_millennium_reduction_g2 theory hamiltonian h_dim h_group h_ground h_excited cluster_decay_obligation
 
 /--
-**Evaluation 10.6a (G2 Certified Clay Millennium Evaluation Alias)**
-Canonical certified entrypoint for the G2 Millennium Problem reduction.
+**Evaluation 10.6a (G2 Conditional Clay Millennium Reduction Entrypoint)**
+Canonical conditional entrypoint for the G2 Millennium Problem reduction.
 -/
-def g2_clay_millennium_certified := @g2_clay_millennium_conditional_reduction
+def g2_clay_millennium_conditional_entrypoint := @g2_clay_millennium_conditional_reduction
 
 /--
 **Evaluation 10.7 (ADHM Instanton Moduli Space Dimension for SU(3) at k = 1)**
@@ -157,20 +157,20 @@ theorem su3_makeenko_migdal_evaluation :
   rfl
 
 /--
-**Evaluation 10.12 (Theta Vacuum Spectral Gap Evaluation)**
-Evaluates the continuous stability lower bound of the theta vacuum mass gap at theta = pi:
+**Evaluation 10.12 (Toy Theta Vacuum Spectral Gap Evaluation)**
+Evaluates the continuous stability lower bound of the theta vacuum mass gap at theta = pi in the toy witness:
 verifies $1460 \ge 1450$.
 -/
-theorem theta_pi_gap_bound_evaluation :
+theorem toy_theta_pi_gap_bound_evaluation :
     theta_vacuum_pi.effective_mass_gap ≥ 1450 := by
   decide
 
 /--
-**Evaluation 10.13 (Bałaban Polymer Activity Subunitarity Evaluation)**
-Evaluates the non-perturbative tree-graph polymer activity rate subunitarity:
+**Evaluation 10.13 (Toy Bałaban Polymer Activity Subunitarity Evaluation)**
+Evaluates the scaled non-perturbative tree-graph polymer activity rate subunitarity on representative integers:
 verifies $582 < 1000$ (representing $\rho = 0.582 < 1$).
 -/
-theorem balaban_polymer_activity_subunitary_evaluation :
+theorem toy_balaban_polymer_activity_subunitary_evaluation :
     582 < 1000 := by
   decide
 
@@ -180,7 +180,7 @@ Exhaustively formalizes the unresolved bridge obligations required to conclude
 the Millennium Prize Problem for 4D non-abelian gauge theory without smuggled hypotheses.
 -/
 structure ClayMillenniumRemainingObligations (group : CompactSimpleLieGroup) where
-  obligation_1_continuum_measure : OpenObligation_ContinuumMeasureExistence group
+  obligation_1_continuum_measure : OpenObligation_AbstractOSModelExistence group
   obligation_2_cluster_decay : ∀ (theory : OsterwalderSchraderQuantumFieldTheory),
     theory.gauge_group.name = group.name → OpenObligation_NonPerturbativeClusterDecay theory
 

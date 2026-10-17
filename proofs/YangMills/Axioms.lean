@@ -6,7 +6,11 @@ Module: YangMills.Axioms
 Description: Compact simple Lie gauge groups, Osterwalder-Schrader Euclidean QFT axioms (OS0-OS4),
              GNS reconstruction theorem, variational Rayleigh quotient, and Clay Millennium Bridge Specification.
 References: Jaffe & Witten (2000), Osterwalder & Schrader (1973, 1975).
-Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
+Status: Conditional formal reduction / research scaffold.
+             Lean verifies the Tier-1 bridge implications from the explicitly stated Tier-2 obligations.
+             The construction of genuine four-dimensional continuum Yang-Mills objects satisfying
+             faithful versions of those obligations remains open. Several current interfaces are
+             provisional semantic proxies and are being replaced by standard mathematical structures.
 -/
 
 namespace YangMills.Axioms
@@ -56,19 +60,19 @@ theorem su2_casimir_positive : SU2.casimir_adjoint > 0 := by decide
 theorem g2_dimension_exact : G2Group.dimension = 14 := by rfl
 theorem g2_casimir_positive : G2Group.casimir_adjoint > 0 := by decide
 
-def HasNonAbelianLieCommutator (group : CompactSimpleLieGroup) : Prop :=
+def HasDimensionAndCasimirLowerBounds (group : CompactSimpleLieGroup) : Prop :=
   group.dimension ≥ 3 ∧ group.casimir_adjoint ≥ 2
 
-theorem su3_has_non_abelian_commutator : HasNonAbelianLieCommutator SU3 := by
-  dsimp [HasNonAbelianLieCommutator, SU3]
+theorem su3_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU3 := by
+  dsimp [HasDimensionAndCasimirLowerBounds, SU3]
   decide
 
-theorem su2_has_non_abelian_commutator : HasNonAbelianLieCommutator SU2 := by
-  dsimp [HasNonAbelianLieCommutator, SU2]
+theorem su2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU2 := by
+  dsimp [HasDimensionAndCasimirLowerBounds, SU2]
   decide
 
-theorem g2_has_non_abelian_commutator : HasNonAbelianLieCommutator G2Group := by
-  dsimp [HasNonAbelianLieCommutator, G2Group]
+theorem g2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds G2Group := by
+  dsimp [HasDimensionAndCasimirLowerBounds, G2Group]
   decide
 
 theorem makeenko_migdal_su3_relation :
@@ -79,11 +83,11 @@ theorem makeenko_migdal_su2_relation :
     SU2.dimension = SU2.number_of_colors * SU2.number_of_colors - 1 ∧ SU2.dimension > 0 := by
   decide
 
-structure ContinuousSpacetimeCoordinate where
+structure IntegerApproximationSequence where
   approx : Nat → Int
 
 structure EuclideanSpacetimePoint where
-  coordinate : Fin 4 → ContinuousSpacetimeCoordinate
+  coordinate : Fin 4 → IntegerApproximationSequence
 
 def origin_point : EuclideanSpacetimePoint := { coordinate := fun _ => { approx := fun _ => 0 } }
 
@@ -195,7 +199,7 @@ def RayleighQuotientCondition
   ∀ ψ, H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0 →
     form.eval_form ψ ψ ≥ (gap : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ)
 
-theorem rayleigh_quotient_implies_eigenvalue_gap
+theorem energy_lower_bound_implies_gap
     (gap : Nat)
     (h_gap : gap > 0)
     (ground_energy excited_energy : Nat)
@@ -233,7 +237,7 @@ def ClayMillenniumProblemSpecification (group : CompactSimpleLieGroup) : Prop :=
     hamiltonian.first_excited_state_energy = theory.first_excited_state_energy ∧
     HasConstructiveSpectralGap hamiltonian theory.vacuum_cluster_decay
 
-def OpenObligation_ContinuumMeasureExistence (group : CompactSimpleLieGroup) : Prop :=
+def OpenObligation_AbstractOSModelExistence (group : CompactSimpleLieGroup) : Prop :=
   ∃ (theory : OsterwalderSchraderQuantumFieldTheory),
     theory.spacetime_dimension = 4 ∧
     theory.gauge_group.name = group.name

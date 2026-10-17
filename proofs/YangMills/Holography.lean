@@ -176,12 +176,12 @@ structure HolographicRenormalizationConfluenceCertificate (group : CompactSimple
   flow_gap_exceeds_bound : constituent_glueball_spectral_gap flow ≥ holographic_mass_lower_bound
   bound_positive : holographic_mass_lower_bound > 0
 
-/-- **Theorem 7.18 (Master Holographic Renormalization Confluence Theorem)**:
-Establishes the triadic equivalence and non-perturbative consistency:
+/-- **Theorem 7.18 (Holographic Renormalization Certificate Projection)**:
+Projects the certified strictly positive properties from the unified certificate:
 1. Constituent glueball mass gap $\Delta_{\text{flow}} > 0$,
 2. Holographic ground state mass squared $M_0^2 > 0$,
 3. Confinement within the interior of the Gribov fundamental domain $\Omega^\circ$. -/
-theorem master_holographic_renormalization_unification_theorem
+theorem holographic_renormalization_certificate_projection
     {group : CompactSimpleLieGroup}
     (certificate : HolographicRenormalizationConfluenceCertificate group) :
     constituent_glueball_spectral_gap certificate.flow > 0 ∧

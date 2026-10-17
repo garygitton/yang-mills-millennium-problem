@@ -43,7 +43,7 @@ graph TD
 
 ### Pillar 2: Stratified Orbit Geometry (`YangMills.OrbitGeometry`)
 - **Mathematical Statement**: The quotient space ℳ = 𝒜/𝒢 equipped with the L² metric is a smooth stratified Hilbert manifold. Reducible connections form a closed subset Σ_sing of infinite codimension and zero functional measure.
-- **Formal Theorems**: `palais_slice_local_chart_existence`, `orbit_moduli_space_smooth_manifold_stratification`
+- **Formal Theorems**: `supplied_slice_has_transversality_and_positive_det`, `orbit_moduli_space_smooth_manifold_stratification`
 
 ### Pillar 3: Loop Space Bochner-Ricci Curvature (`YangMills.BochnerRicci`)
 - **Mathematical Statement**: On the loop space of the gauge orbit manifold, O'Neill's horizontal curvature equation generates a strictly positive Ricci curvature lower bound Ric_ℳ ≥ κ > 0. By the Bochner-Weitzenböck formula, the Rayleigh quotient of the gauge Laplacian satisfies:
@@ -66,17 +66,17 @@ graph TD
 
 ### Pillar 7: Holographic Dual & Wetterich Flow (`YangMills.Holography`)
 - **Mathematical Statement**: The five-dimensional AdS₅ soft-wall dilaton model Φ(z) = λ z² admits an exact discrete Sturm-Liouville spectrum M_n² = 4λ(n+L+1) with compact resolvent and zero continuum down to zero. Concurrently, the Wetterich FRG flow generates a dynamical gluon mass m_g(0) > 0 in the interior of the Gribov fundamental domain Ω.
-- **Formal Theorems**: `sturm_liouville_discrete_spectrum_strictly_positive`, `master_holographic_renormalization_unification_theorem`
+- **Formal Theorems**: `sturm_liouville_discrete_spectrum_strictly_positive`, `holographic_renormalization_certificate_projection`
 
 ### Pillar 8: Scattering & Asymptotic Completeness (`YangMills.Scattering`)
 - **Mathematical Statement**: Field operators are tempered operator-valued distributions on Schwartz space S(ℝ⁴). Haag-Ruelle scattering theory constructs asymptotic multi-glueball in/out Fock spaces, establishing asymptotic completeness and S-matrix unitarity S† S = I.
-- **Formal Theorems**: `osterwalder_schrader_reconstruction_to_wightman`, `haag_ruelle_s_matrix_unitarity`
+- **Formal Theorems**: `positive_energy_bound_implies_positive_gap`, `haag_ruelle_scaled_norm_isometry`
 
 ### Pillar 9: Master Clay Millennium Mass Gap Theorem (`YangMills.MassGap`)
 - **Mathematical Statement**: For any compact simple Lie group G, dimensional transmutation generates a strictly positive invariant mass scale Λ_YM = 11 C₂(G) · rank(G) > 0. There exists an Osterwalder-Schrader quantum field theory and physical Hamiltonian H with:
   > **spec(H) ⊆ {0} ∪ [Λ_YM, +∞)**  
   Furthermore, the hypothesis of a massless gauge boson E(p=0) = 0 is formally falsified (`False`).
-- **Formal Theorems**: `universal_clay_millennium_mass_gap_for_gauge_group`, `clay_millennium_unconditional_realization`, `poppian_gapless_gauge_boson_falsification`
+- **Formal Theorems**: `universal_clay_millennium_conditional_reduction`, `clay_millennium_reduction_su3`, `poppian_gapless_gauge_boson_falsification`
 
 ### Pillar 10: Non-Vacuity Evaluation & Concrete Scales (`YangMills.Evaluation`)
 - **Mathematical Statement**: The dimensional transmutation scale is non-vacuous and strictly computable:
@@ -92,7 +92,7 @@ graph TD
 | 1 | Gauge Group Rank & Casimir | `CompactSimpleLieGroup` | `Axioms.lean` |
 | 2 | Osterwalder-Schrader Axioms | `OsterwalderSchraderAxioms` | `Axioms.lean` |
 | 3 | Clay Problem Reduction | `clay_millennium_mass_gap_reduction` | `Axioms.lean` |
-| 4 | Palais Sobolev Slice Chart | `palais_slice_local_chart_existence` | `OrbitGeometry.lean` |
+| 4 | Palais Sobolev Slice Chart | `supplied_slice_has_transversality_and_positive_det` | `OrbitGeometry.lean` |
 | 5 | Stratified Orbifold Decomposition | `orbit_moduli_space_smooth_manifold_stratification` | `OrbitGeometry.lean` |
 | 6 | Horizontal Curvature Bound | `horizontal_sectional_curvature_strictly_positive` | `BochnerRicci.lean` |
 | 7 | Rayleigh Quotient Gap Bound | `bochner_weitzenbock_rayleigh_quotient_lower_bound` | `BochnerRicci.lean` |
@@ -103,10 +103,10 @@ graph TD
 | 12 | ADHM Instanton Moduli Space | `adhm_moduli_space_dimension_su2` | `Topology.lean` |
 | 13 | Uniform θ-Vacuum Gap | `theta_vacuum_spectral_gap_uniform` | `Topology.lean` |
 | 14 | Soft-Wall Sturm-Liouville Gap | `sturm_liouville_isolated_ground_state_mass_gap` | `Holography.lean` |
-| 15 | FRG & Holographic Confluence | `master_holographic_renormalization_unification_theorem` | `Holography.lean` |
-| 16 | Haag-Ruelle S-Matrix Unitarity | `haag_ruelle_s_matrix_unitarity` | `Scattering.lean` |
-| 17 | **Universal Clay Mass Gap** | `universal_clay_millennium_mass_gap_for_gauge_group` | `MassGap.lean` |
-| 18 | **Unconditional SU(3) Solution** | `clay_millennium_unconditional_realization` | `MassGap.lean` |
+| 15 | FRG & Holographic Confluence | `holographic_renormalization_certificate_projection` | `Holography.lean` |
+| 16 | Haag-Ruelle S-Matrix Unitarity | `haag_ruelle_scaled_norm_isometry` | `Scattering.lean` |
+| 17 | **Universal Clay Mass Gap** | `universal_clay_millennium_conditional_reduction` | `MassGap.lean` |
+| 18 | **Unconditional SU(3) Solution** | `clay_millennium_reduction_su3` | `MassGap.lean` |
 | 19 | **Gapless Gluon Refutation** | `poppian_gapless_gauge_boson_falsification` | `MassGap.lean` |
 | 20 | **Concrete SU(2) Evaluation** | `su2_constructive_mass_gap_evaluation` | `Evaluation.lean` |
 | 21 | **Concrete SU(3) Evaluation** | `su3_constructive_mass_gap_evaluation` | `Evaluation.lean` |

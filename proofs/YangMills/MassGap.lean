@@ -149,10 +149,10 @@ theorem clay_millennium_reduction_g2
     ClayMillenniumProblemSpecification G2Group :=
   osterwalder_schrader_spectral_gap_reduction G2Group theory hamiltonian h_dim h_group h_ground h_excited cluster_decay_obligation
 
-def clay_millennium_mass_gap_theorem_su3 := @clay_millennium_reduction_su3
-def clay_millennium_mass_gap_theorem_su2 := @clay_millennium_reduction_su2
-def clay_millennium_mass_gap_theorem_g2 := @clay_millennium_reduction_g2
-def constructive_clay_millennium_mass_gap_for_gauge_group := @osterwalder_schrader_spectral_gap_reduction
+def clay_millennium_conditional_reduction_su3 := @clay_millennium_reduction_su3
+def clay_millennium_conditional_reduction_su2 := @clay_millennium_reduction_su2
+def clay_millennium_conditional_reduction_g2 := @clay_millennium_reduction_g2
+def universal_clay_millennium_conditional_reduction := @osterwalder_schrader_spectral_gap_reduction
 
 structure PoppianConjectureFalsifier where
   candidate_massless_gluon_dispersion : Nat → Nat
