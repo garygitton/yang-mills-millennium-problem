@@ -65,9 +65,9 @@ structure LatticeTransferMatrix
     (form : ReflectionPositiveForm algebra)
     (hilbert_space : GnsPhysicalHilbertSpace algebra form) where
   lattice_spacing_scaled : Nat := 50
-  ground_state_eigenvalue : Nat := 1000
-  first_excited_eigenvalue : Nat := 682
-  is_contractive : first_excited_eigenvalue < ground_state_eigenvalue := by decide
+  ground_state_eigenvalue : Nat
+  first_excited_eigenvalue : Nat
+  is_contractive : first_excited_eigenvalue < ground_state_eigenvalue
 
 def HasConstructiveMassGap
     {algebra : WilsonLoopAlgebra}

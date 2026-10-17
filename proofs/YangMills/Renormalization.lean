@@ -40,7 +40,6 @@ contract by a factor bounded strictly below 1 (e.g. $582/1000$), preserving acti
 structure BalabanRenormalizationStep (step_index : Nat) where
   scale_block : LatticeScaleBlock := { scale_index := step_index }
   contraction_factor_scaled : Nat
-  contraction_strictly_subunitary : contraction_factor_scaled < 1000
   effective_action_convexity_constant : Nat
   effective_action_convex : effective_action_convexity_constant > 0
   effective_action_sobolev_bound_scaled : Nat
@@ -77,17 +76,15 @@ theorem balaban_polymer_decay_inductive_step
     (step_index : Nat)
     (step : BalabanRenormalizationStep step_index)
     (polymer : PolymerActivity)
-    (decay_bound_satisfied : polymer.activity_bound_scaled ≤ polymer.decay_rate_scaled) :
+    (decay_bound_satisfied : polymer.activity_bound_scaled ≤ polymer.decay_rate_scaled)
+    (subunitary_step : step.contraction_factor_scaled < 1000) :
     BalabanPolymerContractionBound step polymer := by
   dsimp [BalabanPolymerContractionBound]
-  exact ⟨decay_bound_satisfied, step.contraction_strictly_subunitary⟩
-
-
+  exact ⟨decay_bound_satisfied, subunitary_step⟩
 
 def balaban_canonical_step (step_index : Nat) : BalabanRenormalizationStep step_index := {
   scale_block := { scale_index := step_index },
   contraction_factor_scaled := 582,
-  contraction_strictly_subunitary := by decide,
   effective_action_convexity_constant := 325,
   effective_action_convex := by decide,
   effective_action_sobolev_bound_scaled := 418,
