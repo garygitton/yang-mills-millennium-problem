@@ -67,32 +67,28 @@ structure HaagRuelleScatteringAsymptotics where
 Asserts the simultaneous satisfaction of the Osterwalder-Schrader axioms (temperedness,
 Euclidean covariance, reflection positivity, permutation symmetry, cluster decomposition)
 and the existence of a positive spectral gap in the physical GNS Hilbert space. -/
-def SatisfiesConstructiveQuantumFieldTheory
+def HasPositiveDecayParameterAndEnergyBound
     (axioms : OsterwalderSchraderAxioms)
     (hilbert_space : PhysicalHilbertSpace) : Prop :=
   axioms.cluster_decay_exponent > 0 ∧
   hilbert_space.first_excited_glueball_energy ≥ axioms.cluster_decay_exponent
 
-/-- **Theorem 8.7 (Osterwalder-Schrader to Wightman Reconstruction Gap Positivity)**:
-Analytic continuation from Euclidean Schwinger functions obeying OS0-OS4 to relativistic
-Wightman quantum field operators guarantees that the physical energy gap $E_1 - E_0$ is
-strictly positive: $E_1 - E_0 \ge \mu > 0$. -/
-theorem osterwalder_schrader_reconstruction_to_wightman
+/-- **Theorem 8.7 (Energy Bound Implies Positive Numerical Gap)**:
+Extracts the positive energy difference from the cluster decay bound hypothesis. -/
+theorem positive_energy_bound_implies_positive_gap
     (axioms : OsterwalderSchraderAxioms)
     (hilbert_space : PhysicalHilbertSpace)
     (ground_state_energy_zero : hilbert_space.ground_state_energy = 0)
-    (theory_satisfies_axioms : SatisfiesConstructiveQuantumFieldTheory axioms hilbert_space) :
+    (theory_satisfies_axioms : HasPositiveDecayParameterAndEnergyBound axioms hilbert_space) :
     hilbert_space.first_excited_glueball_energy - hilbert_space.ground_state_energy > 0 := by
-  dsimp [SatisfiesConstructiveQuantumFieldTheory] at theory_satisfies_axioms
+  dsimp [HasPositiveDecayParameterAndEnergyBound] at theory_satisfies_axioms
   rcases theory_satisfies_axioms with ⟨decay_pos, energy_bound⟩
   rw [ground_state_energy_zero]
   omega
 
-/-- **Theorem 8.8 (Haag-Ruelle S-Matrix Unitarity and Asymptotic Completeness)**:
-Verifies that the asymptotic wave operators generate the entire physical Hilbert space
-$\mathcal{H}_{\text{in}} = \mathcal{H}_{\text{out}} = \mathcal{H}_{\text{phys}}$ and that the
-$S$-matrix satisfies $S^\dagger S = S S^\dagger = \mathbb{I}$. -/
-theorem haag_ruelle_s_matrix_unitarity
+/-- **Theorem 8.8 (Haag-Ruelle Asymptotic Isometry and Unitary Scale)**:
+Checks that the scaled wave operators are equal and normalized in the toy model. -/
+theorem haag_ruelle_scaled_norm_isometry
     (asymptotics : HaagRuelleScatteringAsymptotics) :
     asymptotics.wave_operator_in_norm_scaled = asymptotics.wave_operator_out_norm_scaled ∧
     asymptotics.s_matrix_norm_scaled ≥ 1000 := by
@@ -101,10 +97,9 @@ theorem haag_ruelle_s_matrix_unitarity
     rw [asymptotics.s_matrix_isometric]
   exact ⟨h_iso, h_norm⟩
 
-/-- **Theorem 8.9 (Cluster Decomposition Implies Exponential Mass Gap)**:
-The spatial clustering $|S_2(x, y) - S_1(x)S_1(y)| \le C e^{-\mu |x-y|}$ directly yields
-an energy gap $\Delta \ge \mu > 0$ above the vacuum in the Transfer Matrix spectrum. -/
-theorem cluster_decomposition_implies_spectral_gap
+/-- **Theorem 8.9 (Cluster Decay Bound Implies Strictly Positive Gap Scale)**:
+Elementary order deduction: if transfer matrix gap scale exceeds positive decay rate, it is positive. -/
+theorem decay_bound_implies_positive_gap_scale
     (decay_rate : Nat)
     (decay_rate_positive : decay_rate > 0)
     (transfer_matrix_gap_scale : Nat)
@@ -140,15 +135,15 @@ def canonical_haag_ruelle_asymptotics : HaagRuelleScatteringAsymptotics := {
   s_matrix_norm_scaled := 1000
 }
 
-/-- **Theorem 8.14 (Canonical Constructive QFT Certification)**:
-Validates the constructive QFT contract unconditionally for any strictly positive mass scale. -/
-theorem canonical_constructive_qft_certified
+/-- **Theorem 8.14 (Canonical Toy Model Satisfies Decay Bound)**:
+Validates the constructive decay contract on the simplified canonical toy witness. -/
+theorem canonical_toy_model_satisfies_decay_bound
     (spectral_gap : Nat)
     (gap_strictly_positive : spectral_gap > 0) :
-    SatisfiesConstructiveQuantumFieldTheory
+    HasPositiveDecayParameterAndEnergyBound
       (canonical_os_axioms spectral_gap)
       (canonical_physical_hilbert spectral_gap gap_strictly_positive) := by
-  dsimp [SatisfiesConstructiveQuantumFieldTheory, canonical_os_axioms, canonical_physical_hilbert]
+  dsimp [HasPositiveDecayParameterAndEnergyBound, canonical_os_axioms, canonical_physical_hilbert]
   exact ⟨gap_strictly_positive, Nat.le_refl spectral_gap⟩
 
 /-- **Theorem 8.15 (Canonical S-Matrix Unitarity Verification)**:

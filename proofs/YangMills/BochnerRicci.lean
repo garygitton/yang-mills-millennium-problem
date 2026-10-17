@@ -49,16 +49,16 @@ structure BochnerWeitzenbockHodgeOperator (hilbert : RealHilbertSpace) where
   boundary_flux_integral : hilbert.Vector → Nat
   boundary_flux_vanishes : ∀ v, boundary_flux_integral v = 0
 
-theorem oneill_sectional_curvature_nonnegative
+theorem scalar_sectional_curvature_nonnegative
     (hilbert : RealHilbertSpace)
     (geometry : ONeillSubmersionGeometry hilbert)
     (u v : hilbert.Vector) :
     geometry.sectional_curvature u v ≥ 0 := by
   omega
 
-def oneill_sectional_curvature_positivity := oneill_sectional_curvature_nonnegative
+def scalar_sectional_curvature_positivity := scalar_sectional_curvature_nonnegative
 
-theorem gribov_horizon_boundary_flux_elimination
+theorem assumed_horizon_boundary_flux_elimination
     (hilbert : RealHilbertSpace)
     (bochner_operator : BochnerWeitzenbockHodgeOperator hilbert)
     (v : hilbert.Vector) :
@@ -79,7 +79,7 @@ theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
   rw [bochner_identity_holds]
   omega
 
-theorem ricci_positivity_implies_strictly_positive_spectral_gap
+theorem condensate_scale_positivity_implies_hodge_positivity
     (hilbert : RealHilbertSpace)
     (bochner_operator : BochnerWeitzenbockHodgeOperator hilbert)
     (v : hilbert.Vector)

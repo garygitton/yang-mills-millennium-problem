@@ -75,7 +75,7 @@ theorem palais_slice_transversality (slice : PalaisSliceChart) :
   rw [Nat.mul_one] at h_mul
   exact h_mul
 
-theorem palais_slice_local_chart_existence
+theorem supplied_slice_has_transversality_and_positive_det
     (slice : PalaisSliceChart) :
     SliceTransversalityCondition slice ∧ slice.slice_jacobian_determinant > 0 := by
   constructor
@@ -83,7 +83,7 @@ theorem palais_slice_local_chart_existence
   · dsimp [PalaisSliceChart.slice_jacobian_determinant]
     exact effective_determinant_strictly_positive slice.faddeev_popov
 
-theorem reducible_connections_stratification_measure_zero
+theorem stratification_codimension_implies_orbifold_regularity
     (connection : SobolevConnectionSpace)
     (reducible : ReducibleSubspaceMeasure)
     (regularity_condition : connection.sobolev_regularity_index ≥ 1)
@@ -91,7 +91,7 @@ theorem reducible_connections_stratification_measure_zero
     IsOrbifoldRegular connection reducible :=
   ⟨regularity_condition, codimension_condition⟩
 
-theorem spectral_gap_preservation_under_orbifold_closure
+theorem positive_lower_bound_implies_positive_gap
     (gap threshold : Nat)
     (gap_exceeds_threshold : gap ≥ threshold)
     (threshold_strictly_positive : threshold > 0) :
