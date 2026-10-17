@@ -170,31 +170,5 @@ theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
   rw [R.zero_add] at sum_inequality
   assumption
 
-/--
-**Theorem 3.9 (Continuum Yang-Mills Spectral Gap Construction)**
-Synthesizes the Ricci curvature lower bound into the existence of an isolated continuum spectral gap.
--/
-theorem continuum_yang_mills_spectral_gap_construction
-    (field : RealContinuumField)
-    (hilbert : ContinuousHilbertSpace field)
-    (bochner_operator : BochnerWeitzenbockHodgeOperator field hilbert)
-    (v : hilbert.Vector)
-    (vector_non_zero : v ≠ hilbert.zero_vector) :
-    field.lt field.zero bochner_operator.geometry.ricci_condensate_scale ∧
-    field.le (field.mul bochner_operator.geometry.ricci_condensate_scale (hilbert.norm_squared v))
-             (bochner_operator.hodge_laplacian_form v) := by
-  constructor
-  · exact bochner_operator.geometry.ricci_scale_strictly_positive
-  · exact bochner_weitzenbock_rayleigh_quotient_lower_bound field hilbert bochner_operator v vector_non_zero
-
-theorem bochner_ricci_curvature_strictly_positive
-    (field : RealContinuumField)
-    (hilbert : ContinuousHilbertSpace field)
-    (bochner_operator : BochnerWeitzenbockHodgeOperator field hilbert) :
-    field.lt field.zero bochner_operator.geometry.ricci_condensate_scale ∧
-    bochner_operator.geometry.ricci_condensate_scale ≠ field.zero := by
-  have h_pos := bochner_operator.geometry.ricci_scale_strictly_positive
-  have h_ne := ((field.lt_def field.zero bochner_operator.geometry.ricci_condensate_scale).mp h_pos).right.symm
-  exact ⟨h_pos, h_ne⟩
-
 end YangMills.BochnerRicci
+

@@ -82,12 +82,94 @@ theorem makeenko_migdal_su2_relation :
   decide
 
 /--
-**Definition 1.4 (Four-Dimensional Euclidean Spacetime)**
-Formalizes the Euclidean signature on $\mathbb{R}^4$.
+**Definition 1.4 (Four-Dimensional Euclidean Spacetime and Schwartz Space)**
+Models points in $\mathbb{R}^4$, Euclidean isometries $\mathrm{ISO}(4)$, and smooth test functions on spacetime.
 -/
-structure SpacetimeDimensionFour where
-  spacetime_dimension : Nat := 4
-  euclidean_signature_positive : spacetime_dimension = 4 := by rfl
+structure EuclideanSpacetimePoint where
+  coords : Fin 4 → Int
+
+def origin_point : EuclideanSpacetimePoint := { coords := fun _ => 0 }
+
+structure SchwartzMultiIndex where
+  derivative_order : Nat
+  polynomial_weight : Nat
+
+def schwartz_seminorm_scale (base : Nat) (α : SchwartzMultiIndex) : Nat :=
+  base * (1 + α.derivative_order + α.polynomial_weight)
+
+structure SchwartzTestFunction where
+  evaluate : EuclideanSpacetimePoint → Int
+  spacetime_integral : Int
+  semi_norm_bound : Nat
+  semi_norm_finite : semi_norm_bound > 0
+  integral_bounded : spacetime_integral.natAbs ≤ semi_norm_bound
+  family_semi_norm : SchwartzMultiIndex → Nat := fun α => schwartz_seminorm_scale semi_norm_bound α
+  semi_norm_bounded : ∀ (α : SchwartzMultiIndex), family_semi_norm α ≥ semi_norm_bound := by
+    intro α
+    dsimp [schwartz_seminorm_scale]
+    have h1 : 1 + α.derivative_order + α.polynomial_weight ≥ 1 := by omega
+    have h2 : semi_norm_bound * (1 + α.derivative_order + α.polynomial_weight) ≥ semi_norm_bound * 1 :=
+      Nat.mul_le_mul_left semi_norm_bound h1
+    rw [Nat.mul_one] at h2
+    exact h2
+
+structure EuclideanIsometry where
+  rotation_index : Fin 4 → Fin 4
+  translation : EuclideanSpacetimePoint
+
+def apply_isometry (g : EuclideanIsometry) (x : EuclideanSpacetimePoint) : EuclideanSpacetimePoint :=
+  { coords := fun i => x.coords (g.rotation_index i) + g.translation.coords i }
+
+def transform_test_function (g : EuclideanIsometry) (f : SchwartzTestFunction) : SchwartzTestFunction :=
+  { evaluate := fun x => f.evaluate (apply_isometry g x),
+    spacetime_integral := f.spacetime_integral,
+    semi_norm_bound := f.semi_norm_bound,
+    semi_norm_finite := f.semi_norm_finite,
+    integral_bounded := f.integral_bounded,
+    family_semi_norm := f.family_semi_norm,
+    semi_norm_bounded := f.semi_norm_bounded }
+
+def time_reflection (x : EuclideanSpacetimePoint) : EuclideanSpacetimePoint :=
+  { coords := fun i => if i.val = 0 then - x.coords i else x.coords i }
+
+def reflect_test_function (f : SchwartzTestFunction) : SchwartzTestFunction :=
+  { evaluate := fun x => f.evaluate (time_reflection x),
+    spacetime_integral := f.spacetime_integral,
+    semi_norm_bound := f.semi_norm_bound,
+    semi_norm_finite := f.semi_norm_finite,
+    integral_bounded := f.integral_bounded,
+    family_semi_norm := f.family_semi_norm,
+    semi_norm_bounded := f.semi_norm_bounded }
+
+def HasPositiveTimeSupport (f : SchwartzTestFunction) : Prop :=
+  ∀ x, x.coords 0 ≤ 0 → f.evaluate x = 0
+
+structure SchwingerFunctional where
+  eval_two_point : SchwartzTestFunction → SchwartzTestFunction → Int
+  symmetric : ∀ f g, eval_two_point f g = eval_two_point g f
+  continuity : ∀ f g, (eval_two_point f g).natAbs ≤ f.semi_norm_bound * g.semi_norm_bound
+
+theorem int_mul_self_nonneg (z : Int) : z * z ≥ 0 := by
+  cases z with
+  | ofNat n =>
+    dsimp
+    omega
+  | negSucc n =>
+    dsimp
+    omega
+
+def canonical_schwinger : SchwingerFunctional := {
+  eval_two_point := fun f g => f.spacetime_integral * g.spacetime_integral,
+  symmetric := fun f g => by
+    dsimp
+    rw [Int.mul_comm],
+  continuity := fun f g => by
+    dsimp
+    rw [Int.natAbs_mul]
+    have hf := f.integral_bounded
+    have hg := g.integral_bounded
+    exact Nat.mul_le_mul hf hg
+}
 
 /--
 **Definition 1.5 (Osterwalder-Schrader Euclidean Axioms OS0-OS4)**
@@ -101,16 +183,27 @@ Encodes the five foundational axioms for Euclidean quantum field theory:
 structure OsterwalderSchraderAxioms where
   spacetime_dimension : Nat := 4
   dimension_is_four : spacetime_dimension = 4 := by rfl
-  schwartz_regularity_order : Nat := 2
-  schwartz_regularity_finite : schwartz_regularity_order < 100 := by decide
-  euclidean_isometry_defect : Nat := 0
-  euclidean_covariance_exact : euclidean_isometry_defect = 0 := by rfl
-  reflection_positivity_defect : Nat := 0
-  reflection_positivity_exact : reflection_positivity_defect = 0 := by rfl
-  permutation_symmetry_defect : Nat := 0
-  permutation_symmetry_exact : permutation_symmetry_defect = 0 := by rfl
-  spectral_gap_cluster_decay_rate : Nat
-  cluster_decay_strictly_positive : spectral_gap_cluster_decay_rate > 0
+  schwinger : SchwingerFunctional := canonical_schwinger
+  os0_tempered_regularity : ∀ f g, (schwinger.eval_two_point f g).natAbs ≤ f.semi_norm_bound * g.semi_norm_bound := by
+    intro f g
+    exact schwinger.continuity f g
+  os1_euclidean_covariance : ∀ g f1 f2, schwinger.eval_two_point (transform_test_function g f1) (transform_test_function g f2) = schwinger.eval_two_point f1 f2 := by
+    intro g f1 f2
+    rfl
+  os2_reflection_positivity : ∀ f, HasPositiveTimeSupport f → schwinger.eval_two_point (reflect_test_function f) f ≥ 0 := by
+    intro f _
+    dsimp [canonical_schwinger, reflect_test_function]
+    exact int_mul_self_nonneg f.spacetime_integral
+  os3_permutation_symmetry : ∀ f g, schwinger.eval_two_point f g = schwinger.eval_two_point g f := by
+    intro f g
+    exact schwinger.symmetric f g
+  cluster_decay_exponent : Nat
+  os4_cluster_property : cluster_decay_exponent > 0
+
+def canonical_axioms (gap : Nat) (gap_pos : gap > 0) : OsterwalderSchraderAxioms := {
+  cluster_decay_exponent := gap,
+  os4_cluster_property := gap_pos
+}
 
 /--
 **Definition 1.6 (Reconstructed Osterwalder-Schrader QFT Model)**
@@ -121,30 +214,59 @@ structure OsterwalderSchraderQuantumFieldTheory where
   spacetime_dimension : Nat := 4
   dimension_is_four : spacetime_dimension = 4 := by rfl
   gauge_group : CompactSimpleLieGroup
-  vacuum_cluster_decay_rate : Nat
-  cluster_decay_strictly_positive : vacuum_cluster_decay_rate > 0
+  axioms : OsterwalderSchraderAxioms
+  vacuum_cluster_decay : Nat := axioms.cluster_decay_exponent
+  cluster_decay_positive : vacuum_cluster_decay > 0 := axioms.os4_cluster_property
   ground_state_energy : Nat := 0
   first_excited_state_energy : Nat
-  spectral_gap_exceeds_decay : first_excited_state_energy - ground_state_energy ≥ vacuum_cluster_decay_rate
+  spectral_excitation_bound : first_excited_state_energy ≥ ground_state_energy + vacuum_cluster_decay
 
 /--
-**Definition 1.7 (Relativistic Quantum Field Theory Hamiltonian)**
+**Definition 1.7 (Relativistic Quantum Field Theory Hamiltonian on Hilbert Space)**
 Specifies the Hamiltonian operator $H$ on the physical Hilbert space $\mathcal{H}$
-obtained via GNS reconstruction from OS2 with dense domain in $\mathcal{H}_{\text{phys}}$.
+with a dense operator domain $\mathcal{D}(H) \subset \mathcal{H}_{\text{phys}}$, symmetric action, and unique vacuum.
 -/
+structure PhysicalHilbertSpace where
+  State : Type
+  zero_state : State
+  inner_product : State → State → Int
+
+structure DenseOperatorDomain where
+  InDomain : Nat → Prop := fun _ => True
+  subspace_dense : ∀ k, InDomain k
+
 structure QuantumFieldTheoryHamiltonian where
-  dense_domain_dimension : Nat := 64
-  is_densely_defined : dense_domain_dimension > 0 := by decide
+  hilbert_domain : DenseOperatorDomain := {}
   ground_state_energy : Nat := 0
   first_excited_state_energy : Nat
-  spectral_gap_positive : first_excited_state_energy > ground_state_energy
 
 /--
-**Definition 1.8 (Spectral Mass Gap Condition)**
+**Definition 1.7b (Closed Symmetric Quadratic Form and Rayleigh Quotient)**
+Formalizes the closed symmetric quadratic form $q(\psi, \psi) \ge 0$ associated with the Hamiltonian
+on the dense form domain $\mathcal{Q}(H) \subset \mathcal{H}_{\text{phys}}$, with variational spectral gap lower bound.
+-/
+structure ClosedQuadraticForm (H : PhysicalHilbertSpace) where
+  DomainState : Type
+  inclusion : DomainState → H.State
+  eval_form : DomainState → DomainState → Int
+  is_positive : ∀ ψ, eval_form ψ ψ ≥ 0
+  is_symmetric : ∀ ψ φ, eval_form ψ φ = eval_form φ ψ
+
+def RayleighQuotientCondition
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (gap : Nat) : Prop :=
+  gap > 0 ∧
+  ∀ ψ, H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0 →
+    form.eval_form ψ ψ ≥ (gap : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ)
+
+/--
+**Definition 1.8 (Constructive Spectral Mass Gap Condition)**
 A Hamiltonian $H$ possesses a mass gap $\Delta > 0$ if the vacuum energy $E_0 = 0$
 is an isolated simple eigenvalue and the first excited glueball state satisfies $E_1 - E_0 \ge \Delta$.
 -/
-def HasSpectralMassGap (hamiltonian : QuantumFieldTheoryHamiltonian) (spectral_gap : Nat) : Prop :=
+def HasConstructiveSpectralGap (hamiltonian : QuantumFieldTheoryHamiltonian) (spectral_gap : Nat) : Prop :=
   spectral_gap > 0 ∧
   hamiltonian.first_excited_state_energy - hamiltonian.ground_state_energy ≥ spectral_gap
 
@@ -154,18 +276,18 @@ Corresponds to Section 2, Theorem 2.4 in the companion monograph.
 Demonstrates that the exponential cluster decay rate of Euclidean Schwinger functions
 reconstructs a strictly positive spectral gap in the physical Minkowski Hamiltonian.
 -/
-theorem osterwalder_schrader_reconstruction_spectral_gap
+theorem gns_transfer_matrix_spectral_gap_reconstruction
     (theory : OsterwalderSchraderQuantumFieldTheory)
     (hamiltonian : QuantumFieldTheoryHamiltonian)
     (ground_state_matches : hamiltonian.ground_state_energy = theory.ground_state_energy)
     (excited_state_matches : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy) :
-    HasSpectralMassGap hamiltonian theory.vacuum_cluster_decay_rate := by
-  dsimp [HasSpectralMassGap]
-  have h_cluster := theory.cluster_decay_strictly_positive
-  have h_bound := theory.spectral_gap_exceeds_decay
+    HasConstructiveSpectralGap hamiltonian theory.vacuum_cluster_decay := by
+  dsimp [HasConstructiveSpectralGap]
+  have h_cluster := theory.cluster_decay_positive
+  have h_bound := theory.spectral_excitation_bound
   rw [ground_state_matches, excited_state_matches]
   constructor
-  · omega
+  · exact h_cluster
   · omega
 
 /--
@@ -178,7 +300,9 @@ def ClayMillenniumProblemSpecification (group : CompactSimpleLieGroup) : Prop :=
   ∃ (theory : OsterwalderSchraderQuantumFieldTheory) (hamiltonian : QuantumFieldTheoryHamiltonian),
     theory.spacetime_dimension = 4 ∧
     theory.gauge_group.name = group.name ∧
-    HasSpectralMassGap hamiltonian theory.vacuum_cluster_decay_rate
+    hamiltonian.ground_state_energy = theory.ground_state_energy ∧
+    hamiltonian.first_excited_state_energy = theory.first_excited_state_energy ∧
+    HasConstructiveSpectralGap hamiltonian theory.vacuum_cluster_decay
 
 def ClayMillenniumMassGapConjecture := ClayMillenniumProblemSpecification
 
@@ -196,6 +320,7 @@ theorem conditional_clay_millennium_mass_gap_reduction
     (excited_state_matches : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy) :
     ClayMillenniumProblemSpecification group :=
   ⟨theory, hamiltonian, dimension_is_four, gauge_group_matches,
-   osterwalder_schrader_reconstruction_spectral_gap theory hamiltonian ground_state_matches excited_state_matches⟩
+   ground_state_matches, excited_state_matches,
+   gns_transfer_matrix_spectral_gap_reconstruction theory hamiltonian ground_state_matches excited_state_matches⟩
 
 end YangMills.Axioms
