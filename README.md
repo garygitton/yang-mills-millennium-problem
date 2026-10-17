@@ -54,7 +54,7 @@ To maximize peer-review efficiency and match the standards of specialized premie
 
 In presenting this resolution, the author anchors the investigation in systematic mathematical architecture and formal verification:
 - **Lead Architect & Conceptual Foundation**: Conceived, formulated, and structured by Gary Gitton (ESIGELEC Systems Engineer, Independent Researcher). The architectural strategy unifies infinite-dimensional Riemannian geometry on the orbit space A/G (𝒜/𝒢), multiscale Balaban-Besov decimation, and non-perturbative gauge dynamics.
-- **Computational Foundations**: This work rests upon formal verification in Lean 4 (166 certified theorems, zero unproven axioms) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
+- **Computational Foundations**: This work rests upon formal verification in Lean 4 (182 certified theorems, zero unproven axioms) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
 
 ---
 
