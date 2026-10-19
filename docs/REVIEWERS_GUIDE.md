@@ -24,7 +24,7 @@ In mathematical physics and constructive quantum field theory, the resolution of
    - Every theorem is verified by the Lean 4 kernel with complete proofs and zero unproven axioms.
 
 3. **Structural Obstructions & Heuristic Demarcation**:
-   - For an analysis of why classical fluid/aerodynamic analogies (Moffatt helicity) and scalar symmetry breaking (Goldstone/Higgs) fail structurally in pure 4D gauge theory, consult the dedicated [Research Notes on Structural Obstructions](RESEARCH_NOTES.md).
+   - For an analysis of why classical fluid/aerodynamic analogies (Moffatt helicity) and scalar symmetry breaking (Goldstone/Higgs) fail structurally in pure 4D gauge theory, consult the dedicated structural obstruction analysis in the companion analytical monographs (Volume IV & V).
 
 ---
 

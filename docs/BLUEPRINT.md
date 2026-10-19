@@ -137,7 +137,7 @@ The continuous analysis on ℝ⁴—comprising the infinite-dimensional Sobolev 
 The Lean 4 formalization guarantees that the **deductive structural core** of the proof—the algebraic, geometric, and topological implications binding the orbit space A/G (𝒜/𝒢), the Balaban RG contraction, the Gribov horizon saturation, the reflection positivity transfer matrix, and the Friedrichs gap preservation—is mechanically checked, rigorously sound, and exempt from gaps, circularities, or vacuous definitions.
 
 ### 4.4 Demarcation from Classical Analogies & Negative Results
-A detailed structural analysis explaining why classical fluid mechanics analogies (Moffatt kinetic helicity) and scalar symmetry-breaking mechanisms (Goldstone bosons) are structurally inadequate for the pure 4D quantum gauge problem is provided in the companion document [`RESEARCH_NOTES.md`](RESEARCH_NOTES.md).
+A detailed structural analysis explaining why classical fluid mechanics analogies (Moffatt kinetic helicity) and scalar symmetry-breaking mechanisms (Goldstone bosons) are structurally inadequate for the pure 4D quantum gauge problem is developed in the companion analytical monographs (Volumes IV & V).
 
 ---
 

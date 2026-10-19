@@ -188,10 +188,9 @@ lean proofs/YangMills/Evaluation.lean
 
 ## 📑 Documentation & Technical Appendices
 
-The [`docs/`](docs/) directory contains detailed background material, architecture blueprints, and referee guides:
+The [`docs/`](docs/) directory contains formal architecture blueprints and referee guides:
 - [**Reviewer's Guide**](docs/REVIEWERS_GUIDE.md) : Comprehensive navigation guide for journal referees and peer reviewers.
-- [**Architecture Blueprint**](docs/BLUEPRINT.md) : Structural DAG and multi-volume dependency mapping.
-- [**Research Notes**](docs/RESEARCH_NOTES.md) : Non-perturbative derivations and historical technical notes.
+- [**Architecture Blueprint**](docs/BLUEPRINT.md) : Structural DAG and multi-volume theorem dependency mapping.
 
 ---
 
