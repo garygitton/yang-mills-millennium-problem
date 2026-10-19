@@ -8,7 +8,7 @@ Description: Schwartz test function space, tempered distribution field operators
 References: Schwartz (1950), Haag (1958), Ruelle (1962), Jost (1965).
 Mathlib: Mathlib.Analysis.Distribution.SchwartzSpace, Mathlib.Analysis.InnerProductSpace.Adjoint,
          Mathlib.Topology.ContinuousLinearMap.
-Status: Formally verified in Lean 4 (Fully certified, zero unproven axioms).
+Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
 import YangMills.Axioms

@@ -4,7 +4,7 @@ Author: Gary Gitton
 Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
 Description: Master root library entrypoint for machine-checked formal verification.
 Problem: Clay Mathematics Institute Millennium Prize Problem (Jaffe & Witten, 2000)
-Status: Formally verified in Lean 4 (Fully certified, zero unproven axioms)
+Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations)
 -/
 
 -- Module 1: Foundational Gauge Groups & Osterwalder-Schrader Axioms (OS0-OS4)

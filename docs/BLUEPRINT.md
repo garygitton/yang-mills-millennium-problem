@@ -106,7 +106,7 @@ graph TD
 | 15 | FRG & Holographic Confluence | `holographic_renormalization_certificate_projection` | `Holography.lean` |
 | 16 | Haag-Ruelle S-Matrix Unitarity | `haag_ruelle_scaled_norm_isometry` | `Scattering.lean` |
 | 17 | **Universal Clay Mass Gap** | `universal_clay_millennium_conditional_reduction` | `MassGap.lean` |
-| 18 | **Unconditional SU(3) Solution** | `clay_millennium_reduction_su3` | `MassGap.lean` |
+| 18 | **SU(3) Conditional Reduction** | `clay_millennium_reduction_su3` | `MassGap.lean` |
 | 19 | **Gapless Gluon Refutation** | `poppian_gapless_gauge_boson_falsification` | `MassGap.lean` |
 | 20 | **Concrete SU(2) Evaluation** | `su2_constructive_mass_gap_evaluation` | `Evaluation.lean` |
 | 21 | **Concrete SU(3) Evaluation** | `su3_constructive_mass_gap_evaluation` | `Evaluation.lean` |

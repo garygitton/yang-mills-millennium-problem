@@ -79,7 +79,7 @@ proofs/
 | **Scattering** | `positive_energy_bound_implies_positive_gap` | Theorem 8.7 | Analytic continuation yields positive physical energy gap E₁ - E₀ > 0 |
 | **Scattering** | `haag_ruelle_scaled_norm_isometry` | Theorem 8.8 | Asymptotic completeness and unitary S-matrix in the physical Hilbert space |
 | **MassGap** | `universal_clay_millennium_conditional_reduction` | Theorem 9.9 | **Master Millennium Theorem**: Constructive existence and Δ > 0 for any simple G |
-| **MassGap** | `clay_millennium_reduction_su3` | Theorem 9.17 | Unconditional realization for SU(3) using dimensional transmutation |
+| **MassGap** | `clay_millennium_reduction_su3` | Theorem 9.17 | Conditional reduction for SU(3) to open cluster decay obligation |
 | **MassGap** | `poppian_gapless_gauge_boson_falsification` | Theorem 9.19 | Refutes candidate massless gauge bosons (proves contradiction with gap) |
 | **Evaluation** | `su3_constructive_mass_gap_evaluation` | Theorem 10.3 | Computes explicit SU(3) transmutation scale Λ_YM = 66 > 0 |
 | **Evaluation** | `su2_constructive_mass_gap_evaluation` | Theorem 10.6 | Computes explicit SU(2) transmutation scale Λ_YM = 22 > 0 |
