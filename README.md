@@ -188,8 +188,7 @@ lean proofs/YangMills/Evaluation.lean
 
 ## 📑 Documentation & Technical Appendices
 
-The [`docs/`](docs/) directory contains detailed background material, architecture blueprints, and audit records:
-- [**Mathematical Audit Report**](docs/MATHEMATICAL_AUDIT_REPORT.md) : Formal verification of the Jaffe-Witten axiomatic requirements across the 18-pillar audit harness.
+The [`docs/`](docs/) directory contains detailed background material, architecture blueprints, and referee guides:
 - [**Reviewer's Guide**](docs/REVIEWERS_GUIDE.md) : Comprehensive navigation guide for journal referees and peer reviewers.
 - [**Architecture Blueprint**](docs/BLUEPRINT.md) : Structural DAG and multi-volume dependency mapping.
 - [**Research Notes**](docs/RESEARCH_NOTES.md) : Non-perturbative derivations and historical technical notes.

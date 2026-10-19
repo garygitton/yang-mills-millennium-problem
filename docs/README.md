@@ -21,7 +21,6 @@ This directory provides specialized documentation designed to support journal re
 | :--- | :--- | :--- |
 | [**Reviewer's Guide**](REVIEWERS_GUIDE.md) | Referee quickstart, sub-discipline navigation, critical theorem locator, non-vacuity criteria, and analysis of 10 common technical objections. | Journal referees (*Annals of Math*, *CMP*, *PRD*) & prize advisory committee |
 | [**Architecture Blueprint**](BLUEPRINT.md) | Structural dependency DAG, the 10 confluent pillars, and formal theorem traceability matrix across the Lean 4 modules. | Formal proof specialists & constructive analysts |
-| [**Mathematical Audit Report**](MATHEMATICAL_AUDIT_REPORT.md) | Direct verification of the official Jaffe-Witten (2000) CMI axiomatic criteria (OS0–OS4, Wightman reconstruction, isolated vacuum, Δ > 0). | Advisory committees & audit referees |
 | [**Research Notes**](RESEARCH_NOTES.md) | Structural obstruction analysis: why hydrodynamic helicity analogies and scalar symmetry-breaking mechanisms fail in pure 4D gauge theory. | Theoretical physicists & differential geometers |
 
 ---
