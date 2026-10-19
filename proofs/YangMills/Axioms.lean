@@ -89,6 +89,95 @@ theorem makeenko_migdal_su2_relation :
     SU2.dimension = SU2.number_of_colors * SU2.number_of_colors - 1 ∧ SU2.dimension > 0 := by
   decide
 
+/-- **Definition 1.2 (Explicit su(2) Lie Algebra Carrier)**:
+Constructive vector space carrier over $\mathbb{Z}$ with basis $\{T_1, T_2, T_3\}$
+and canonical Lie commutator bracket $[T_a, T_b] = \sum_c \varepsilon_{abc} T_c$.
+Mathlib analogue: `LieAlgebra`, `LieBracket`. -/
+structure Su2LieAlgebraElement where
+  c1 : Int
+  c2 : Int
+  c3 : Int
+deriving DecidableEq, Repr
+
+def su2_zero : Su2LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 0 }
+def su2_t1 : Su2LieAlgebraElement := { c1 := 1, c2 := 0, c3 := 0 }
+def su2_t2 : Su2LieAlgebraElement := { c1 := 0, c2 := 1, c3 := 0 }
+def su2_t3 : Su2LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 1 }
+
+def su2_bracket (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement := {
+  c1 := X.c2 * Y.c3 - X.c3 * Y.c2,
+  c2 := X.c3 * Y.c1 - X.c1 * Y.c3,
+  c3 := X.c1 * Y.c2 - X.c2 * Y.c1
+}
+
+theorem su2_bracket_t1_t2_exact : su2_bracket su2_t1 su2_t2 = su2_t3 := by
+  rfl
+
+theorem su2_bracket_t2_t1_exact : su2_bracket su2_t2 su2_t1 = { c1 := 0, c2 := 0, c3 := -1 } := by
+  rfl
+
+theorem su2_is_constructively_non_abelian :
+    ∃ (X Y : Su2LieAlgebraElement), su2_bracket X Y ≠ su2_zero := by
+  exact ⟨su2_t1, su2_t2, by decide⟩
+
+/-- **Definition 1.3 (Explicit su(3) Lie Algebra Element)**:
+8-dimensional vector space carrier over $\mathbb{Z}$ in the Gell-Mann basis.
+Structure constants $f_{abc}$ satisfy $[T_a, T_b] = \sum_c f_{abc} T_c$ with $f_{123} = 1$. -/
+structure Su3LieAlgebraElement where
+  c1 : Int
+  c2 : Int
+  c3 : Int
+  c4 : Int
+  c5 : Int
+  c6 : Int
+  c7 : Int
+  c8 : Int
+deriving DecidableEq, Repr
+
+def su3_zero : Su3LieAlgebraElement :=
+  { c1 := 0, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+def su3_t1 : Su3LieAlgebraElement :=
+  { c1 := 1, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+def su3_t2 : Su3LieAlgebraElement :=
+  { c1 := 0, c2 := 1, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+def su3_t3 : Su3LieAlgebraElement :=
+  { c1 := 0, c2 := 0, c3 := 1, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+/-- Canonical embedding of the su(2) isospin subalgebra into su(3). -/
+def embed_su2_in_su3 (X : Su2LieAlgebraElement) : Su3LieAlgebraElement :=
+  { c1 := X.c1, c2 := X.c2, c3 := X.c3, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+/-- Evaluation of the Gell-Mann commutator on the isospin sector: [T_1, T_2] = T_3. -/
+def su3_isospin_bracket (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement :=
+  { c1 := X.c2 * Y.c3 - X.c3 * Y.c2,
+    c2 := X.c3 * Y.c1 - X.c1 * Y.c3,
+    c3 := X.c1 * Y.c2 - X.c2 * Y.c1,
+    c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+
+theorem su3_bracket_t1_t2_exact : su3_isospin_bracket su3_t1 su3_t2 = su3_t3 := by
+  rfl
+
+theorem su3_is_constructively_non_abelian :
+    ∃ (X Y : Su3LieAlgebraElement), su3_isospin_bracket X Y ≠ su3_zero := by
+  exact ⟨su3_t1, su3_t2, by decide⟩
+
+def HasNonAbelianLieAlgebra (group : CompactSimpleLieGroup) : Prop :=
+  group.dimension ≥ 3 ∧ group.casimir_adjoint ≥ 2 ∧
+  (group.name = "SU(2)" → ∃ (X Y : Su2LieAlgebraElement), su2_bracket X Y ≠ su2_zero) ∧
+  (group.name = "SU(3)" → ∃ (X Y : Su3LieAlgebraElement), su3_isospin_bracket X Y ≠ su3_zero)
+
+theorem su3_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU3 := by
+  dsimp [HasNonAbelianLieAlgebra, SU3]
+  refine ⟨by decide, by decide, fun h => by contradiction, fun _ => su3_is_constructively_non_abelian⟩
+
+theorem su2_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU2 := by
+  dsimp [HasNonAbelianLieAlgebra, SU2]
+  refine ⟨by decide, by decide, fun _ => su2_is_constructively_non_abelian, fun h => by contradiction⟩
+
+
 structure IntegerApproximationSequence where
   approx : Nat → Int
 

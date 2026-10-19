@@ -61,7 +61,17 @@ theorem analytic_mass_gap_strictly_positive
   exact Nat.mul_pos scale_positive casimir_positive
 
 def IsNonAbelianGaugeGroup (group : CompactSimpleLieGroup) : Prop :=
-  group.casimir_adjoint ≥ 2 ∧ group.number_of_colors ≥ 2
+  group.casimir_adjoint ≥ 2 ∧ group.number_of_colors ≥ 2 ∧
+  HasNonAbelianLieAlgebra group
+
+theorem su3_is_non_abelian_gauge_group : IsNonAbelianGaugeGroup SU3 := by
+  dsimp [IsNonAbelianGaugeGroup, SU3]
+  refine ⟨by decide, by decide, su3_has_non_abelian_lie_algebra⟩
+
+theorem su2_is_non_abelian_gauge_group : IsNonAbelianGaugeGroup SU2 := by
+  dsimp [IsNonAbelianGaugeGroup, SU2]
+  refine ⟨by decide, by decide, su2_has_non_abelian_lie_algebra⟩
+
 
 theorem free_abelian_theory_gapless
     (casimir : Nat)
