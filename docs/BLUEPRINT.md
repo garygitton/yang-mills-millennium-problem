@@ -2,7 +2,7 @@
 
 > **Document Type**: Architectural Blueprint & Traceability Matrix  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
-> **Lean 4 Status**: 10 modules, 166 theorems, zero unproven axioms.
+> **Lean 4 Status**: 10 modules, 195 theorems, zero unproven axioms.
 
 ---
 

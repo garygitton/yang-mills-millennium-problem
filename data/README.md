@@ -8,7 +8,7 @@
 
 ## 🔬 Dataset Overview & Experimental Parameters
 
-- **Hardware Platform**: Scaleway Cloud Compute (`fr-par-1`) multi-core and GPU acceleration infrastructure
+- **Hardware Platform**: Dedicated European Cloud Compute (`fr-par-1`) multi-core and GPU acceleration infrastructure
 - **Lattice Topology**: Physical continuum scaling across 3 ensembles: $\mathcal{E}_1 (16^4, \beta=6.00, a=0.093\text{ fm})$, $\mathcal{E}_2 (24^4, \beta=6.20, a=0.068\text{ fm})$, $\mathcal{E}_3 (32^4, \beta=6.40, a=0.051\text{ fm})$
 - **Gauge Group**: Non-Abelian compact Lie group $SU(3)$
 - **Statistics**: Production trajectories under Symanzik tree-level improved action with Omelyan 2MN symplectic integration and APE smearing
