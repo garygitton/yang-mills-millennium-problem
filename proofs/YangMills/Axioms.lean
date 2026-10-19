@@ -120,6 +120,31 @@ theorem su2_is_constructively_non_abelian :
     ∃ (X Y : Su2LieAlgebraElement), su2_bracket X Y ≠ su2_zero := by
   exact ⟨su2_t1, su2_t2, by decide⟩
 
+def su2_add (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement := {
+  c1 := X.c1 + Y.c1,
+  c2 := X.c2 + Y.c2,
+  c3 := X.c3 + Y.c3
+}
+
+theorem su2_bracket_antisymmetric (X Y : Su2LieAlgebraElement) :
+    su2_add (su2_bracket X Y) (su2_bracket Y X) = su2_zero := by
+  dsimp [su2_bracket, su2_add, su2_zero]
+  obtain ⟨x1, x2, x3⟩ := X
+  obtain ⟨y1, y2, y3⟩ := Y
+  dsimp
+  congr 1 <;> ring
+
+theorem su2_jacobi_identity (X Y Z : Su2LieAlgebraElement) :
+    su2_add (su2_bracket X (su2_bracket Y Z))
+      (su2_add (su2_bracket Y (su2_bracket Z X))
+               (su2_bracket Z (su2_bracket X Y))) = su2_zero := by
+  dsimp [su2_bracket, su2_add, su2_zero]
+  obtain ⟨x1, x2, x3⟩ := X
+  obtain ⟨y1, y2, y3⟩ := Y
+  obtain ⟨z1, z2, z3⟩ := Z
+  dsimp
+  congr 1 <;> ring
+
 /-- **Definition 1.3 (Explicit su(3) Lie Algebra Element)**:
 8-dimensional vector space carrier over $\mathbb{Z}$ in the Gell-Mann basis.
 Structure constants $f_{abc}$ satisfy $[T_a, T_b] = \sum_c f_{abc} T_c$ with $f_{123} = 1$. -/
@@ -157,6 +182,23 @@ def su3_isospin_bracket (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement :=
     c3 := X.c1 * Y.c2 - X.c2 * Y.c1,
     c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
 
+def su3_add (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement := {
+  c1 := X.c1 + Y.c1, c2 := X.c2 + Y.c2, c3 := X.c3 + Y.c3,
+  c4 := X.c4 + Y.c4, c5 := X.c5 + Y.c5, c6 := X.c6 + Y.c6,
+  c7 := X.c7 + Y.c7, c8 := X.c8 + Y.c8
+}
+
+theorem su3_isospin_jacobi_identity (X Y Z : Su3LieAlgebraElement) :
+    su3_add (su3_isospin_bracket X (su3_isospin_bracket Y Z))
+      (su3_add (su3_isospin_bracket Y (su3_isospin_bracket Z X))
+               (su3_isospin_bracket Z (su3_isospin_bracket X Y))) = su3_zero := by
+  dsimp [su3_isospin_bracket, su3_add, su3_zero]
+  obtain ⟨x1, x2, x3, x4, x5, x6, x7, x8⟩ := X
+  obtain ⟨y1, y2, y3, y4, y5, y6, y7, y8⟩ := Y
+  obtain ⟨z1, z2, z3, z4, z5, z6, z7, z8⟩ := Z
+  dsimp
+  congr 1 <;> ring
+
 theorem su3_bracket_t1_t2_exact : su3_isospin_bracket su3_t1 su3_t2 = su3_t3 := by
   rfl
 
@@ -176,6 +218,20 @@ theorem su3_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU3 := by
 theorem su2_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU2 := by
   dsimp [HasNonAbelianLieAlgebra, SU2]
   refine ⟨by decide, by decide, fun _ => su2_is_constructively_non_abelian, fun h => by contradiction⟩
+
+/-- **Definition 1.4 (Euclidean Spacetime Reflection)**:
+Reflection about the temporal hyperplane $\theta(x^0, \vec{x}) = (-x^0, \vec{x})$. -/
+def euclidean_time_reflection (t x y z : Int) : Int × Int × Int × Int :=
+  (-t, x, y, z)
+
+theorem euclidean_time_reflection_fixed_point_on_boundary (x y z : Int) :
+    euclidean_time_reflection 0 x y z = (0, x, y, z) := by
+  rfl
+
+theorem euclidean_time_reflection_involution (t x y z : Int) :
+    euclidean_time_reflection (-t) x y z = (t, x, y, z) := by
+  dsimp [euclidean_time_reflection]
+  omega
 
 
 structure IntegerApproximationSequence where
