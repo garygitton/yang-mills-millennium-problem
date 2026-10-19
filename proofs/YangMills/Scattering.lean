@@ -6,6 +6,8 @@ Module: YangMills.Scattering
 Description: Schwartz test function space, tempered distribution field operators,
              Haag-Ruelle scattering states, asymptotic completeness, and S-matrix unitarity.
 References: Schwartz (1950), Haag (1958), Ruelle (1962), Jost (1965).
+Mathlib: Mathlib.Analysis.Distribution.SchwartzSpace, Mathlib.Analysis.InnerProductSpace.Adjoint,
+         Mathlib.Topology.ContinuousLinearMap.
 Status: Formally verified in Lean 4 (Fully certified, zero unproven axioms).
 -/
 
@@ -143,8 +145,9 @@ theorem canonical_toy_model_satisfies_decay_bound
     HasPositiveDecayParameterAndEnergyBound
       (canonical_os_axioms spectral_gap)
       (canonical_physical_hilbert spectral_gap gap_strictly_positive) := by
-  dsimp [HasPositiveDecayParameterAndEnergyBound, canonical_os_axioms, canonical_physical_hilbert]
-  exact ⟨gap_strictly_positive, Nat.le_refl spectral_gap⟩
+  constructor
+  · exact gap_strictly_positive
+  · omega
 
 /-- **Theorem 8.15 (Canonical S-Matrix Unitarity Verification)**:
 Direct verification of asymptotic unitarity in the canonical Haag-Ruelle framework. -/

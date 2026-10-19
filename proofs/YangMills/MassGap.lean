@@ -6,6 +6,8 @@ Module: YangMills.MassGap
 Description: Non-perturbative dimensional transmutation, universal Clay Millennium Prize Mass Gap reduction
              theorems for compact simple Lie gauge groups, and Popperian gapless gluon falsification.
 References: Jaffe & Witten (2000), Gross & Wilczek (1973), Politzer (1973).
+Mathlib: Mathlib.Analysis.SpecialFunctions.Exp, Mathlib.Analysis.SpecialFunctions.Log.Basic,
+         Mathlib.Analysis.InnerProductSpace.Rayleigh, Mathlib.Order.Basic.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
@@ -19,6 +21,9 @@ namespace YangMills.MassGap
 
 open YangMills.Axioms
 
+/-- **Definition 9.1 (One-Loop Beta Function Numerator)**:
+First coefficient of the Callan-Symanzik beta function $\beta_0 = \frac{11}{3} C_2(G)$.
+Mathlib analogue: `Real.exp`, order properties. -/
 def one_loop_beta_function_numerator (group : CompactSimpleLieGroup) : Nat :=
   11 * group.casimir_adjoint
 

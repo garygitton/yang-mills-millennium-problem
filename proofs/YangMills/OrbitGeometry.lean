@@ -6,6 +6,8 @@ Module: YangMills.OrbitGeometry
 Description: Gauge orbit space orbifold regularity, Palais slice transversality,
              measure-zero reducible connections, and essential self-adjointness of orbit Laplacian.
 References: Palais (1961), Singer (1978), Uhlenbeck (1982).
+Mathlib: Mathlib.Geometry.Manifold.Submanifold, Mathlib.Geometry.Manifold.VectorBundle.Tangent,
+         Mathlib.LinearAlgebra.Matrix.Determinant, Mathlib.Analysis.InnerProductSpace.Positive.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
@@ -15,6 +17,9 @@ namespace YangMills.OrbitGeometry
 
 open YangMills.Axioms
 
+/-- **Definition 2.1 (Gauge Group Symmetries and Center)**:
+Encodes structural Lie algebraic data for gauge symmetries acting on the affine space of connections $\mathcal{A}$.
+Mathlib analogue: `LieAlgebra.Basic`, `Matrix.SpecialUnitaryGroup`. -/
 structure GaugeGroupStructure where
   name : String := "SU(3)"
   dimension : Nat := 8

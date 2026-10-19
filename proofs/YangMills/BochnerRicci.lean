@@ -6,6 +6,8 @@ Module: YangMills.BochnerRicci
 Description: O'Neill horizontal Riemannian submersion, Gribov fundamental region boundary flux vanishing,
              and Bochner-Weitzenböck spectral gap bound from positive gauge orbit space Ricci curvature.
 References: Bochner (1946), O'Neill (1966), Gribov (1978), Lichnerowicz (1958).
+Mathlib: Mathlib.Analysis.InnerProductSpace.Basic, Mathlib.Analysis.InnerProductSpace.Rayleigh,
+         Mathlib.Geometry.Manifold.RiemannianGeometry, Mathlib.Analysis.InnerProductSpace.Spectrum.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
@@ -17,6 +19,9 @@ namespace YangMills.BochnerRicci
 open YangMills.Axioms
 open YangMills.OrbitGeometry
 
+/-- **Definition 3.1 (Real Pre-Hilbert Space of Gauge Field Tangents)**:
+Models tangent space $T_A \mathcal{A}$ equipped with $L^2$ inner product $\langle u, v\rangle$.
+Mathlib analogue: `InnerProductSpace ℝ E`, `inner_self_nonneg`, `inner_self_eq_zero`. -/
 structure RealHilbertSpace where
   Vector : Type
   zero_vector : Vector

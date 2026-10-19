@@ -6,6 +6,7 @@ Module: YangMills.Evaluation
 Description: Epistemic evaluation of dimensional transmutation scales, conditional bridge reductions
              for SU(2), SU(3), and exceptional group G2, and formalization of open continuum obligations.
 References: Jaffe & Witten (2000), Atiyah, Drinfeld, Hitchin, Manin (1978).
+Mathlib: Mathlib.Data.Nat.Basic, Mathlib.Data.Int.Basic, Mathlib.Tactic.NormNum.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 

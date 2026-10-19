@@ -6,6 +6,8 @@ Module: YangMills.Topology
 Description: Non-trivial topological sectors, ADHM instanton moduli dimensions,
              BPS action bounds, and uniform spectral mass gap stability across the theta-vacuum.
 References: Atiyah, Drinfeld, Hitchin, Manin (1978), Belavin, Polyakov, Schwartz, Tyupkin (1975), 't Hooft (1976).
+Mathlib: Mathlib.LinearAlgebra.Dimension, Mathlib.AlgebraicTopology.SimplicialSet,
+         Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
@@ -15,6 +17,10 @@ namespace YangMills.Topology
 
 open YangMills.Axioms
 
+/-- **Definition 6.1 (Topological Sector and Pontryagin Index)**:
+Encodes non-Abelian instanton charge $Q = \frac{1}{8\pi^2}\int \text{Tr}(F \wedge F) \in \mathbb{Z}$
+and the algebraic dimension of the framed ADHM moduli space $\dim \mathcal{M}_k(G) = 4 N k$.
+Mathlib analogue: `LinearAlgebra.finrank`, topological invariants. -/
 structure TopologicalSector where
   number_of_gauge_colors : Nat := 3
   pontryagin_charge : Int

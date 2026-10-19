@@ -6,6 +6,8 @@ Module: YangMills.Renormalization
 Description: Balaban multiscale renormalization group, polymer decimation,
              strictly subunitary contraction factor, and thermodynamic infinite-volume mass gap stability.
 References: Balaban (1984, 1985, 1989), Dimock (2013).
+Mathlib: Mathlib.Topology.MetricSpace.Contracting, Mathlib.Topology.MetricSpace.BanachFixedPoint,
+         Mathlib.Topology.MetricSpace.Basic, Mathlib.Topology.MetricSpace.CauchySeqFilter.
 Status: Rigorous Two-Tier Architecture (Proven Bridge Reduction Theorems + Explicit Open Obligations).
 -/
 
@@ -15,6 +17,9 @@ namespace YangMills.Renormalization
 
 open YangMills.Axioms
 
+/-- **Definition 5.1 (Multiscale Lattice Block Spin)**:
+Block-spin decimation block with length scale $L = 2(k + 1)$.
+Mathlib analogue: `Metric.ball`. -/
 structure LatticeScaleBlock where
   scale_index : Nat
   block_length : Nat := 2 * (scale_index + 1)
@@ -122,6 +127,20 @@ theorem balaban_flow_two_step_triangle_bound
   have h1 := flow.step_contraction (k + 1)
   have h0 := flow.step_contraction k
   have h_tri := M.besov_triangle (flow.trajectory (k + 2)) (flow.trajectory (k + 1)) (flow.trajectory k)
+  omega
+
+/-- **Theorem 5.15 (Balaban Continuum Flow Three-Step Triangle Bound)**:
+Iterated triangle inequality for renormalization trajectory step displacement:
+$d(\phi_{k+3}, \phi_k) \le 3 \cdot \delta_{\mathrm{step}}$.
+Mathlib analogue: `dist_triangle4`, iterated `dist_triangle`. -/
+theorem balaban_flow_three_step_triangle_bound
+    (M : CompleteBesovActionSpace)
+    (flow : BalabanContinuumFlow M)
+    (k : Nat) :
+    M.besov_distance (flow.trajectory (k + 3)) (flow.trajectory k) ≤ 3 * M.contraction_bound := by
+  have h2 := balaban_flow_two_step_triangle_bound M flow (k + 1)
+  have h0 := flow.step_contraction k
+  have h_tri := M.besov_triangle (flow.trajectory (k + 3)) (flow.trajectory (k + 1)) (flow.trajectory k)
   omega
 
 end YangMills.Renormalization

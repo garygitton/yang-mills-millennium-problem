@@ -6,6 +6,8 @@ Module: YangMills.Axioms
 Description: Compact simple Lie gauge groups, Osterwalder-Schrader Euclidean QFT axioms (OS0-OS4),
              GNS reconstruction theorem, variational Rayleigh quotient, and Clay Millennium Bridge Specification.
 References: Jaffe & Witten (2000), Osterwalder & Schrader (1973, 1975).
+Mathlib: Mathlib.LinearAlgebra.Matrix.SpecialUnitaryGroup, Mathlib.Analysis.Distribution.SchwartzSpace,
+         Mathlib.Analysis.InnerProductSpace.Rayleigh, Mathlib.Topology.Algebra.Star.
 Status: Conditional formal reduction / research scaffold.
              Lean verifies the Tier-1 bridge implications from the explicitly stated Tier-2 obligations.
              The construction of genuine four-dimensional continuum Yang-Mills objects satisfying
@@ -15,6 +17,10 @@ Status: Conditional formal reduction / research scaffold.
 
 namespace YangMills.Axioms
 
+/-- **Definition 1.1 (Compact Simple Lie Group)**:
+Lie group specification encoding rank, dimension, quadratic Casimir eigenvalue in the adjoint
+representation $C_2(G)$, and dual Coxeter number $h^\vee(G)$.
+Mathlib analogue: `Matrix.SpecialUnitaryGroup`, `LieAlgebra.CartanSubalgebra`. -/
 structure CompactSimpleLieGroup where
   name : String
   number_of_colors : Nat
@@ -190,6 +196,10 @@ structure ClosedQuadraticForm (H : PhysicalHilbertSpace) where
   is_positive : ∀ ψ, eval_form ψ ψ ≥ 0
   is_symmetric : ∀ ψ φ, eval_form ψ φ = eval_form φ ψ
 
+/-- **Definition 1.13 (Rayleigh Quotient Gap Condition)**:
+Encodes the variational characterization of the Hamiltonian spectral gap
+$\Delta = \inf_{\psi \perp \Omega} \frac{\langle \psi, H\psi\rangle}{\|\psi\|^2} > 0$.
+Mathlib analogue: `rayleigh_quotient`, `InnerProductSpace.Spectrum`. -/
 def RayleighQuotientCondition
     (H : PhysicalHilbertSpace)
     (form : ClosedQuadraticForm H)
@@ -199,6 +209,9 @@ def RayleighQuotientCondition
   ∀ ψ, H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0 →
     form.eval_form ψ ψ ≥ (gap : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ)
 
+/-- **Theorem 1.14 (Energy Lower Bound Implies Positive Spectral Gap)**:
+Extracts the strictly positive excitation difference $\Delta = E_1 - E_0 > 0$.
+Mathlib analogue: `sub_pos_of_lt`, `Nat.sub_ge_of_le_add`. -/
 theorem energy_lower_bound_implies_gap
     (gap : Nat)
     (h_gap : gap > 0)

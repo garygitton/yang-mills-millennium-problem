@@ -6,6 +6,8 @@ Module: YangMills.Holography
 Description: Sturm-Liouville resolvent compactness, AdS5 soft-wall dilaton holographic dual,
              Wetterich FRG infrared flow, and Regge trajectory glueball spectrum.
 References: Karch, Katz, Son, Stephanov (2006), Wetterich (1993), Gribov (1978).
+Mathlib: Mathlib.Analysis.Calculus.Deriv.Basic, Mathlib.Analysis.InnerProductSpace.Spectrum,
+         Mathlib.Order.Monotone.Basic.
 Status: Formally verified in Lean 4 (Fully certified, zero unproven axioms).
 -/
 
