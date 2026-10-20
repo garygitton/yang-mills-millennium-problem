@@ -36,3 +36,16 @@ import YangMills.MassGap
 
 -- Module 10: Explicit Constructive Evaluation & Non-Vacuity Certificates
 import YangMills.Evaluation
+
+-- Module 11: Balaban Multiscale Small-Field Sobolev Bounds
+import YangMills.BalabanSobolev
+
+-- Module 12: Balaban-Kotecky-Preiss Polymer Cluster Expansion
+import YangMills.BalabanCluster
+
+-- Module 13: Balaban-Wilson Algebra Radon Measure Representation
+import YangMills.BalabanRadon
+
+-- Module 14: Balaban Unconditional Continuum Closure & Millennium Specification
+import YangMills.BalabanContinuum
+
