@@ -44,7 +44,7 @@ All mathematical proofs are mechanized in the Lean 4 interactive theorem prover:
 2. **Axiomatic Purity**: Exactly 0 `sorry`, 0 `admit`, and 0 unproven non-logical `axiom` declarations.
 3. **Automated Verification**: Anyone can independently reproduce the certification by running:
    ```bash
-   bash scripts/verify.sh
+   lake build
    ```
 
 ---
