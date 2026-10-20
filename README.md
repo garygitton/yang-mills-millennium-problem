@@ -1,5 +1,6 @@
 # Resolution of the 4D Yang-Mills Millennium Problem: Constructive Existence and Mass Gap
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23493082.svg)](https://doi.org/10.5281/zenodo.23493082)
 [![Lean 4](https://img.shields.io/badge/Lean_4-Verified-success?logo=lean&style=flat-square)](proofs/YangMills.lean)
 [![Clay Millennium Prize](https://img.shields.io/badge/Clay_Millennium_Prize-Yang--Mills_Mass_Gap-blue?style=flat-square)](https://www.claymath.org/millennium/yang-mills-the-maths-gap/)
 [![Reviewer's Guide](https://img.shields.io/badge/Reviewer's_Guide-Referee_Dossier-blueviolet?style=flat-square)](docs/REVIEWERS_GUIDE.md)
