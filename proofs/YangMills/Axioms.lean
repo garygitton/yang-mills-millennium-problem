@@ -81,6 +81,22 @@ theorem g2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds 
   dsimp [HasDimensionAndCasimirLowerBounds, G2Group]
   decide
 
+def U1AbelianGroup : CompactSimpleLieGroup := {
+  name := "U(1)",
+  number_of_colors := 1,
+  rank := 0,
+  dimension := 1,
+  casimir_adjoint := 0,
+  dual_coxeter_number := 0
+}
+
+theorem adversarial_u1_cannot_satisfy_non_abelian_bounds :
+    ¬ HasDimensionAndCasimirLowerBounds U1AbelianGroup := by
+  dsimp [HasDimensionAndCasimirLowerBounds, U1AbelianGroup]
+  intro h
+  rcases h with ⟨h_dim, h_casimir⟩
+  omega
+
 theorem makeenko_migdal_su3_relation :
     SU3.dimension = SU3.number_of_colors * SU3.number_of_colors - 1 ∧ SU3.dimension > 0 := by
   decide
@@ -295,6 +311,13 @@ def reflect_test_function (f : SchwartzTestFunction) : SchwartzTestFunction :=
 
 def HasPositiveTimeSupport (f : SchwartzTestFunction) : Prop :=
   ∀ x, (x.coordinate 0).approx 0 ≤ 0 → f.evaluate x = 0
+
+theorem boundary_contact_test_function_strictly_rejected :
+    ∀ (f : SchwartzTestFunction), HasPositiveTimeSupport f →
+      ∀ (x : EuclideanSpacetimePoint), (x.coordinate 0).approx 0 = 0 → f.evaluate x = 0 := by
+  intro f h_supp x h_zero
+  apply h_supp x
+  omega
 
 structure SchwingerFunctional where
   eval_two_point : SchwartzTestFunction → SchwartzTestFunction → Int
