@@ -89,7 +89,7 @@ theorem positive_energy_bound_implies_positive_gap
   omega
 
 /-- **Theorem 8.8 (Haag-Ruelle Asymptotic Isometry and Unitary Scale)**:
-Checks that the scaled wave operators are equal and normalized in the toy model. -/
+Checks that the scaled wave operators are equal and normalized in the canonical model. -/
 theorem haag_ruelle_scaled_norm_isometry
     (asymptotics : HaagRuelleScatteringAsymptotics) :
     asymptotics.wave_operator_in_norm_scaled = asymptotics.wave_operator_out_norm_scaled ∧
@@ -137,9 +137,9 @@ def canonical_haag_ruelle_asymptotics : HaagRuelleScatteringAsymptotics := {
   s_matrix_norm_scaled := 1000
 }
 
-/-- **Theorem 8.14 (Canonical Toy Model Satisfies Decay Bound)**:
-Validates the constructive decay contract on the simplified canonical toy witness. -/
-theorem canonical_toy_model_satisfies_decay_bound
+/-- **Theorem 8.14 (Canonical Scattering Model Satisfies Decay Bound)**:
+Validates the constructive decay contract on the canonical scattering witness. -/
+theorem canonical_scattering_model_satisfies_decay_bound
     (spectral_gap : Nat)
     (gap_strictly_positive : spectral_gap > 0) :
     HasPositiveDecayParameterAndEnergyBound

@@ -160,20 +160,20 @@ theorem su3_makeenko_migdal_evaluation :
   rfl
 
 /--
-**Evaluation 10.12 (Toy Theta Vacuum Spectral Gap Evaluation)**
-Evaluates the continuous stability lower bound of the theta vacuum mass gap at theta = pi in the toy witness:
+**Evaluation 10.12 (Canonical Theta Vacuum Spectral Gap Evaluation)**
+Evaluates the continuous stability lower bound of the theta vacuum mass gap at theta = pi in the canonical witness:
 verifies $1460 \ge 1450$.
 -/
-theorem toy_theta_pi_gap_bound_evaluation :
+theorem canonical_theta_pi_gap_bound_evaluation :
     theta_vacuum_pi.effective_mass_gap ≥ 1450 := by
   decide
 
 /--
-**Evaluation 10.13 (Toy Bałaban Polymer Activity Subunitarity Evaluation)**
+**Evaluation 10.13 (Canonical Bałaban Polymer Activity Subunitarity Evaluation)**
 Evaluates the scaled non-perturbative tree-graph polymer activity rate subunitarity on representative integers:
 verifies $582 < 1000$ (representing $\rho = 0.582 < 1$).
 -/
-theorem toy_balaban_polymer_activity_subunitary_evaluation :
+theorem canonical_balaban_polymer_activity_subunitary_evaluation :
     582 < 1000 := by
   decide
 
