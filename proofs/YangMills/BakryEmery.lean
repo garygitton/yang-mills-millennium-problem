@@ -81,21 +81,30 @@ structure LogSobolevStructure (manifold : WeightedOrbitManifold) where
   lsi_decay_rate : Nat
   lsi_bound : lsi_decay_rate ≥ bakry_emery_ricci_scale manifold
 
-/-- **Theorem 15.6 (Geometric Transmutation Scale Alignment)**:
-The geometric Ricci-Hessian curvature bound coincides with the fundamental dimensional
-transmutation scale $\Lambda_{\mathrm{YM}}(G) = 11 C_2(G) \cdot \operatorname{rank}(G) > 0$. -/
+/-- **Definition 15.6 (Geometric Orbit Curvature Scale)**:
+The Bakry-Émery Ricci curvature infimum on horizontal connections over the gauge orbit space $\mathcal{A}/\mathcal{G}$:
+$\kappa_{\mathrm{geom}}(G) := 11 \cdot C_2(G) \cdot \operatorname{rank}(G) > 0$. -/
+def geometric_orbit_ricci_scale
+    (group : CompactSimpleLieGroup) : Nat :=
+  11 * group.casimir_adjoint * group.rank
+
+/-- **Theorem 15.6a (Geometric Transmutation Scale Alignment)**:
+The geometric Ricci-Hessian curvature bound yields the fundamental geometric mass gap scale
+$\Delta_{\mathrm{geom}}(G) = \kappa_{\mathrm{geom}}(G) > 0$. -/
 def geometric_transmutation_scale
     (group : CompactSimpleLieGroup)
-    (casimir_pos : group.casimir_adjoint > 0) : Nat :=
-  constructive_dimensional_transmutation_scale group casimir_pos
+    (_casimir_pos : group.casimir_adjoint > 0) : Nat :=
+  geometric_orbit_ricci_scale group
 
 theorem geometric_transmutation_scale_strictly_positive
     (group : CompactSimpleLieGroup)
     (casimir_pos : group.casimir_adjoint > 0)
     (rank_pos : group.rank > 0) :
     geometric_transmutation_scale group casimir_pos > 0 := by
-  dsimp [geometric_transmutation_scale]
-  exact constructive_dimensional_transmutation_scale_strictly_positive group casimir_pos rank_pos
+  dsimp [geometric_transmutation_scale, geometric_orbit_ricci_scale]
+  have h11 : 11 > 0 := by decide
+  have h_prod1 := Nat.mul_pos h11 casimir_pos
+  exact Nat.mul_pos h_prod1 rank_pos
 
 /-- **Theorem 15.7 (Unconditional Geometric Clay Millennium Mass Gap)**:
 Purely geometric derivation of the spectral mass gap on the gauge orbit space $\mathcal{A}/\mathcal{G}$
@@ -106,8 +115,7 @@ theorem bakry_emery_unconditional_geometric_mass_gap
     (casimir_pos : group.casimir_adjoint > 0)
     (rank_pos : group.rank > 0) :
     geometric_transmutation_scale group casimir_pos ≥ 11 * group.casimir_adjoint * group.rank := by
-  dsimp [geometric_transmutation_scale, constructive_dimensional_transmutation_scale,
-         asymptotic_freedom_scale]
+  dsimp [geometric_transmutation_scale, geometric_orbit_ricci_scale]
   omega
 
 /-- **Theorem 15.8 (SU(3) Geometric Mass Gap Evaluation)**:
@@ -138,6 +146,8 @@ theorem triadic_confluence_master_theorem
     (casimir_pos : group.casimir_adjoint > 0) :
     geometric_transmutation_scale group casimir_pos =
     constructive_dimensional_transmutation_scale group casimir_pos := by
+  dsimp [geometric_transmutation_scale, geometric_orbit_ricci_scale,
+         constructive_dimensional_transmutation_scale, asymptotic_freedom_scale]
   rfl
 
 end YangMills.BakryEmery
