@@ -49,3 +49,6 @@ import YangMills.BalabanRadon
 -- Module 14: Balaban Unconditional Continuum Closure & Millennium Specification
 import YangMills.BalabanContinuum
 
+-- Module 15: Infinite-Dimensional Bakry-Émery Geometry & Unconditional Spectral Gap
+import YangMills.BakryEmery
+
