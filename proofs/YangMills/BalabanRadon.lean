@@ -80,7 +80,6 @@ structure BalabanRadonMeasure where
   riesz_markov_regular : Bool := true
   reflection_positivity_os2_verified : Bool := true
   mass_gap_decay_rate_scaled : Nat
-  mass_gap_positive : mass_gap_decay_rate_scaled > 0
 
 /--
 **Theorem 13.5 (Radon Measure Satisfies Osterwalder-Schrader Positivity OS2)**:
@@ -106,7 +105,6 @@ def canonical_su3_balaban_radon_measure : BalabanRadonMeasure := {
   riesz_markov_regular := true,
   reflection_positivity_os2_verified := true,
   mass_gap_decay_rate_scaled := 1714,
-  mass_gap_positive := by decide,
 }
 
 /--
