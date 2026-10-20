@@ -375,6 +375,29 @@ def RayleighQuotientCondition
   ∀ ψ, H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0 →
     form.eval_form ψ ψ ≥ (gap : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ)
 
+/-- **Theorem 1.13a (Rayleigh Quotient Implies Eigenvalue Gap)**:
+Proves that if the Hamiltonian closed quadratic form satisfies the variational Rayleigh quotient
+condition with infimum gap $\Delta > 0$ on the orthogonal complement of the vacuum state $\Omega$,
+then any excited eigenstate $\psi \perp \Omega$ satisfies $\langle \psi, H\psi\rangle \ge \Delta \|\psi\|^2 > 0$.
+Mathlib analogue: `rayleigh_quotient`, `InnerProductSpace.Spectrum`. -/
+theorem rayleigh_quotient_implies_eigenvalue_gap
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (gap : Nat)
+    (rq : RayleighQuotientCondition H form vacuum gap)
+    (excited : form.DomainState)
+    (h_ortho : H.inner_product (form.inclusion vacuum) (form.inclusion excited) = 0)
+    (h_norm_pos : H.inner_product (form.inclusion excited) (form.inclusion excited) > 0) :
+    form.eval_form excited excited ≥ (gap : Int) * H.inner_product (form.inclusion excited) (form.inclusion excited) ∧
+    form.eval_form excited excited > 0 := by
+  have ⟨h_gap_pos, h_quad⟩ := rq
+  have h_bound := h_quad excited h_ortho
+  have h_gap_int : (gap : Int) > 0 := by omega
+  have h_prod : (gap : Int) * H.inner_product (form.inclusion excited) (form.inclusion excited) > 0 :=
+    mul_pos h_gap_int h_norm_pos
+  refine ⟨h_bound, by omega⟩
+
 /-- **Theorem 1.14 (Energy Lower Bound Implies Positive Spectral Gap)**:
 Extracts the strictly positive excitation difference $\Delta = E_1 - E_0 > 0$.
 Mathlib analogue: `sub_pos_of_lt`, `Nat.sub_ge_of_le_add`. -/
