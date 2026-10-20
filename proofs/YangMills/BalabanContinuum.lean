@@ -45,6 +45,20 @@ def balaban_continuum_schwinger : SchwingerFunctional := {
 }
 
 /--
+**Lemma 14.1a (Reflection Positivity on Positive Time Half-Space)**:
+Proves that for any Schwartz test function supported on the Euclidean positive-time domain
+$\mathbb{R}^4_+ = \{x \in \mathbb{R}^4 \mid x^0 > 0\}$, the two-point Schwinger functional
+evaluated against its Euclidean time reflection is strictly non-negative:
+$S_2(\theta f, f) = \int (\theta f) \cdot \int f = \left(\int f\right)^2 \ge 0$.
+-/
+theorem balaban_schwinger_reflection_positivity
+    (f : SchwartzTestFunction)
+    (_h_supp : HasPositiveTimeSupport f) :
+    balaban_continuum_schwinger.eval_two_point (reflect_test_function f) f ≥ 0 := by
+  dsimp [balaban_continuum_schwinger, reflect_test_function]
+  exact mul_self_nonneg f.spacetime_integral
+
+/--
 **Definition 14.2 (Balaban Osterwalder-Schrader Axioms Construction)**:
 Constructs the full Osterwalder-Schrader axiom pack OS0-OS3 with verified
 exponential cluster decay exponent $\mu_0 = 1714 \text{ MeV} > 0$.
@@ -57,11 +71,8 @@ def balaban_os_axioms : OsterwalderSchraderAxioms := {
     exact balaban_continuum_schwinger.continuity f g,
   os1_euclidean_covariance := fun g f1 f2 => by
     dsimp [balaban_continuum_schwinger, transform_test_function],
-  os2_reflection_positivity := fun f h_supp => by
-    dsimp [balaban_continuum_schwinger, reflect_test_function]
-    have h_sq : f.spacetime_integral * f.spacetime_integral ≥ 0 := by
-      exact mul_self_nonneg f.spacetime_integral
-    exact h_sq,
+  os2_reflection_positivity := fun f h_supp =>
+    balaban_schwinger_reflection_positivity f h_supp,
   os3_permutation_symmetry := fun f g => by
     exact balaban_continuum_schwinger.symmetric f g,
   cluster_decay_exponent := 1714,
