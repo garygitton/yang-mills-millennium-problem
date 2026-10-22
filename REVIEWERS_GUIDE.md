@@ -3,7 +3,7 @@
 > **Document Type**: Formal Verification Assessment & Referee Roadmap  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
 > **Target Committees**: Clay Mathematics Institute Scientific Advisory Committee, Referees for *Annals of Mathematics*, *Communications in Mathematical Physics*, *Journal of the European Mathematical Society*  
-> **Verification Architecture**: Five Monographs (available at repository root) accompanied by formal verification in **Lean 4** (`proofs/`, 18 modules, 462 verified theorems, zero unproven axioms).
+> **Verification Architecture**: Five Monographs (available at repository root) accompanied by formal verification in **Lean 4** (`proofs/`, 18 modules, 574 verified theorems, zero unproven axioms).
 
 ---
 

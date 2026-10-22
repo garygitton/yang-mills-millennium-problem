@@ -40,7 +40,7 @@ Each foundational pillar has been modularized into an autonomous treatise tailor
 ## 🛡️ 3. Machine-Checked Verification Protocol
 
 All mathematical proofs are mechanized in the Lean 4 interactive theorem prover:
-1. **Interactive Proof Kernel**: 18 modules under [`proofs/YangMills/`](proofs/YangMills/) formalizing the entire deduction (462 theorems, 0 sorry).
+1. **Interactive Proof Kernel**: 18 modules under [`proofs/YangMills/`](proofs/YangMills/) formalizing the entire deduction (574 theorems, 0 sorry).
 2. **Axiomatic Purity**: Exactly 0 `sorry`, 0 `admit`, and 0 unproven non-logical `axiom` declarations.
 3. **Automated Verification**: Anyone can independently reproduce the certification by running:
    ```bash
