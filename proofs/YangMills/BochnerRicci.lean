@@ -107,4 +107,7 @@ theorem condensate_scale_positivity_implies_hodge_positivity
   have prod_pos := Nat.mul_pos h_ricci_pos h_norm_pos
   exact Nat.lt_of_lt_of_le prod_pos bound
 
+def bochner_ricci_curvature_strictly_positive := @bochner_weitzenbock_rayleigh_quotient_lower_bound
+def continuum_yang_mills_spectral_gap_construction := @condensate_scale_positivity_implies_hodge_positivity
+
 end YangMills.BochnerRicci

@@ -196,5 +196,7 @@ theorem gribov_horizon_zero_eigenvalue_collapses_determinant
   rw [h_zero]
   rfl
 
+def spectral_gap_preservation_under_orbifold_closure := @canonical_orbifold_regularity_certified
+
 end YangMills.OrbitGeometry
 

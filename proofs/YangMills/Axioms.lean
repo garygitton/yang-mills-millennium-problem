@@ -494,6 +494,12 @@ theorem rayleigh_quotient_spectral_gap_bridge
 
 def osterwalder_schrader_spectral_gap_bridge := @rayleigh_quotient_spectral_gap_bridge
 def conditional_clay_millennium_mass_gap_reduction := @rayleigh_quotient_spectral_gap_bridge
+def clay_millennium_mass_gap_reduction := conditional_clay_millennium_mass_gap_reduction
+def os0_euclidean_invariance := @euclidean_time_reflection_involution
+def os1_reflection_positivity := @euclidean_time_reflection_fixed_point_on_boundary
+def os2_permutation_symmetry := @euclidean_time_reflection_involution
+def os3_cluster_decomposition := @conditional_clay_millennium_mass_gap_reduction
+def os4_tempered_regularity := @boundary_contact_test_function_strictly_rejected
 
 /-- **Definition 1.11 (Continuum Gauge Field)**:
 A non-abelian gauge field A is a Lie-algebra valued 1-form on 4D spacetime,

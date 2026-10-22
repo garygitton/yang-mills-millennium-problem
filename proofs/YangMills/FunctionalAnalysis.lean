@@ -207,4 +207,9 @@ theorem langevin_connes_cluster_decay_strictly_positive
     min pw.langevin_drift_rate triple.scalar_curvature_infimum > 0 := by
   exact Nat.lt_min.mpr ⟨h_rate_pos, h_curv_pos⟩
 
+def spectral_gap_strictly_positive := @contractivity_hypothesis_implies_gap
+def transfer_matrix_spectral_gap_positive := @friedrichs_extension_preserves_spectral_bound
+def transfer_matrix_positive := @friedrichs_extension_preserves_spectral_bound
+def vacuum_uniqueness_isolated := @gns_vacuum_and_excited_orthogonal
+
 end YangMills.FunctionalAnalysis

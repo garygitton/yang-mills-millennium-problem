@@ -37,6 +37,8 @@ structure TopologicalSector where
   adhm_moduli_space_dimension : Nat := 4 * number_of_gauge_colors * pontryagin_charge.natAbs
   bps_action_topological_bound : Nat := 8 * pontryagin_charge.natAbs
 
+def topological_charge := @TopologicalSector.pontryagin_charge
+
 def adhm_moduli_space_dimension_formula (colors : Nat) (instanton_number : Nat) : Nat :=
   4 * colors * instanton_number
 

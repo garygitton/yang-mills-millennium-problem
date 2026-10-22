@@ -190,7 +190,7 @@ Detailed numerical benchmarks, lattice simulation parameters, and systematic err
 
 ### Formal Verification Using Lean 4 (Standard Lake Toolchain)
 
-Referees and researchers can verify the entire 15-module library with standard `lean` and `lake` on Linux, macOS, or Windows:
+Referees and researchers can verify the entire 18-module library with standard `lean` and `lake` on Linux, macOS, or Windows:
 
 ```bash
 # 1. Clone repository

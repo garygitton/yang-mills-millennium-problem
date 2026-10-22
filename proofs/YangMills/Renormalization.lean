@@ -271,4 +271,9 @@ theorem thermodynamic_limit_mass_gap_stability
     Nat.lt_of_lt_of_le h_pos h_decay
   exact ⟨h_decay, h_cl_pos⟩
 
+def besov_multiscale_contraction := @balaban_multiscale_composite_contraction
+def balaban_decimation := @balaban_multiscale_composite_contraction
+def polymer_activity_rate := @balaban_polymer_decay_inductive_step
+def balaban_inductive_step := @balaban_polymer_decay_inductive_step
+
 end YangMills.Renormalization

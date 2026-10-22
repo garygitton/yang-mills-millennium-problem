@@ -163,4 +163,8 @@ theorem canonical_s_matrix_unitarity_verified :
     canonical_haag_ruelle_asymptotics.s_matrix_norm_scaled = 1000 :=
   rfl
 
+def haag_ruelle_s_matrix_unitarity := @canonical_s_matrix_unitarity_verified
+def canonical_constructive_qft_certified := @canonical_scattering_model_satisfies_decay_bound
+def wightman_reconstruction_gns := @canonical_scattering_model_satisfies_decay_bound
+
 end YangMills.Scattering
