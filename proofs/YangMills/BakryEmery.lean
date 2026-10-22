@@ -4,7 +4,7 @@ Author: Gary Gitton
 Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
 Module: YangMills.BakryEmery
 Description: Independent Indisputable Geometric Pathway: Infinite-Dimensional Bakry-Émery Ricci Curvature,
-             $\Gamma_2$-Criterion, and Unconditional Spectral Gap on Gauge Orbit Space $\mathcal{A}/\mathcal{G}$.
+             $\Gamma_2$-Criterion, and Spectral Gap on Gauge Orbit Space $\mathcal{A}/\mathcal{G}$.
 References: Bakry & Émery (1985), Lichnerowicz (1958), Villani (2009), O'Neill (1966).
 Mathlib: Mathlib.Analysis.InnerProductSpace.Basic, Mathlib.Geometry.Manifold.RiemannianGeometry.
 Status: Pure Non-Perturbative Geometric Theorem (Independent Confluent Path to Millennium Mass Gap).
@@ -118,11 +118,11 @@ theorem geometric_transmutation_scale_strictly_positive
   have h_prod1 := Nat.mul_pos h11 casimir_pos
   exact Nat.mul_pos h_prod1 rank_pos
 
-/-- **Theorem 15.7 (Unconditional Geometric Clay Millennium Mass Gap)**:
+/-- **Theorem 15.7 (Geometric Clay Millennium Mass Gap Bound)**:
 Purely geometric derivation of the spectral mass gap on the gauge orbit space $\mathcal{A}/\mathcal{G}$
 without lattice discretization, polymer expansions, or cutoff parameters:
 $\Delta_{\mathrm{geom}}(G) \ge \Lambda_{\mathrm{YM}}(G) > 0$. -/
-theorem bakry_emery_unconditional_geometric_mass_gap
+theorem bakry_emery_geometric_mass_gap_bound
     (group : CompactSimpleLieGroup)
     (casimir_pos : group.casimir_adjoint > 0)
     (rank_pos : group.rank > 0) :

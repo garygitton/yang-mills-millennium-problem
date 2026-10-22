@@ -193,89 +193,99 @@ theorem gns_reconstruction_spectral_mass_gap
   }
 
 /-- **Definition 16.9 (Clay Millennium Problem Formal Specification)**:
-The Clay Mathematics Institute specification for Yang-Mills Existence and Mass Gap:
+The Clay Mathematics Institute specification for Yang-Mills Existence and Mass Gap (Jaffe & Witten, 2000):
 For any compact simple non-Abelian gauge group $G$, there exists a non-trivial 4D
-quantum Yang-Mills theory on $\mathbb{R}^4$ satisfying the Wightman axioms and possessing
-a strictly positive spectral mass gap $\Delta > 0$. -/
-structure ClayMillenniumProblemSpecification (G : CompactSimpleLieGroup) where
-  gauge_group : CompactSimpleLieGroup := G
-  continuum_qft_exists : True
-  spectral_mass_gap : Nat
-  gap_strictly_positive : spectral_mass_gap > 0
-  wightman_axioms_satisfied : True
+quantum Yang-Mills theory on $\mathbb{R}^4$ satisfying the Osterwalder-Schrader or Wightman axioms
+and possessing a strictly positive spectral mass gap $\Delta > 0$ on the orthogonal complement of the vacuum. -/
+def ClayMillenniumProblemSpecification (group : CompactSimpleLieGroup) : Prop :=
+  ∃ (theory : OsterwalderSchraderQuantumFieldTheory)
+    (hamiltonian : QuantumFieldTheoryHamiltonian)
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState),
+    theory.spacetime_dimension = 4 ∧
+    theory.gauge_group.name = group.name ∧
+    hamiltonian.ground_state_energy = theory.ground_state_energy ∧
+    hamiltonian.first_excited_state_energy = theory.first_excited_state_energy ∧
+    RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay ∧
+    HasConstructiveSpectralGap hamiltonian theory.vacuum_cluster_decay
 
-/-- **Theorem 16.5 (SU(3) Clay Millennium Problem Constructive Resolution)**:
-Constructive formal resolution of the Clay Millennium Prize Problem for gauge group SU(3). -/
-theorem su3_clay_millennium_certified_solution :
-    ClayMillenniumProblemSpecification SU3 := by
-  let gap := dimensional_transmutation_mass_gap SU3 1
-  have h_gap : gap > 0 := dimensional_transmutation_mass_gap_positive SU3 1 su3_casimir_positive (Nat.succ_pos 0)
-  have rq : RayleighQuotientCondition balaban_physical_hilbert_space
-              (balaban_quadratic_form gap) balaban_vacuum_state gap :=
-    balaban_rayleigh_quotient_gap gap h_gap
-  exact {
-    gauge_group := SU3,
-    continuum_qft_exists := trivial,
-    spectral_mass_gap := gap,
-    gap_strictly_positive := rq.gap_strictly_positive,
-    wightman_axioms_satisfied := trivial,
-  }
+/-- **Theorem 16.5 (SU(3) Clay Millennium Conditional Reduction Master Theorem)**:
+Proves that IF a 4D quantum field theory for gauge group SU(3) satisfies the
+Osterwalder-Schrader axioms with non-perturbative cluster decay and the variational Rayleigh condition,
+THEN it satisfies the Clay Millennium Problem specification. -/
+theorem su3_clay_millennium_conditional_reduction_master
+    (theory : OsterwalderSchraderQuantumFieldTheory)
+    (hamiltonian : QuantumFieldTheoryHamiltonian)
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (h_dim : theory.spacetime_dimension = 4)
+    (h_group : theory.gauge_group.name = SU3.name)
+    (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
+    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
+    (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
+    (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
+    ClayMillenniumProblemSpecification SU3 :=
+  clay_millennium_reduction_su3 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
 
-/-- **Theorem 16.6 (SU(2) Clay Millennium Problem Constructive Resolution)**:
-Constructive formal resolution of the Clay Millennium Prize Problem for gauge group SU(2). -/
-theorem su2_clay_millennium_certified_solution :
-    ClayMillenniumProblemSpecification SU2 := by
-  let gap := dimensional_transmutation_mass_gap SU2 1
-  have h_gap : gap > 0 := dimensional_transmutation_mass_gap_positive SU2 1 su2_casimir_positive (Nat.succ_pos 0)
-  have rq : RayleighQuotientCondition balaban_physical_hilbert_space
-              (balaban_quadratic_form gap) balaban_vacuum_state gap :=
-    balaban_rayleigh_quotient_gap gap h_gap
-  exact {
-    gauge_group := SU2,
-    continuum_qft_exists := trivial,
-    spectral_mass_gap := gap,
-    gap_strictly_positive := rq.gap_strictly_positive,
-    wightman_axioms_satisfied := trivial,
-  }
+/-- **Theorem 16.6 (SU(2) Clay Millennium Conditional Reduction Master Theorem)**:
+Proves that IF a 4D quantum field theory for gauge group SU(2) satisfies the
+Osterwalder-Schrader axioms with non-perturbative cluster decay and the variational Rayleigh condition,
+THEN it satisfies the Clay Millennium Problem specification. -/
+theorem su2_clay_millennium_conditional_reduction_master
+    (theory : OsterwalderSchraderQuantumFieldTheory)
+    (hamiltonian : QuantumFieldTheoryHamiltonian)
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (h_dim : theory.spacetime_dimension = 4)
+    (h_group : theory.gauge_group.name = SU2.name)
+    (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
+    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
+    (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
+    (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
+    ClayMillenniumProblemSpecification SU2 :=
+  clay_millennium_reduction_su2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
 
-/-- **Theorem 16.7 (G2 Exceptional Group Clay Millennium Problem Constructive Resolution)**:
-Constructive formal resolution of the Clay Millennium Prize Problem for exceptional gauge group G2. -/
-theorem g2_clay_millennium_certified_solution :
-    ClayMillenniumProblemSpecification G2Group := by
-  let gap := dimensional_transmutation_mass_gap G2Group 1
-  have h_gap : gap > 0 := dimensional_transmutation_mass_gap_positive G2Group 1 g2_casimir_positive (Nat.succ_pos 0)
-  have rq : RayleighQuotientCondition balaban_physical_hilbert_space
-              (balaban_quadratic_form gap) balaban_vacuum_state gap :=
-    balaban_rayleigh_quotient_gap gap h_gap
-  exact {
-    gauge_group := G2Group,
-    continuum_qft_exists := trivial,
-    spectral_mass_gap := gap,
-    gap_strictly_positive := rq.gap_strictly_positive,
-    wightman_axioms_satisfied := trivial,
-  }
+/-- **Theorem 16.7 (G2 Exceptional Group Clay Millennium Conditional Reduction Master Theorem)**:
+Proves that IF a 4D quantum field theory for exceptional gauge group G2 satisfies the
+Osterwalder-Schrader axioms with non-perturbative cluster decay and the variational Rayleigh condition,
+THEN it satisfies the Clay Millennium Problem specification. -/
+theorem g2_clay_millennium_conditional_reduction_master
+    (theory : OsterwalderSchraderQuantumFieldTheory)
+    (hamiltonian : QuantumFieldTheoryHamiltonian)
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (h_dim : theory.spacetime_dimension = 4)
+    (h_group : theory.gauge_group.name = G2Group.name)
+    (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
+    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
+    (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
+    (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
+    ClayMillenniumProblemSpecification G2Group :=
+  clay_millennium_reduction_g2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
 
-/-- **Theorem 16.8 (Universal Clay Millennium Master Theorem)**:
-For any compact simple gauge group $G$ with $C_2(G) > 0$, the constructive continuum
-theory satisfies the full Clay Millennium Problem specification. -/
-theorem universal_clay_millennium_master_theorem
+/-- **Theorem 16.8 (Universal Clay Millennium Conditional Reduction Master Theorem)**:
+For any compact simple gauge group $G$, IF the constructive continuum theory satisfies the
+Osterwalder-Schrader axioms with non-perturbative cluster decay and the variational Rayleigh condition,
+THEN it satisfies the full Clay Millennium Problem specification. -/
+theorem universal_clay_millennium_conditional_reduction_master
     (G : CompactSimpleLieGroup)
-    (energy_scale : Nat)
-    (h_casimir : G.casimir_adjoint > 0)
-    (h_scale : energy_scale > 0) :
-    ClayMillenniumProblemSpecification G := by
-  let gap := dimensional_transmutation_mass_gap G energy_scale
-  have h_gap : gap > 0 := dimensional_transmutation_mass_gap_positive G energy_scale h_casimir h_scale
-  have rq : RayleighQuotientCondition balaban_physical_hilbert_space
-              (balaban_quadratic_form gap) balaban_vacuum_state gap :=
-    balaban_rayleigh_quotient_gap gap h_gap
-  exact {
-    gauge_group := G,
-    continuum_qft_exists := trivial,
-    spectral_mass_gap := gap,
-    gap_strictly_positive := rq.gap_strictly_positive,
-    wightman_axioms_satisfied := trivial,
-  }
+    (theory : OsterwalderSchraderQuantumFieldTheory)
+    (hamiltonian : QuantumFieldTheoryHamiltonian)
+    (H : PhysicalHilbertSpace)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (h_dim : theory.spacetime_dimension = 4)
+    (h_group : theory.gauge_group.name = G.name)
+    (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
+    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
+    (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
+    (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
+    ClayMillenniumProblemSpecification G :=
+  osterwalder_schrader_spectral_gap_reduction G theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
 
 /-- **Theorem 16.9 (Canonical Orbit Curvature and Spectral Gap Bridge)**:
 Proves that strictly positive Ricci curvature on the gauge orbit space implies a strictly
@@ -303,7 +313,7 @@ theorem scattering_state_space_gap_bridge
 
 /-- **Theorem 16.11 (Infinite-Dimensional Bakry-Émery Poincaré Mass Gap Bridge)**:
 Bridges the Bakry-Émery Γ₂ curvature criterion on the loop space / orbit space to the
-unconditional Poincaré inequality on the physical continuum measure space. -/
+continuum Poincaré inequality on the physical continuum measure space. -/
 theorem bakry_emery_poincare_gap_bridge
     (criterion : BakryEmeryCriterion)
     (f : SchwartzTestFunction) :

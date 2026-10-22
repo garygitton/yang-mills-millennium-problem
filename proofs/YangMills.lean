@@ -52,10 +52,10 @@ import YangMills.BalabanCluster
 -- Module 13: Balaban-Wilson Algebra Radon Measure Representation
 import YangMills.BalabanRadon
 
--- Module 14: Balaban Unconditional Continuum Closure & Millennium Specification
+-- Module 14: Balaban Continuum Reduction & Millennium Specification
 import YangMills.BalabanContinuum
 
--- Module 15: Infinite-Dimensional Bakry-Émery Geometry & Unconditional Spectral Gap
+-- Module 15: Infinite-Dimensional Bakry-Émery Geometry & Spectral Gap
 import YangMills.BakryEmery
 
 -- Module 16: Clay Mathematics Institute Millennium Specification & Universal Bridge

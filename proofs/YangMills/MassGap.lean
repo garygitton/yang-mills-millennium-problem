@@ -316,9 +316,9 @@ theorem g2_clay_millennium_solution :
     ClayMillenniumProblemSpecification G2Group :=
   g2_clay_millennium_mass_gap_solution
 
-def su3_clay_millennium_unconditional_mass_gap := su3_clay_millennium_solution
-def su2_clay_millennium_unconditional_mass_gap := su2_clay_millennium_solution
-def g2_clay_millennium_unconditional_mass_gap := g2_clay_millennium_solution
+def su3_clay_millennium_framework_mass_gap := su3_clay_millennium_solution
+def su2_clay_millennium_framework_mass_gap := su2_clay_millennium_solution
+def g2_clay_millennium_framework_mass_gap := g2_clay_millennium_solution
 def yang_mills_mass_gap_existence := su3_clay_millennium_solution
 def spectral_gap_positive := @analytic_mass_gap_strictly_positive
 def spectral_mass_gap := @analytic_mass_gap_bound

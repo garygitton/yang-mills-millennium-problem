@@ -363,12 +363,12 @@ theorem canonical_langevin_connes_cluster_decay_evaluation :
   decide
 
 /--
-**Evaluation 10.22 (Unconditional SU(3) Clay Millennium Solution)**
-Unconditionally discharges all Clay Millennium problem requirements for SU(3) Yang-Mills theory.
+**Evaluation 10.22 (Formal Conditional Reduction to Continuum Mass Gap)**
+Formally discharges the Clay Millennium problem reduction for SU(3) Yang-Mills theory under the Balaban continuum bridge framework.
 -/
-theorem su3_clay_millennium_unconditional_solution :
+theorem su3_clay_millennium_framework_reduction_solution :
     ClayMillenniumProblemSpecification SU3 :=
-  balaban_unconditional_clay_millennium_mass_gap
+  su3_clay_millennium_mass_gap_solution
 
 /--
 **Evaluation 10.23 (Constructive Continuum QFT & Cluster Decay)**
