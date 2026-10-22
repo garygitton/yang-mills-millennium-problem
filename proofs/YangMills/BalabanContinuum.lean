@@ -119,17 +119,6 @@ theorem dimensional_transmutation_mass_gap_positive
 Constructs the constructive 4D Yang-Mills theory for any compact simple gauge group
 with non-zero Casimir, parameterized by energy scale Λ > 0.
 -/
-/--
-**Definition 14.2c (Variational Operator Spectral Energy Levels)**:
-Extracts the ground state energy E0 = 0 and first excited state energy E1
-from the physical Hodge-Bochner Hamiltonian operator spectrum.
--/
-def hodge_spectral_vacuum_decay_rate (spectrum_value : Nat) : Nat :=
-  spectrum_value
-
-def hodge_spectral_first_excitation_energy (spectrum_value : Nat) : Nat :=
-  spectrum_value
-
 def universal_balaban_qft
     (group : CompactSimpleLieGroup)
     (energy_scale : Nat) : OsterwalderSchraderQuantumFieldTheory :=
@@ -139,9 +128,9 @@ def universal_balaban_qft
     dimension_is_four := rfl,
     gauge_group := group,
     axioms := balaban_os_axioms_with_decay delta_spectrum,
-    vacuum_cluster_decay := hodge_spectral_vacuum_decay_rate delta_spectrum,
+    vacuum_cluster_decay := delta_spectrum,
     ground_state_energy := 0,
-    first_excited_state_energy := hodge_spectral_first_excitation_energy delta_spectrum,
+    first_excited_state_energy := delta_spectrum,
   }
 
 def universal_balaban_hamiltonian
@@ -150,7 +139,7 @@ def universal_balaban_hamiltonian
   let delta_spectrum := dimensional_transmutation_mass_gap group energy_scale
   {
     ground_state_energy := 0,
-    first_excited_state_energy := hodge_spectral_first_excitation_energy delta_spectrum,
+    first_excited_state_energy := delta_spectrum,
   }
 
 def balaban_os_axioms : OsterwalderSchraderAxioms :=

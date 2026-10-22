@@ -124,7 +124,12 @@ theorem constructive_dimensional_transmutation_scale_strictly_positive
   have freedom_positive := asymptotic_freedom_scale_strictly_positive group casimir_positive
   exact Nat.mul_pos freedom_positive rank_positive
 
-theorem rayleigh_quotient_variational_mass_gap
+/--
+**Theorem 9.5 (Spectral Energy Scale Casimir Lower Bound)**:
+Proves that the product of the energy scale $\Lambda > 0$ and the non-zero Casimir invariant
+$C_2(G) \ge 1$ is strictly positive and bounded below by the fundamental energy scale $\Lambda$.
+-/
+theorem spectral_energy_scale_casimir_lower_bound
     (energy_scale : Nat)
     (scale_pos : energy_scale > 0)
     (casimir : Nat)

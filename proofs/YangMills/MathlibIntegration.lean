@@ -64,24 +64,23 @@ structure ProjectiveInductiveLimitSchwartz where
   is_dense_pre_frechet : ∀ (k : Nat), 2^k > 0 := fun k => Nat.two_pow_pos k
 
 /--
-**Theorem 18.1 (Strong Convergence of Dyadic Projections)**:
-Proves that for any smooth rapidly decreasing test function $f \in \mathcal{S}(\mathbb{R}^4, \mathbb{C})$,
-the sequence of dyadic sample projections converges strongly to $f$ in the Fréchet topology as $k \to \infty$.
+**Theorem 18.1 (Dyadic Sampling Resolution Lower Bound)**:
+Proves that the dyadic sampling grid scale factor $2^k$ is strictly positive and bounded below by 1
+for all resolution levels $k \in \mathbb{N}$, ensuring non-vanishing grid discretization.
 -/
-theorem dyadic_projection_strong_convergence
+theorem dyadic_sampling_resolution_lower_bound
     (_limit_space : ProjectiveInductiveLimitSchwartz)
     (k : Nat) :
     2^k ≥ 1 :=
   Nat.one_le_two_pow
 
 /--
-**Theorem 18.2 (Continuum Rayleigh Quotient Gap Inheritance)**:
-Proves that the variational Rayleigh quotient lower bound $Q_k(\psi, \psi) \ge \Delta \|\psi\|^2$
-on the dyadic lattice passes to the projective limit, guaranteeing that the continuous
-Hodge-Bochner quadratic form on $\mathcal{S}(\mathbb{R}^4, \mathbb{C})$ satisfies the exact mass gap:
-$Q_{\text{cont}}(\psi, \psi) \ge \Delta \|\psi\|_{\mathcal{H}}^2 > 0$.
+**Theorem 18.2 (Dyadic Spectral Resolution Scaling Positivity)**:
+Proves that given a strictly positive mass gap $\Delta > 0$ and non-vanishing dyadic refinement
+factor $2^k > 0$, the scaled spectral discretization parameter $\Delta \cdot 2^k$ remains strictly positive
+for all resolution levels $k \in \mathbb{N}$.
 -/
-theorem continuum_rayleigh_quotient_gap_inheritance
+theorem dyadic_spectral_resolution_scaling
     (limit_space : ProjectiveInductiveLimitSchwartz)
     (gap : Nat)
     (h_gap : gap > 0)
@@ -89,6 +88,24 @@ theorem continuum_rayleigh_quotient_gap_inheritance
     gap * (2^k) > 0 := by
   have h2 : 2^k > 0 := limit_space.is_dense_pre_frechet k
   exact Nat.mul_pos h_gap h2
+
+/--
+**Theorem 18.2b (Continuous Test Function Rayleigh Quotient Lower Bound)**:
+Variational lower bound on the continuous pre-Hilbert test space: any excited state $\psi \perp \Omega$
+under a closed quadratic form satisfying the Rayleigh quotient condition inherits the strictly positive mass gap.
+-/
+theorem continuous_rayleigh_quotient_variational_gap
+    (H : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
+    (form : Axioms.ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (gap : Nat)
+    (rq : Axioms.RayleighQuotientCondition H form vacuum gap)
+    (excited : form.DomainState)
+    (h_ortho : H.inner_product (form.inclusion vacuum) (form.inclusion excited) = 0)
+    (h_norm_pos : H.inner_product (form.inclusion excited) (form.inclusion excited) > 0) :
+    form.eval_form excited excited ≥ (gap : Int) * H.inner_product (form.inclusion excited) (form.inclusion excited) ∧
+    form.eval_form excited excited > 0 :=
+  Axioms.rayleigh_quotient_implies_eigenvalue_gap H form vacuum gap rq excited h_ortho h_norm_pos
 
 /--
 **Theorem 18.3 (Continuous Mathlib Schwartz Space Embedding Bridge)**:
@@ -130,10 +147,10 @@ def canonical_dyadic_projector (k : Nat) : DyadicSchwartzProjector k := {
 }
 
 /--
-**Theorem 18.4 (Canonical Projective Limit Strong Convergence Realization)**:
-Proves that the canonical projective inductive limit converges with non-vanishing resolution scale 2^k ≥ 1.
+**Theorem 18.4 (Canonical Dyadic Projector Resolution Growth)**:
+Proves that the canonical dyadic sampling projector at resolution index $k$ has non-vanishing grid resolution scale $\ge 1$.
 -/
-theorem canonical_projective_limit_strong_convergence (k : Nat) :
+theorem canonical_dyadic_projector_resolution_growth (k : Nat) :
     (canonical_dyadic_projector k).sampling_resolution ≥ 1 :=
   Nat.one_le_two_pow
 
@@ -161,22 +178,25 @@ structure DiscreteToRealHilbertEmbedding
     (H_real : ContinuousRealHilbertSpace) where
   embed : H_disc.State → H_real.State
   embed_zero : embed H_disc.zero_state = H_real.zero_state
-  spectral_gap_scaled : Nat
-  gap_strictly_positive : spectral_gap_scaled > 0
   norm_scaling_preserved : ∀ ψ, H_real.inner_product (embed ψ) (embed ψ) ≥ 0
+  norm_embedding_scale : Nat
+  scale_positive : norm_embedding_scale > 0
 
 /--
 **Theorem 18.5 (Real Hilbert Space Continuous Spectral Gap Extension)**:
-Proves that the non-perturbative mass gap $\Delta > 0$ certified on the discrete pre-Hilbert space
-extends uniquely to a strictly positive spectral gap on the continuous completed real Hilbert space $\mathcal{H}_{\mathbb{R}}$,
-satisfying the full Clay Millennium continuum requirements.
+Proves that given a strictly positive mass gap $\Delta > 0$ certified on the discrete pre-Hilbert space
+and a non-degenerate embedding functor into the continuous completed real Hilbert space $\mathcal{H}_{\mathbb{R}}$
+with positive embedding scale $\sigma > 0$, the resulting continuous mass gap $\Delta \cdot \sigma$
+is strictly positive.
 -/
 theorem real_hilbert_space_mass_gap_extension
     (H_disc : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
     (H_real : ContinuousRealHilbertSpace)
-    (ext : DiscreteToRealHilbertEmbedding H_disc H_real) :
-    ext.spectral_gap_scaled > 0 :=
-  ext.gap_strictly_positive
+    (ext : DiscreteToRealHilbertEmbedding H_disc H_real)
+    (discrete_gap : Nat)
+    (h_disc_gap : discrete_gap > 0) :
+    discrete_gap * ext.norm_embedding_scale > 0 :=
+  Nat.mul_pos h_disc_gap ext.scale_positive
 
 /--
 **Definition 18.8 (Canonical Real Hilbert Space Witness)**:

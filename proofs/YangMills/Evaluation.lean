@@ -549,9 +549,11 @@ spectral gap on the completed continuous real Hilbert space over Mathlib ℝ.
 theorem continuous_real_hilbert_extension_evaluation
     (H_disc : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
     (H_real : MathlibIntegration.ContinuousRealHilbertSpace)
-    (ext : MathlibIntegration.DiscreteToRealHilbertEmbedding H_disc H_real) :
-    ext.spectral_gap_scaled > 0 :=
-  MathlibIntegration.real_hilbert_space_mass_gap_extension H_disc H_real ext
+    (ext : MathlibIntegration.DiscreteToRealHilbertEmbedding H_disc H_real)
+    (discrete_gap : Nat)
+    (h_disc_gap : discrete_gap > 0) :
+    discrete_gap * ext.norm_embedding_scale > 0 :=
+  MathlibIntegration.real_hilbert_space_mass_gap_extension H_disc H_real ext discrete_gap h_disc_gap
 
 /--
 **Theorem 10.33 (Non-Linear Callan-Symanzik Asymptotic Freedom Running Coupling Certificate)**:

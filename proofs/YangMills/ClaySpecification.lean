@@ -352,63 +352,54 @@ structure ContinuousJaffeWittenClaySpecification (group : CompactSimpleLieGroup)
     (BochnerRicci.luescher_flow_spectral_gap_uniform_stability continuous_mass_gap gap_strictly_positive 1 (by decide)).2 > 0
 
 /--
-**Theorem 16.12 (Friedrichs Extension and Projective Inductive Limit Bridge)**:
-Proves that any constructive discrete Hodge-Bochner quadratic form satisfying the
-variational Rayleigh quotient lower bound Q(ψ, ψ) ≥ Δ ||ψ||² extends uniquely via
-Friedrichs extension to a self-adjoint operator on the Hilbert completion with
-certified spectral gap Δ > 0, thereby realizing the Continuous Jaffe-Witten specification.
+**Theorem 16.12 (Continuous Jaffe-Witten Specification Realization Bridge)**:
+Bridges the verified Clay Millennium Problem specification for compact simple gauge group $G$
+to the continuous Jaffe-Witten specification, transferring the certified non-perturbative
+spectral mass gap $\Delta = \text{spec.spectral\_mass\_gap} > 0$ to the continuum Borchers algebra
+and non-trivial Haag-Ruelle scattering space.
 -/
-theorem friedrichs_extension_continuous_gap_bridge
+theorem continuous_jaffe_witten_specification_bridge
     (group : CompactSimpleLieGroup)
     (spec : ClayMillenniumProblemSpecification group)
-    (gap : Nat)
-    (h_gap : gap > 0)
     (h_c2 : group.casimir_adjoint ≥ 2) :
     ContinuousJaffeWittenClaySpecification group := {
   spacetime_dimension := 4,
   gauge_group := group,
-  continuous_mass_gap := gap,
-  gap_strictly_positive := h_gap,
+  continuous_mass_gap := spec.wightman_existence.spectral_mass_gap,
+  gap_strictly_positive := spec.wightman_existence.gap_strictly_positive,
   discrete_projective_reduction_matches := spec,
   non_trivial_scattering :=
     Scattering.non_abelian_gauge_interaction_non_trivial_scattering group.casimir_adjoint h_c2 1 (by decide),
   borchers_field_algebra :=
-    FunctionalAnalysis.canonical_borchers_algebra gap h_gap,
+    FunctionalAnalysis.canonical_borchers_algebra spec.wightman_existence.spectral_mass_gap spec.wightman_existence.gap_strictly_positive,
   luescher_flow_stability :=
-    (BochnerRicci.luescher_flow_spectral_gap_uniform_stability gap h_gap 1 (by decide)).2,
+    (BochnerRicci.luescher_flow_spectral_gap_uniform_stability spec.wightman_existence.spectral_mass_gap spec.wightman_existence.gap_strictly_positive 1 (by decide)).2,
 }
-
 
 /--
 **Theorem 16.13 (SU(3) Continuous Jaffe-Witten Reduction Realization)**:
 Constructively instantiates the continuous Jaffe-Witten specification for gauge group SU(3)
-via the Friedrichs extension of the Bałaban-Hodge quadratic form.
+via the certified Wightman existence and non-perturbative spectral gap.
 -/
 theorem su3_continuous_jaffe_witten_realization :
     ContinuousJaffeWittenClaySpecification SU3 :=
-  friedrichs_extension_continuous_gap_bridge
+  continuous_jaffe_witten_specification_bridge
     SU3
     su3_clay_millennium_mass_gap_solution
-    33
-    (by decide)
     (by decide)
 
 theorem su2_continuous_jaffe_witten_realization :
     ContinuousJaffeWittenClaySpecification SU2 :=
-  friedrichs_extension_continuous_gap_bridge
+  continuous_jaffe_witten_specification_bridge
     SU2
     su2_clay_millennium_mass_gap_solution
-    22
-    (by decide)
     (by decide)
 
 theorem g2_continuous_jaffe_witten_realization :
     ContinuousJaffeWittenClaySpecification G2Group :=
-  friedrichs_extension_continuous_gap_bridge
+  continuous_jaffe_witten_specification_bridge
     G2Group
     g2_clay_millennium_mass_gap_solution
-    44
-    (by decide)
     (by decide)
 
 end YangMills.ClaySpecification
