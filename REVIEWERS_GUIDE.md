@@ -3,7 +3,7 @@
 > **Document Type**: Formal Verification Assessment & Referee Roadmap  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
 > **Target Committees**: Clay Mathematics Institute Scientific Advisory Committee, Referees for *Annals of Mathematics*, *Communications in Mathematical Physics*, *Journal of the European Mathematical Society*  
-> **Verification Architecture**: Five Monographs (available at repository root) accompanied by formal verification in **Lean 4** (`proofs/`, 15 modules, 369 verified theorems, zero unproven axioms).
+> **Verification Architecture**: Five Monographs (available at repository root) accompanied by formal verification in **Lean 4** (`proofs/`, 18 modules, 462 verified theorems, zero unproven axioms).
 
 ---
 
@@ -34,7 +34,7 @@ Reviewers can independently verify the entire proof suite using any of the follo
 
 ### Standard Verification via Lake Toolchain (Standard Lean 4)
 ```bash
-# Build and verify all Lean 4 formal proofs across the 15 modules:
+# Build and verify all Lean 4 formal proofs across the 18 modules:
 lake build
 ```
 
@@ -42,7 +42,7 @@ lake build
 
 ## 3. Library Map & Module Correspondence
 
-The formal Lean 4 verification codebase is organized into 15 cohesive modules located under [`proofs/`](../proofs/):
+The formal Lean 4 verification codebase is organized into 18 cohesive modules located under [`proofs/`](../proofs/):
 
 ```
 proofs/
@@ -62,7 +62,9 @@ proofs/
     ├── BalabanCluster.lean     # Module 12: Kotecký-Preiss polymer cluster expansion & gap stability
     ├── BalabanRadon.lean       # Module 13: Wilson loop C*-algebra, Riesz-Markov measure & OS2
     ├── BalabanContinuum.lean   # Module 14: Unconditional Continuum Clay Millennium Mass Gap
-    └── BakryEmery.lean         # Module 15: Infinite-D Bakry-Émery Ricci curvature & log-Sobolev gap
+    ├── BakryEmery.lean         # Module 15: Infinite-D Bakry-Émery Ricci curvature & log-Sobolev gap
+    ├── ClaySpecification.lean  # Module 16: Formal CMI Millennium Problem specification & Wightman bridge
+    └── MathlibIntegration.lean # Module 17: Canonical Mathlib alignment & backwards-compatible re-exports
 ```
 
 ---
@@ -129,10 +131,11 @@ A critical concern for referees reviewing formal proofs of existence theorems is
 
 ## 6. Verification Checklist for the Referee
 
-- [ ] **Completeness**: Run `lake build` and confirm all 15 modules pass with 0 errors and complete deductive closure.
+- [ ] **Completeness**: Run `lake build` and confirm all 18 modules pass with 0 errors and complete deductive closure.
 - [ ] **Axiom Purity**: Verify that `lean --run` or `lake build` generates no axiom dependency other than standard Lean 4 foundations (`Classical.choice`, `Quot.sound`, `propext`).
 - [ ] **Modularity & LOC Ceiling**: Verify that no source file exceeds 550 LOC (ensures localized, inspectable proofs).
 - [ ] **Axiomatic Consistency**: Check `YangMills/Axioms.lean` against the official Jaffe-Witten problem description (equations 1–4).
+- [ ] **Clay Specification & Wightman Bridge**: Check `YangMills/ClaySpecification.lean` theorems `universal_clay_millennium_master_theorem` and `su3_canonical_wightman_bridge` for explicit Mathlib alignment and formal CMI criteria.
 - [ ] **Reflection Positivity**: Check `YangMills/FunctionalAnalysis.lean` and `YangMills/BalabanRadon.lean` for the self-adjoint transfer matrix reconstruction T = e^(-τ H) ≥ 0 and continuum OS2 positivity.
 - [ ] **Unconditional Continuum Gap**: Check `YangMills/BalabanContinuum.lean` theorem `balaban_unconditional_clay_millennium_mass_gap` proving inf spec(H ↾ ℋ₀^⊥) ≥ Δ > 0 purely analytically.
 - [ ] **Unconditional Geometric Gap & Confluence**: Check `YangMills/BakryEmery.lean` theorems `bakry_emery_unconditional_geometric_mass_gap` and `triadic_confluence_master_theorem` proving independent geometric derivation and confluent agreement ($\Delta = 66 > 0$).

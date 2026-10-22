@@ -2,7 +2,7 @@
 
 > **Document Type**: Architectural Blueprint & Traceability Matrix  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
-> **Lean 4 Status**: 15 modules, 369 theorems, zero unproven axioms.
+> **Lean 4 Status**: 18 modules, 462 theorems, zero unproven axioms.
 
 ---
 
@@ -198,9 +198,9 @@ A detailed structural analysis explaining why classical fluid mechanics analogie
 
 ## 5. Verification Metrics & Code Hygiène
 
-- **Total Proof Files**: 16 (1 master entrypoint + 15 modules).
-- **Total Lines of Code**: 3,368 LOC (Average: 210 LOC per file, Maximum: 473 LOC, all strictly < 550 LOC).
-- **Total Verified Theorems**: 369 theorems.
+- **Total Proof Files**: 19 (1 master entrypoint + 18 modules).
+- **Total Lines of Code**: 4,280 LOC (Average: 225 LOC per file, all strictly < 550 LOC, ceiling 600 LOC).
+- **Total Verified Theorems**: 462 theorems.
 - **Proof Completeness**: Strictly verified without incomplete tokens, sorrys, or gaps.
 - **Custom Axiom Declarations**: Strictly 0.
 - **Purely Constructive Tactics**: `rfl`, `omega`, `decide`, `refine`, `dsimp`, `constructor`.
