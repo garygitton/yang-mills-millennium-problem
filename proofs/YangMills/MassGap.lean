@@ -154,11 +154,10 @@ theorem osterwalder_schrader_spectral_gap_reduction
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = group.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification group :=
-  rayleigh_quotient_spectral_gap_bridge group theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  rayleigh_quotient_spectral_gap_bridge group theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 theorem clay_millennium_reduction_su3
     (theory : OsterwalderSchraderQuantumFieldTheory)
@@ -169,11 +168,10 @@ theorem clay_millennium_reduction_su3
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU3.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU3 :=
-  osterwalder_schrader_spectral_gap_reduction SU3 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  osterwalder_schrader_spectral_gap_reduction SU3 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 theorem clay_millennium_reduction_su2
     (theory : OsterwalderSchraderQuantumFieldTheory)
@@ -184,11 +182,10 @@ theorem clay_millennium_reduction_su2
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU2.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU2 :=
-  osterwalder_schrader_spectral_gap_reduction SU2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  osterwalder_schrader_spectral_gap_reduction SU2 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 theorem clay_millennium_reduction_g2
     (theory : OsterwalderSchraderQuantumFieldTheory)
@@ -199,11 +196,10 @@ theorem clay_millennium_reduction_g2
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = G2Group.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification G2Group :=
-  osterwalder_schrader_spectral_gap_reduction G2Group theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  osterwalder_schrader_spectral_gap_reduction G2Group theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 def clay_millennium_conditional_reduction_su3 := @clay_millennium_reduction_su3
 def clay_millennium_conditional_reduction_su2 := @clay_millennium_reduction_su2

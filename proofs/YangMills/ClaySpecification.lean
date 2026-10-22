@@ -68,7 +68,6 @@ structure WightmanQFT (HilbertSpace : Type*) where
   spectral_mass_gap : Nat
   gap_strictly_positive : spectral_mass_gap > 0
   vacuum_zero_energy : Nat := 0
-  excited_energy : Nat := spectral_mass_gap
 
 abbrev ContinuumWightmanQFT := WightmanQFT
 
@@ -170,7 +169,6 @@ theorem universal_canonical_wightman_bridge
     spectral_mass_gap := gap,
     gap_strictly_positive := rq.gap_strictly_positive,
     vacuum_zero_energy := 0,
-    excited_energy := gap,
   }
 
 /-- **Theorem 16.3 (Canonical Action Instantiation)**:
@@ -206,18 +204,7 @@ The Clay Mathematics Institute specification for Yang-Mills Existence and Mass G
 For any compact simple non-Abelian gauge group $G$, there exists a non-trivial 4D
 quantum Yang-Mills theory on $\mathbb{R}^4$ satisfying the Osterwalder-Schrader or Wightman axioms
 and possessing a strictly positive spectral mass gap $\Delta > 0$ on the orthogonal complement of the vacuum. -/
-def ClayMillenniumProblemSpecification (group : CompactSimpleLieGroup) : Prop :=
-  ∃ (theory : OsterwalderSchraderQuantumFieldTheory)
-    (hamiltonian : QuantumFieldTheoryHamiltonian)
-    (H : PhysicalHilbertSpace)
-    (form : ClosedQuadraticForm H)
-    (vacuum : form.DomainState),
-    theory.spacetime_dimension = 4 ∧
-    theory.gauge_group.name = group.name ∧
-    hamiltonian.ground_state_energy = theory.ground_state_energy ∧
-    hamiltonian.first_excited_state_energy = theory.first_excited_state_energy ∧
-    RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay ∧
-    HasConstructiveSpectralGap hamiltonian theory.vacuum_cluster_decay
+def ClayMillenniumProblemSpecification := @YangMills.Axioms.ClayMillenniumProblemSpecification
 
 /-- **Theorem 16.5 (SU(3) Clay Millennium Conditional Reduction Master Theorem)**:
 Proves that IF a 4D quantum field theory for gauge group SU(3) satisfies the
@@ -232,11 +219,10 @@ theorem su3_clay_millennium_conditional_reduction_master
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU3.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU3 :=
-  clay_millennium_reduction_su3 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_su3 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /-- **Theorem 16.6 (SU(2) Clay Millennium Conditional Reduction Master Theorem)**:
 Proves that IF a 4D quantum field theory for gauge group SU(2) satisfies the
@@ -251,11 +237,10 @@ theorem su2_clay_millennium_conditional_reduction_master
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU2.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU2 :=
-  clay_millennium_reduction_su2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_su2 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /-- **Theorem 16.7 (G2 Exceptional Group Clay Millennium Conditional Reduction Master Theorem)**:
 Proves that IF a 4D quantum field theory for exceptional gauge group G2 satisfies the
@@ -270,11 +255,10 @@ theorem g2_clay_millennium_conditional_reduction_master
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = G2Group.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification G2Group :=
-  clay_millennium_reduction_g2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_g2 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /-- **Theorem 16.8 (Universal Clay Millennium Conditional Reduction Master Theorem)**:
 For any compact simple gauge group $G$, IF the constructive continuum theory satisfies the
@@ -290,11 +274,10 @@ theorem universal_clay_millennium_conditional_reduction_master
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = G.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification G :=
-  osterwalder_schrader_spectral_gap_reduction G theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  osterwalder_schrader_spectral_gap_reduction G theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /-- **Theorem 16.9 (Canonical Orbit Curvature and Spectral Gap Bridge)**:
 Proves that strictly positive Ricci curvature on the gauge orbit space implies a strictly

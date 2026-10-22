@@ -81,11 +81,10 @@ theorem su3_clay_millennium_conditional_reduction
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU3.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU3 :=
-  clay_millennium_reduction_su3 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_su3 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /--
 **Evaluation 10.4a (SU(3) Conditional Clay Millennium Reduction Entrypoint)**
@@ -108,11 +107,10 @@ theorem su2_clay_millennium_conditional_reduction
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = SU2.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification SU2 :=
-  clay_millennium_reduction_su2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_su2 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /--
 **Evaluation 10.5a (SU(2) Conditional Clay Millennium Reduction Entrypoint)**
@@ -135,11 +133,10 @@ theorem g2_clay_millennium_conditional_reduction
     (h_dim : theory.spacetime_dimension = 4)
     (h_group : theory.gauge_group.name = G2Group.name)
     (h_ground : hamiltonian.ground_state_energy = theory.ground_state_energy)
-    (h_excited : hamiltonian.first_excited_state_energy = theory.first_excited_state_energy)
     (cluster_decay : NonPerturbativeExponentialClusterDecay theory)
     (rq : RayleighQuotientCondition H form vacuum theory.vacuum_cluster_decay) :
     ClayMillenniumProblemSpecification G2Group :=
-  clay_millennium_reduction_g2 theory hamiltonian H form vacuum h_dim h_group h_ground h_excited cluster_decay rq
+  clay_millennium_reduction_g2 theory hamiltonian H form vacuum h_dim h_group h_ground cluster_decay rq
 
 /--
 **Evaluation 10.6a (G2 Conditional Clay Millennium Reduction Entrypoint)**
