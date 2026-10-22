@@ -138,7 +138,8 @@ theorem su2_bracket_t2_t1_exact : su2_bracket su2_t2 su2_t1 = { c1 := 0, c2 := 0
 
 theorem su2_is_constructively_non_abelian :
     ∃ (X Y : Su2LieAlgebraElement), su2_bracket X Y ≠ su2_zero := by
-  exact ⟨su2_t1, su2_t2, by decide⟩
+  have h_ne : su2_bracket su2_t1 su2_t2 ≠ su2_zero := by decide
+  exact ⟨su2_t1, su2_t2, h_ne⟩
 
 def su2_add (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement := {
   c1 := X.c1 + Y.c1,
@@ -224,7 +225,8 @@ theorem su3_bracket_t1_t2_exact : su3_isospin_bracket su3_t1 su3_t2 = su3_t3 := 
 
 theorem su3_is_constructively_non_abelian :
     ∃ (X Y : Su3LieAlgebraElement), su3_isospin_bracket X Y ≠ su3_zero := by
-  exact ⟨su3_t1, su3_t2, by decide⟩
+  have h_ne : su3_isospin_bracket su3_t1 su3_t2 ≠ su3_zero := by decide
+  exact ⟨su3_t1, su3_t2, h_ne⟩
 
 def HasNonAbelianLieAlgebra (group : CompactSimpleLieGroup) : Prop :=
   group.dimension ≥ 3 ∧ group.casimir_adjoint ≥ 2 ∧
@@ -233,11 +235,21 @@ def HasNonAbelianLieAlgebra (group : CompactSimpleLieGroup) : Prop :=
 
 theorem su3_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU3 := by
   dsimp [HasNonAbelianLieAlgebra, SU3]
-  refine ⟨by decide, by decide, fun h => by contradiction, fun _ => su3_is_constructively_non_abelian⟩
+  have h_dim : (8 : Nat) ≥ 3 := by decide
+  have h_cas : (3 : Nat) ≥ 2 := by decide
+  refine ⟨h_dim, h_cas, fun h => by contradiction, fun _ => su3_is_constructively_non_abelian⟩
 
 theorem su2_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra SU2 := by
   dsimp [HasNonAbelianLieAlgebra, SU2]
-  refine ⟨by decide, by decide, fun _ => su2_is_constructively_non_abelian, fun h => by contradiction⟩
+  have h_dim : (3 : Nat) ≥ 3 := by decide
+  have h_cas : (2 : Nat) ≥ 2 := by decide
+  refine ⟨h_dim, h_cas, fun _ => su2_is_constructively_non_abelian, fun h => by contradiction⟩
+
+theorem g2_has_non_abelian_lie_algebra : HasNonAbelianLieAlgebra G2Group := by
+  dsimp [HasNonAbelianLieAlgebra, G2Group]
+  have h_dim : (14 : Nat) ≥ 3 := by decide
+  have h_cas : (4 : Nat) ≥ 2 := by decide
+  refine ⟨h_dim, h_cas, fun h => by contradiction, fun h => by contradiction⟩
 
 /-- **Definition 1.4 (Euclidean Spacetime Reflection)**:
 Reflection about the temporal hyperplane $\theta(x^0, \vec{x}) = (-x^0, \vec{x})$. -/
