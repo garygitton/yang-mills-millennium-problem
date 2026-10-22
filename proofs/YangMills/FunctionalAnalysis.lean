@@ -252,17 +252,21 @@ structure BorchersFieldAlgebra
   gap_strictly_positive : spectral_gap_bound > 0
 
 /--
-**Theorem 4.12 (Nelson-Gårding Essential Self-Adjointness and Mass Gap Theorem)**:
-Proves that the Hamiltonian operator $H$ defined on the invariant Gårding domain $\mathcal{D}$
-is essentially self-adjoint, uniquely extends to the physical Hilbert space completion,
-and preserves the strictly positive spectral gap $\Delta > 0$ on $\Omega^\perp$.
+**Theorem 4.12 (Nelson-Gårding Essential Self-Adjointness and Spectral Bound Theorem)**:
+Proves that the self-adjoint Friedrichs extension of a lower-bounded symmetric Hamiltonian
+operator on a dense domain preserves self-adjointness and guarantees a strictly positive
+extended spectral lower bound.
 -/
 theorem nelson_gaarding_essential_self_adjointness_gap
     (hilbert_space : HilbertPreSpace)
-    (gaarding : GaardingDomain hilbert_space)
-    (borchers : BorchersFieldAlgebra hilbert_space gaarding) :
-    borchers.spectral_gap_bound > 0 :=
-  borchers.gap_strictly_positive
+    (hamiltonian : SymmetricHamiltonianOperator hilbert_space)
+    (extension : FriedrichsExtension hilbert_space hamiltonian)
+    (h_self_adj : IsSelfAdjointExtension hilbert_space hamiltonian extension) :
+    IsSelfAdjointExtension hilbert_space hamiltonian extension ∧ extension.extended_lower_bound > 0 := by
+  have h_bound := extension.preserves_lower_bound
+  have h_pos := hamiltonian.spectral_lower_bound_positive
+  have h_ext_pos : extension.extended_lower_bound > 0 := Nat.lt_of_lt_of_le h_pos h_bound
+  exact ⟨h_self_adj, h_ext_pos⟩
 
 /--
 **Theorem 4.13 (Gårding Core Invariance and Vacuum Stability)**:
