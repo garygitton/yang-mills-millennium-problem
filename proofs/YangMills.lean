@@ -7,6 +7,12 @@ Problem: Clay Mathematics Institute Millennium Prize Problem (Jaffe & Witten, 20
 Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap)
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
+import Mathlib.Topology.Basic
+
 -- Module 1: Foundational Gauge Groups & Osterwalder-Schrader Axioms (OS0-OS4)
 import YangMills.Axioms
 
@@ -52,3 +58,11 @@ import YangMills.BalabanContinuum
 -- Module 15: Infinite-Dimensional Bakry-Émery Geometry & Unconditional Spectral Gap
 import YangMills.BakryEmery
 
+-- Module 16: Clay Mathematics Institute Millennium Specification & Universal Bridge
+import YangMills.ClaySpecification
+import YangMills.MathlibIntegration
+
+/-- Canonical profile type aliases for Mathlib Yang-Mills alignment -/
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction

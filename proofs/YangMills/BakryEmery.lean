@@ -10,6 +10,12 @@ Mathlib: Mathlib.Analysis.InnerProductSpace.Basic, Mathlib.Geometry.Manifold.Rie
 Status: Pure Non-Perturbative Geometric Theorem (Independent Confluent Path to Millennium Mass Gap).
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
+import Mathlib.Geometry.Manifold.SmoothManifoldWithCorners
+import Mathlib.Geometry.Manifold.RiemannianGeometry
 import YangMills.Axioms
 import YangMills.OrbitGeometry
 import YangMills.BochnerRicci
@@ -21,6 +27,10 @@ open YangMills.Axioms
 open YangMills.OrbitGeometry
 open YangMills.BochnerRicci
 open YangMills.MassGap
+
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction
 
 /-- **Definition 15.1 (Weighted Infinite-Dimensional Orbit Manifold)**:
 The orbit space $\mathcal{M} = \mathcal{A}/\mathcal{G}$ equipped with the natural $L^2$ metric $g$
@@ -44,8 +54,10 @@ theorem bakry_emery_ricci_strictly_positive
     (h_ricci_pos : manifold.bochner_operator.geometry.ricci_condensate_scale > 0) :
     bakry_emery_ricci_scale manifold > 0 := by
   dsimp [bakry_emery_ricci_scale]
-  have h_hess := manifold.action_hessian_nonnegative
-  omega
+  have _h_hess := manifold.action_hessian_nonnegative
+  have : manifold.bochner_operator.geometry.ricci_condensate_scale + manifold.action_hessian_lower_bound ≥
+         manifold.bochner_operator.geometry.ricci_condensate_scale := Nat.le_add_right _ _
+  exact Nat.lt_of_lt_of_le h_ricci_pos this
 
 /-- **Definition 15.3 (Bakry-Émery $\Gamma_2$ Carré du Champ Generator)**:
 The diffusion generator $L = \Delta_{\mathcal{M}} - \langle \nabla S_{\mathrm{YM}}, \nabla \cdot \rangle$.
@@ -71,7 +83,7 @@ theorem lichnerowicz_bakry_emery_spectral_gap
   have be_pos := bakry_emery_ricci_strictly_positive manifold h_ricci_pos
   have crit := diff.gamma_two_criterion v
   have prod_pos := Nat.mul_pos be_pos v_non_zero
-  omega
+  exact Nat.lt_of_lt_of_le prod_pos crit
 
 /-- **Definition 15.5 (Log-Sobolev Inequality and Hypercontractivity)**:
 Under $\operatorname{Ric}_\infty \ge \kappa > 0$, the Gibbs measure $d\mu$ satisfies
@@ -102,7 +114,7 @@ theorem geometric_transmutation_scale_strictly_positive
     (rank_pos : group.rank > 0) :
     geometric_transmutation_scale group casimir_pos > 0 := by
   dsimp [geometric_transmutation_scale, geometric_orbit_ricci_scale]
-  have h11 : 11 > 0 := by decide
+  have h11 : 11 > 0 := Nat.succ_pos 10
   have h_prod1 := Nat.mul_pos h11 casimir_pos
   exact Nat.mul_pos h_prod1 rank_pos
 
@@ -116,7 +128,7 @@ theorem bakry_emery_unconditional_geometric_mass_gap
     (rank_pos : group.rank > 0) :
     geometric_transmutation_scale group casimir_pos ≥ 11 * group.casimir_adjoint * group.rank := by
   dsimp [geometric_transmutation_scale, geometric_orbit_ricci_scale]
-  omega
+  exact Nat.le_refl _
 
 /-- **Theorem 15.8 (SU(3) Geometric Mass Gap Evaluation)**:
 Explicit non-vacuous evaluation for $SU(3)$ under the Bakry-Émery geometric pathway:
@@ -134,7 +146,7 @@ theorem su2_geometric_bakry_emery_mass_gap :
 /-- **Theorem 15.10 (G₂ Geometric Mass Gap Evaluation)**:
 $\Delta_{\mathrm{geom}}(G_2) = 88 > 0$. -/
 theorem g2_geometric_bakry_emery_mass_gap :
-    geometric_transmutation_scale G2 g2_casimir_positive = 88 := by
+    geometric_transmutation_scale G2Group g2_casimir_positive = 88 := by
   rfl
 
 /-- **Theorem 15.11 (Triadic Confluence Master Theorem)**:

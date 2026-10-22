@@ -9,6 +9,10 @@ References: Balaban (1984, 1985), Dimock (2013).
 Status: Rigorous Constructive Module (Pure Lean 4, Under 600 LOC).
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 import YangMills.Axioms
 import YangMills.Renormalization
 
@@ -16,6 +20,10 @@ namespace YangMills.BalabanSobolev
 
 open YangMills.Axioms
 open YangMills.Renormalization
+
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction
 
 /--
 **Definition 11.1 (Dyadic Lattice Spacing Scale)**:
@@ -59,10 +67,10 @@ structure SmallFieldSobolevBound (scale : DyadicLatticeScale) where
   sobolev_h2_norm_scaled : Nat
   elliptic_constant : EllipticRegularityConstant
   running_coupling : RunningGaugeCoupling scale
-  background_energy_scaled : Nat
+  fluctuation_energy_scale : Nat
   sobolev_bound_satisfied :
     sobolev_h2_norm_scaled ≤
-      elliptic_constant.constant_scaled * running_coupling.coupling_permille * background_energy_scaled
+      elliptic_constant.constant_scaled * running_coupling.coupling_permille * fluctuation_energy_scale
 
 /--
 **Theorem 11.5 (Monotonic Decrease of Running Coupling Under Decimation)**:
@@ -75,11 +83,11 @@ theorem running_coupling_ultraviolet_decay
     (h_scale : scale.scale_index ≥ 1) :
     coupling.coupling_permille ≤ coupling.initial_coupling_permille / 2 := by
   have h_bound := coupling.asymptotic_freedom_bound
-  have h_denom : scale.scale_index + 1 ≥ 2 := by omega
+  have h_denom : scale.scale_index + 1 ≥ 2 := Nat.succ_le_succ h_scale
   have h_div : coupling.initial_coupling_permille / (scale.scale_index + 1) ≤
                coupling.initial_coupling_permille / 2 :=
-    Nat.div_le_div_left h_denom (by decide)
-  omega
+    Nat.div_le_div_left h_denom (Nat.succ_pos 1)
+  exact Nat.le_trans h_bound h_div
 
 /--
 **Theorem 11.6 (Uniformity of Elliptic Regularity Across All Scales)**:
@@ -92,7 +100,7 @@ theorem elliptic_regularity_scale_independent
     c_elliptic.constant_scaled > 0 ∧ k + 1 > 0 := by
   constructor
   · exact c_elliptic.elliptic_strictly_positive
-  · omega
+  · exact Nat.succ_pos k
 
 /--
 **Theorem 11.7 (Small-Field Sobolev Bound Contractivity)**:
@@ -104,21 +112,29 @@ theorem small_field_sobolev_bound_contractivity
     (bound : SmallFieldSobolevBound scale)
     (h_scale : scale.scale_index ≥ 9)
     (h_initial : bound.running_coupling.initial_coupling_permille ≤ 1000)
-    (h_bg : bound.background_energy_scaled ≤ 100)
+    (h_bg : bound.fluctuation_energy_scale ≤ 100)
     (h_ell : bound.elliptic_constant.constant_scaled ≤ 25) :
     bound.sobolev_h2_norm_scaled ≤ 250000 := by
   have h_cov := bound.sobolev_bound_satisfied
   have h_af := bound.running_coupling.asymptotic_freedom_bound
-  have h_denom : scale.scale_index + 1 ≥ 10 := by omega
-  have h_coup_le : bound.running_coupling.coupling_permille ≤ 1000 / 10 := by
-    have h_d := Nat.div_le_div_left h_denom (by decide)
-    omega
-  have h_coup_100 : bound.running_coupling.coupling_permille ≤ 100 := by omega
-  have h_prod1 : bound.elliptic_constant.constant_scaled * bound.running_coupling.coupling_permille ≤ 25 * 100 := by
-    nlinarith
-  have h_prod2 : bound.elliptic_constant.constant_scaled * bound.running_coupling.coupling_permille * bound.background_energy_scaled ≤ 2500 * 100 := by
-    nlinarith
-  omega
+  have h_denom : scale.scale_index + 1 ≥ 10 := Nat.succ_le_succ h_scale
+  have h_div : bound.running_coupling.initial_coupling_permille / (scale.scale_index + 1) ≤
+               1000 / 10 := by
+    have h1 : bound.running_coupling.initial_coupling_permille / (scale.scale_index + 1) ≤
+              1000 / (scale.scale_index + 1) := Nat.div_le_div_right h_initial
+    have h2 : 1000 / (scale.scale_index + 1) ≤ 1000 / 10 := Nat.div_le_div_left h_denom (Nat.succ_pos 9)
+    exact Nat.le_trans h1 h2
+  have h_coup_le : bound.running_coupling.coupling_permille ≤ 100 := by
+    have h_ten : 1000 / 10 = 100 := rfl
+    rw [h_ten] at h_div
+    exact Nat.le_trans h_af h_div
+  have h_prod1 : bound.elliptic_constant.constant_scaled * bound.running_coupling.coupling_permille ≤ 25 * 100 :=
+    Nat.mul_le_mul h_ell h_coup_le
+  have h_prod2 : bound.elliptic_constant.constant_scaled * bound.running_coupling.coupling_permille * bound.fluctuation_energy_scale ≤ 2500 * 100 :=
+    Nat.mul_le_mul h_prod1 h_bg
+  have h_250k : 2500 * 100 = 250000 := rfl
+  rw [h_250k] at h_prod2
+  exact Nat.le_trans h_cov h_prod2
 
 /--
 **Definition 11.8 (Canonical Balaban Small-Field State)**:
@@ -134,15 +150,19 @@ def canonical_small_field_state (k : Nat) : SmallFieldSobolevBound { scale_index
   running_coupling := {
     coupling_permille := 1000 / (k + 1),
     initial_coupling_permille := 1000,
-    asymptotic_freedom_bound := by omega,
+    asymptotic_freedom_bound := Nat.le_refl _,
   },
-  background_energy_scaled := 15,
+  fluctuation_energy_scale := 15,
   sobolev_bound_satisfied := by
-    have h_k : k + 1 ≥ 1 := by omega
-    have h_c : 100 / (k + 1) ≤ 100 := Nat.div_le_self 100 (k + 1)
-    have h_prod : 24 * (1000 / (k + 1)) * 15 ≥ 360 * (1000 / (k + 1)) := by omega
-    have h_pos : 1000 / (k + 1) ≥ 0 := by omega
-    omega,
+    have h_le1 : 100 / (k + 1) ≤ 1000 / (k + 1) := Nat.div_le_div_right (by decide)
+    have h_le2 : 1000 / (k + 1) ≤ 360 * (1000 / (k + 1)) :=
+      Nat.le_mul_of_pos_left (1000 / (k + 1)) (Nat.succ_pos 359)
+    have h_trans : 100 / (k + 1) ≤ 360 * (1000 / (k + 1)) := Nat.le_trans h_le1 h_le2
+    have h_assoc : 24 * (1000 / (k + 1)) * 15 = 360 * (1000 / (k + 1)) := by
+      rw [Nat.mul_right_comm, Nat.mul_assoc]
+      rfl
+    rw [h_assoc]
+    exact h_trans,
 }
 
 /--

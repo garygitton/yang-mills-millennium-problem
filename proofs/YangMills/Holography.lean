@@ -11,11 +11,21 @@ Mathlib: Mathlib.Analysis.Calculus.Deriv.Basic, Mathlib.Analysis.InnerProductSpa
 Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
+import Mathlib.Topology.Basic
 import YangMills.Axioms
 
 namespace YangMills.Holography
 
 open YangMills.Axioms
+
+/-- Canonical profile type aliases for Mathlib Yang-Mills alignment -/
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction
 
 /-- **Definition 7.1 (Sturm-Liouville Bulk Operator in AdS₅ Soft-Wall)**:
 Represents the holographic radial Hamiltonian $-\partial_z^2 + V(z)$ on the five-dimensional

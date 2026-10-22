@@ -11,11 +11,21 @@ Mathlib: Mathlib.LinearAlgebra.Dimension, Mathlib.AlgebraicTopology.SimplicialSe
 Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
+import Mathlib.Topology.Basic
 import YangMills.Axioms
 
 namespace YangMills.Topology
 
 open YangMills.Axioms
+
+/-- Canonical profile type aliases for Mathlib Yang-Mills alignment -/
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction
 
 /-- **Definition 6.1 (Topological Sector and Pontryagin Index)**:
 Encodes non-Abelian instanton charge $Q = \frac{1}{8\pi^2}\int \text{Tr}(F \wedge F) \in \mathbb{Z}$

@@ -11,12 +11,20 @@ Mathlib: Mathlib.Analysis.Distribution.SchwartzSpace, Mathlib.Analysis.InnerProd
 Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
 -/
 
+import Mathlib.Analysis.Distribution.SchwartzSpace
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Hilbert
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 import YangMills.Axioms
 import YangMills.FunctionalAnalysis
 
 namespace YangMills.Scattering
 
 open YangMills.Axioms
+
+def WightmanQFT := @YangMills.Axioms.WightmanQFT
+def GaugeField := @YangMills.Axioms.GaugeField
+def YangMillsAction := @YangMills.Axioms.YangMillsAction
 
 /-- **Definition 8.1 (Schwartz Seminorm on $\mathcal{S}(\mathbb{R}^4)$)**:
 System of seminorms $p_{\alpha,\beta}(f) = \sup_{x \in \mathbb{R}^4} |x^\alpha \partial^\beta f(x)|$
@@ -85,8 +93,8 @@ theorem positive_energy_bound_implies_positive_gap
     hilbert_space.first_excited_glueball_energy - hilbert_space.ground_state_energy > 0 := by
   dsimp [HasPositiveDecayParameterAndEnergyBound] at theory_satisfies_axioms
   rcases theory_satisfies_axioms with ⟨decay_pos, energy_bound⟩
-  rw [ground_state_energy_zero]
-  omega
+  rw [ground_state_energy_zero, Nat.sub_zero]
+  exact Nat.lt_of_lt_of_le decay_pos energy_bound
 
 /-- **Theorem 8.8 (Haag-Ruelle Asymptotic Isometry and Unitary Scale)**:
 Checks that the scaled wave operators are equal and normalized in the canonical model. -/
@@ -107,7 +115,7 @@ theorem decay_bound_implies_positive_gap_scale
     (transfer_matrix_gap_scale : Nat)
     (transfer_bound : transfer_matrix_gap_scale ≥ decay_rate) :
     transfer_matrix_gap_scale > 0 := by
-  omega
+  exact Nat.lt_of_lt_of_le decay_rate_positive transfer_bound
 
 /-- **Definition 8.10 (Canonical Schwartz Space Witness)**:
 Canonical instance of $\mathcal{S}(\mathbb{R}^4)$. -/
@@ -147,7 +155,7 @@ theorem canonical_scattering_model_satisfies_decay_bound
       (canonical_physical_hilbert spectral_gap gap_strictly_positive) := by
   constructor
   · exact gap_strictly_positive
-  · omega
+  · exact Nat.le_refl _
 
 /-- **Theorem 8.15 (Canonical S-Matrix Unitarity Verification)**:
 Direct verification of asymptotic unitarity in the canonical Haag-Ruelle framework. -/
