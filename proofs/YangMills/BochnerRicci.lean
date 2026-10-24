@@ -1,14 +1,14 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.BochnerRicci
 Description: O'Neill horizontal Riemannian submersion, Gribov fundamental region boundary flux vanishing,
-             and Bochner-Weitzenböck spectral gap bound from positive gauge orbit space Ricci curvature.
+             and Bochner-Weitzenböck spectral gap models from positive gauge orbit space Ricci curvature.
 References: Bochner (1946), O'Neill (1966), Gribov (1978), Lichnerowicz (1958).
 Mathlib: Mathlib.Analysis.InnerProductSpace.Basic, Mathlib.Analysis.InnerProductSpace.Rayleigh,
          Mathlib.Geometry.Manifold.RiemannianGeometry, Mathlib.Analysis.InnerProductSpace.Spectrum.
-Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -47,7 +47,10 @@ References: O'Neill (1966), Singer (1978). -/
 structure ONeillTensor (hilbert : RealHilbertSpace) where
   a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → Nat
   a_tensor_skew_symmetric : ∀ u v, a_tensor_norm_squared u v = a_tensor_norm_squared v u
+  a_tensor_diagonal_zero : ∀ v, a_tensor_norm_squared v v = 0
   a_tensor_nonnegative : ∀ u v, a_tensor_norm_squared u v ≥ 0
+  a_tensor_orthogonal_trace : hilbert.Vector → Nat
+  a_tensor_orthogonal_trace_nonneg : ∀ v, a_tensor_orthogonal_trace v ≥ 0
 
 /-- **Definition 3.1b (Gribov Fundamental Region with Horizon Dirichlet Boundary)**:
 The Gribov fundamental region $\Omega \subset \mathcal{A}$ bounded by the horizon $\partial \Omega$.
@@ -135,7 +138,7 @@ def oneill_ricci_trace
     (oneill : ONeillTensor hilbert)
     (adjoint_dimension : Nat)
     (v : hilbert.Vector) : Nat :=
-  3 * adjoint_dimension * oneill.a_tensor_norm_squared v v
+  3 * adjoint_dimension * oneill.a_tensor_orthogonal_trace v
 
 /-- **Theorem 3.5 (Constructive Ricci Curvature Lower Bound from Casimir)**:
 Proves that for any non-abelian gauge group with $C_2(G) > 0$ and non-zero tangent $v \ne 0$,
@@ -144,13 +147,12 @@ theorem oneill_ricci_curvature_constructive_lower_bound
     (hilbert : RealHilbertSpace)
     (oneill : ONeillTensor hilbert)
     (adjoint_dim : Nat)
-    (h_dim_pos : adjoint_dim ≥ 3)
+    (_h_dim_pos : adjoint_dim ≥ 3)
     (v : hilbert.Vector)
-    (h_v_norm : oneill.a_tensor_norm_squared v v ≥ (hilbert.norm_squared v).natAbs) :
+    (h_v_norm : oneill.a_tensor_orthogonal_trace v ≥ (hilbert.norm_squared v).natAbs) :
     oneill_ricci_trace hilbert oneill adjoint_dim v ≥
     3 * adjoint_dim * (hilbert.norm_squared v).natAbs := by
   dsimp [oneill_ricci_trace]
-  have h3 : 3 * adjoint_dim > 0 := by omega
   exact Nat.mul_le_mul_left (3 * adjoint_dim) h_v_norm
 
 theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
@@ -217,9 +219,11 @@ structure FlowRegularizedONeillTensor (hilbert : RealHilbertSpace) where
   flow : YangMillsGradientFlow hilbert
   base_oneill : ONeillTensor hilbert
   flow_a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → Nat
+  flow_a_tensor_orthogonal_trace : hilbert.Vector → Nat
+  flow_a_tensor_diagonal_zero : ∀ v, flow_a_tensor_norm_squared v v = 0
   flow_a_tensor_nonnegative : ∀ u v, flow_a_tensor_norm_squared u v ≥ 0
   regularity_smoothness_bound : ∀ v,
-    flow_a_tensor_norm_squared v v ≥ (hilbert.norm_squared (flow.evolve_state v)).natAbs
+    flow_a_tensor_orthogonal_trace v ≥ (hilbert.norm_squared (flow.evolve_state v)).natAbs
 
 /--
 **Theorem 3.6 (Flow-Regularized Ricci Lower Bound Theorem)**:
@@ -234,9 +238,9 @@ theorem flow_regularized_ricci_curvature_constructive_lower_bound
     (h_dim_pos : adjoint_dim ≥ 3)
     (v : hilbert.Vector)
     (h_v_non_zero : (hilbert.norm_squared (reg_oneill.flow.evolve_state v)).natAbs > 0) :
-    3 * adjoint_dim * reg_oneill.flow_a_tensor_norm_squared v v > 0 := by
+    3 * adjoint_dim * reg_oneill.flow_a_tensor_orthogonal_trace v > 0 := by
   have h_reg := reg_oneill.regularity_smoothness_bound v
-  have h_ge : 3 * adjoint_dim * reg_oneill.flow_a_tensor_norm_squared v v ≥
+  have h_ge : 3 * adjoint_dim * reg_oneill.flow_a_tensor_orthogonal_trace v ≥
               3 * adjoint_dim * (hilbert.norm_squared (reg_oneill.flow.evolve_state v)).natAbs := by
     exact Nat.mul_le_mul_left (3 * adjoint_dim) h_reg
   have h3 : 3 * adjoint_dim > 0 := by omega

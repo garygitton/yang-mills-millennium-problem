@@ -1,14 +1,14 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.Topology
-Description: Non-trivial topological sectors, ADHM instanton moduli dimensions,
-             BPS action bounds, and uniform spectral mass gap stability across the theta-vacuum.
+Description: Non-trivial topological sector models, ADHM instanton moduli dimensions,
+             BPS action bounds, and theta-vacuum parameter models.
 References: Atiyah, Drinfeld, Hitchin, Manin (1978), Belavin, Polyakov, Schwartz, Tyupkin (1975), 't Hooft (1976).
 Mathlib: Mathlib.LinearAlgebra.Dimension, Mathlib.AlgebraicTopology.SimplicialSet,
          Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex.
-Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace

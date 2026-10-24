@@ -1,14 +1,14 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.OrbitGeometry
-Description: Gauge orbit space orbifold regularity, Palais slice transversality,
-             measure-zero reducible connections, and essential self-adjointness of orbit Laplacian.
+Description: Gauge orbit space orbifold regularity models, Palais slice transversality,
+             measure-zero reducible connections, and orbit Laplacian operator models.
 References: Palais (1961), Singer (1978), Uhlenbeck (1982).
 Mathlib: Mathlib.Geometry.Manifold.Submanifold, Mathlib.Geometry.Manifold.VectorBundle.Tangent,
          Mathlib.LinearAlgebra.Matrix.Determinant, Mathlib.Analysis.InnerProductSpace.Positive.
-Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -35,15 +35,15 @@ structure GaugeGroupStructure where
   dimension : Nat := 8
   rank : Nat := 2
   center_order : Nat := 3
-  has_finite_center : center_order > 0 := by decide
+  has_finite_center : center_order > 0
   lie_algebra_simple_roots : Nat := 2
-  has_simple_roots : lie_algebra_simple_roots > 0 := by decide
+  has_simple_roots : lie_algebra_simple_roots > 0
 
 structure SobolevConnectionSpace where
   spacetime_dimension : Nat := 4
   sobolev_regularity_index : Nat := 1
-  metric_positive_definite : spacetime_dimension = 4 := by rfl
-  regularity_at_least_one : sobolev_regularity_index ≥ 1 := by decide
+  metric_positive_definite : spacetime_dimension = 4
+  regularity_at_least_one : sobolev_regularity_index ≥ 1
 
 structure FaddeevPopovOperator where
   lowest_eigenvalue : Nat
@@ -69,9 +69,9 @@ structure ReducibleSubspaceMeasure where
 
 structure EssentialSelfAdjointLaplacian where
   sobolev_domain_regularity : Nat := 2
-  domain_is_regular : sobolev_domain_regularity ≥ 2 := by decide
+  domain_is_regular : sobolev_domain_regularity ≥ 2
   deficiency_index : Nat := 0
-  deficiency_zero : deficiency_index = 0 := by rfl
+  deficiency_zero : deficiency_index = 0
   spectral_gap_bound : Nat
 
 def IsOrbifoldRegular (connection : SobolevConnectionSpace) (reducible : ReducibleSubspaceMeasure) : Prop :=
@@ -115,7 +115,9 @@ theorem positive_lower_bound_implies_positive_gap
 
 def canonical_connection_space : SobolevConnectionSpace := {
   spacetime_dimension := 4,
-  sobolev_regularity_index := 1
+  sobolev_regularity_index := 1,
+  metric_positive_definite := rfl,
+  regularity_at_least_one := by decide,
 }
 
 def canonical_reducible_measure : ReducibleSubspaceMeasure := {
@@ -192,11 +194,11 @@ Popperian falsification: on the Gribov horizon boundary where the lowest Faddeev
 eigenvalue vanishes (λ₀ = 0), the effective determinant bound collapses identically to zero,
 proving that strict positivity holds if and only if the connection resides strictly inside the fundamental domain. -/
 theorem gribov_horizon_zero_eigenvalue_collapses_determinant
-    (lowest_eigenvalue : Nat)
-    (h_zero : lowest_eigenvalue = 0) :
-    lowest_eigenvalue * lowest_eigenvalue = 0 := by
-  rw [h_zero]
-  rfl
+    (slice : PalaisSliceChart)
+    (h_zero : slice.faddeev_popov.lowest_eigenvalue = 0) :
+    slice.slice_jacobian_determinant = 0 := by
+  dsimp [PalaisSliceChart.slice_jacobian_determinant, effective_determinant_bound]
+  rw [h_zero, Nat.zero_mul]
 
 def spectral_gap_preservation_under_orbifold_closure := @canonical_orbifold_regularity_certified
 

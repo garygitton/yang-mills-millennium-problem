@@ -26,6 +26,21 @@ In mathematical physics and constructive quantum field theory, the resolution of
 3. **Structural Obstructions & Heuristic Demarcation**:
    - For an analysis of why classical fluid/aerodynamic analogies (Moffatt helicity) and scalar symmetry breaking (Goldstone/Higgs) fail structurally in pure 4D gauge theory, consult the dedicated structural obstruction analysis in the companion analytical monographs (Volume IV & V).
 
+### 1.2 Epistemic Scope, Tooling Boundaries of Lean 4 & Search for Continuous Verification Frameworks
+
+> **Crucial Referee Clarification**:  
+> The Lean 4 formalization in this repository constitutes a **rigorous architectural blueprint and conditional reduction DAG** (`ConditionalReductionWithOpenObligations`). It verifies the deductive chain from the continuum Osterwalder-Schrader measure and multiscale cluster bounds to the Clay Millennium mass gap specification.
+> 
+> **However, Lean 4 (including Mathlib) does not currently possess the functional-analytic and geometric machinery required to formalize an unconditional, non-perturbative continuum proof from ground ZFC/CIC axioms.**  
+> Specifically, Lean 4 / Mathlib lacks:
+> 1. **Non-Gaussian Functional Integration**: No functional path integrals $\int \mathcal{D}A \, e^{-S(A)}$ on nuclear distribution spaces $\mathcal{S}'(\mathbb{R}^4)$ (absence of Minlos-Bochner theorem and non-Gaussian measure extensions).
+> 2. **Multiscale Renormalization Group (Bałaban-Besov Program)**: No dyadic block-spin decimations on localized Besov spaces $B_{p,q}^s$, nor inductive polymer activity contractions ($\rho < 1$).
+> 3. **Infinite-Dimensional Gauge Orbit Differential Geometry**: No Palais-Ebin slice theorems on $\mathcal{A}/\mathcal{G}$ or global analysis of the fundamental Gribov horizon $\partial\Omega$ in infinite dimensions.
+> 4. **Continuous Osterwalder-Schrader Reconstruction & Scattering**: No GNS physical Hilbert space reconstruction $\mathcal{H}$ from Euclidean Schwinger distributions with positive spectrum $H \ge 0$, nor Haag-Ruelle asymptotic scattering states.
+> 5. **Paradigm Gap (CIC vs Continuous Analysis)**: Lean 4's Calculus of Inductive Constructions introduces severe proof bureaucracy when handling limits of sequences of measures in distribution spaces.
+>
+> **Active Research**: The author is actively researching and seeking next-generation continuous formal verification tools (hybrid ITP/continuous CAS, specialized distribution-space provers, SMT-augmented continuous verifiers) specifically adapted to constructive field theory.
+
 ---
 
 ## 2. Sixty-Second Referee Quickstart
@@ -94,11 +109,11 @@ proofs/
 | **BalabanSobolev** | `balaban_elliptic_sobolev_h2_bound` | Theorem 4.12 | Uniform H² Sobolev bound across dyadic decimation scales $a_k$ |
 | **BalabanCluster** | `balaban_kotecky_preiss_expansion_convergent` | Theorem 4.15 | Kotecký-Preiss cluster expansion convergence ($\rho \cdot 3 < 1$) |
 | **BalabanRadon** | `balaban_riesz_markov_continuum_measure_exists` | Theorem 5.12 | Radon probability measure on Gelfand spectrum of Wilson loop C*-algebra |
-| **BalabanContinuum** | `balaban_unconditional_clay_millennium_mass_gap` | Theorem 9.25 | **Unconditional Master Millennium Theorem**: Pure analytical closure without simulation |
+| **BalabanContinuum** | `su3_tier3_conditional_clay_millennium_reduction` | Theorem 9.25 | **Continuum Reduction**: Proves non-perturbative continuum bridge implies Clay specification |
 | **BalabanContinuum** | `balaban_continuum_mass_gap_evaluation_su3` | Theorem 10.12 | Exact SU(3) continuum mass gap $\Delta = 66 > 0$ derived purely constructively |
 | **BakryEmery** | `bakry_emery_ricci_strictly_positive` | Theorem 1.14 | $\infty$-Bakry-Émery Ricci curvature $\mathrm{Ric}_\infty \ge \kappa_{\mathrm{geom}} > 0$ on weighted orbit space |
 | **BakryEmery** | `lichnerowicz_bakry_emery_spectral_gap` | Theorem 1.15 | $\Gamma_2$-criterion and Bochner formula imply spectral gap $\lambda_1(-L) \ge \kappa_{\mathrm{geom}} > 0$ |
-| **BakryEmery** | `bakry_emery_unconditional_geometric_mass_gap` | Theorem 1.16 | **Unconditional Geometric Master Theorem**: Mass gap $\Delta_{\mathrm{geom}} \ge \Lambda_{\mathrm{YM}} > 0$ independent of lattice decimation |
+| **BakryEmery** | `bakry_emery_geometric_mass_gap_lower_bound` | Theorem 1.16 | **Geometric Lower Bound**: Mass gap $\Delta_{\mathrm{geom}} \ge \Lambda_{\mathrm{YM}} > 0$ under positive Ricci curvature |
 | **BakryEmery** | `triadic_confluence_master_theorem` | Theorem 9.28 | **Triadic Confluence**: Bałaban multiscale, Bakry-Émery geometry, and holographic AdS$_5$ converge to $\Delta = 66 > 0$ |
 
 ---

@@ -1,10 +1,10 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Description: Master root library entrypoint for machine-checked formal verification.
 Problem: Clay Mathematics Institute Millennium Prize Problem (Jaffe & Witten, 2000)
-Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap)
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace

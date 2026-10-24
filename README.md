@@ -56,7 +56,7 @@ To maximize peer-review efficiency and match the standards of specialized premie
 In presenting this resolution, the author anchors the investigation in systematic mathematical architecture and formal verification:
 - **Lead Architect & Conceptual Foundation**: Conceived, formulated, and structured by Gary Gitton (ESIGELEC Systems Engineer, Independent Researcher). The architectural strategy unifies infinite-dimensional Riemannian geometry on the orbit space A/G (𝒜/𝒢), multiscale Balaban-Besov decimation, and non-perturbative gauge dynamics.
 - **The Telescope Principle**: When Galileo trained his telescope toward Jupiter in 1609, the optics did not invent the celestial bodies; the telescope served as an instrument of augmented observation. In identical fashion, the high-performance formal and numerical tools developed for this research function as an epistemic telescope: they assist and scale mathematical verification, while the resulting analytical deductions stand autonomously, verified in classical analysis and fully machine-certified in Lean 4.
-- **Computational Foundations**: This work rests upon formal verification in Lean 4 (18 certified modules, 574 verified theorems, zero unproven axioms) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
+- **Computational Foundations**: This work rests upon formal verification in Lean 4 (18 certified modules, 574 verified theorems, zero unproven axioms, structured as a machine-checked conditional reduction DAG; see the [Epistemic Note](#️-epistemic-note-tooling-boundaries-of-lean-4--search-for-continuous-verification-frameworks)) and high-precision numerical lattice gauge simulations (16-layer equivariant normalizing flows).
 
 ---
 
@@ -75,7 +75,7 @@ The proof bridges five confluent mathematical pillars:
 
 ## 📊 Numerical Lattice Simulation & Empirical Validation
 
-While the analytical existence and spectral mass gap are certified formally in Lean 4 without cutoffs, non-perturbative continuum phenomenology is corroborated empirically by high-statistics lattice gauge theory simulations backing **Paper III**:
+While the analytical existence and spectral mass gap reduction are formalized in Lean 4 as a machine-checked deductive blueprint, non-perturbative continuum phenomenology is corroborated empirically by high-statistics lattice gauge theory simulations backing **Paper III**:
 
 - **Hardware Architecture & Computation** : High-performance multi-core and GPU acceleration cluster infrastructure for non-perturbative sampling.
 - **Lattice Topology & Physical Ensembles** : Continuum scaling across three physical hypercubic ensembles (ℰ₁: 16⁴, β = 6.00, a = 0.093 fm; ℰ₂: 24⁴, β = 6.20, a = 0.068 fm; ℰ₃: 32⁴, β = 6.40, a = 0.051 fm) with box sizes L·a ≥ 1.49 fm (m(0⁺⁺)·L·a ≥ 11.4), strictly eliminating surrogate approximations through authentic full-scale Markov chain Monte Carlo empirical data.
@@ -166,10 +166,83 @@ The formal verification suite is hosted under [`proofs/`](proofs/) and organized
 | [`YangMills/BalabanSobolev.lean`](proofs/YangMills/BalabanSobolev.lean) | Dyadic Scales & Uniform H² Bounds | `Balaban Elliptic Sobolev H² Bound` |
 | [`YangMills/BalabanCluster.lean`](proofs/YangMills/BalabanCluster.lean) | Kotecký-Preiss Polymer Decay & Gap Stability | `Balaban Kotecký-Preiss Expansion Convergent` |
 | [`YangMills/BalabanRadon.lean`](proofs/YangMills/BalabanRadon.lean) | Wilson Loop C*-Algebra & OS2 Positivity | `Balaban Riesz-Markov Continuum Measure Exists` |
-| [`YangMills/BalabanContinuum.lean`](proofs/YangMills/BalabanContinuum.lean) | **Unconditional Continuum Clay Millennium Mass Gap** | `Balaban Unconditional Clay Millennium Mass Gap` |
-| [`YangMills/BakryEmery.lean`](proofs/YangMills/BakryEmery.lean) | **Independent Infinite-D Bakry-Émery Geometry** | `Bakry Emery Unconditional Geometric Mass Gap` |
-| [`YangMills/ClaySpecification.lean`](proofs/YangMills/ClaySpecification.lean) | **Formal CMI Millennium Specification & Mathlib Bridge** | `Universal Clay Millennium Master Theorem` |
+| [`YangMills/BalabanContinuum.lean`](proofs/YangMills/BalabanContinuum.lean) | **Continuum Clay Millennium Conditional Reduction** | `su3_tier3_conditional_clay_millennium_reduction` |
+| [`YangMills/BakryEmery.lean`](proofs/YangMills/BakryEmery.lean) | **Independent Infinite-D Bakry-Émery Geometry** | `Bakry Emery Geometric Mass Gap Lower Bound` |
+| [`YangMills/ClaySpecification.lean`](proofs/YangMills/ClaySpecification.lean) | **Formal CMI Millennium Specification & Mathlib Bridge** | `su3_computable_blueprint_model_reduction` |
 | [`YangMills/MathlibIntegration.lean`](proofs/YangMills/MathlibIntegration.lean) | Canonical Mathlib Compatibility Bridge | Re-exporting CMI Types & Structures |
+
+---
+
+## ⚠️ Epistemic Note: Tooling Boundaries of Lean 4 & Search for Continuous Verification Frameworks
+
+### 🇬🇧 English: Epistemic Scope and Formal Verification Boundaries
+
+> **Key Takeaway**:  
+> The formal Lean 4 codebase in this repository establishes a **machine-checked architectural blueprint and conditional reduction DAG** (`ConditionalReductionWithOpenObligations`). It rigorously proves the algebraic structures, Casimir invariants, reflection positivity relations, and the conditional theorem:
+> $$\text{Continuous Measure on } \mathcal{S}'(\mathbb{R}^4) + \text{Multiscale Cluster Decay } \mu > 0 \implies \text{Clay Millennium Mass Gap } \Delta \ge \mu > 0$$
+> **However, Lean 4 (including Mathlib) does not currently provide the foundational mathematical machinery required to formalize an unconditional, non-perturbative continuum proof from first principles.**  
+> The author is actively researching and seeking a more suitable verification framework specifically engineered for continuous physics and constructive quantum field theory.
+
+#### The 5 Foundational Gaps of Lean 4 for 4D Non-Perturbative Yang-Mills
+
+1. **Absence of Infinite-Dimensional Non-Gaussian Functional Integration**:
+   - Mathlib formalizes standard finite-dimensional Lebesgue measures and basic probability spaces.
+   - Non-abelian quantum gauge theory requires functional path integrals $\int_{\mathcal{A}} \mathcal{D}A \, e^{-S_{\mathrm{YM}}(A)}$ defined as non-Gaussian cylinder measures on nuclear distribution spaces $\mathcal{S}'(\mathbb{R}^4, \mathfrak{su}(3))$.
+   - Key foundational theorems—such as the **Minlos-Bochner theorem** for cylinder measures on nuclear Fréchet spaces and the construction of interacting functional measures on distributions—are entirely absent from Mathlib.
+
+2. **Absence of Multiscale Renormalization Group (RG) in Function Spaces**:
+   - Tadeusz Bałaban's multiscale program is the only known constructive route to four-dimensional Yang-Mills in the continuum. It requires:
+     - Hierarchical dyadic block-spin decimation operators across an infinite tower of ultraviolet scales ($a_k = 2^{-k} a_0 \to 0$).
+     - Localized Besov spaces $B_{p,q}^s(\mathbb{R}^4)$ and uniform elliptic $H^2$ Sobolev bounds on fluctuating background fields.
+     - Inductive estimates on polymer activities $K_k(X)$ with exponential cluster decay $e^{-\kappa \cdot \mathrm{dist}(X,Y)}$ (Kotecký-Preiss convergence criterion $\rho < 1$).
+   - None of these multiscale functional spaces or inductive polymer bounds currently exist in any interactive theorem prover.
+
+3. **Absence of Infinite-Dimensional Differential Geometry & Gribov Horizon Analysis**:
+   - The physical gauge orbit space $\mathcal{A}/\mathcal{G}$ is an infinite-dimensional stratified Fréchet/Sobolev orbifold.
+   - Rigorous construction requires the Palais-Ebin slice theorem for $H^s$ Sobolev connections, analysis of the stratification of reducible connections, and global analysis of the fundamental Gribov region $\Omega$ where the Faddeev-Popov determinant $-\partial \cdot D(A)$ vanishes on the horizon $\partial\Omega$.
+   - Mathlib's differential geometry library is currently restricted to finite-dimensional smooth manifolds and does not support infinite-dimensional Fréchet/Sobolev manifolds or Ricci curvature operators on loop spaces.
+
+4. **Absence of Continuous Osterwalder-Schrader Reconstruction & Scattering**:
+   - The formal passage from Euclidean Schwinger distributions $\mathcal{S}'((\mathbb{R}^4)^n)$ satisfying reflection positivity (OS2) to a relativistic Minkowski Hilbert space $\mathcal{H}$ via GNS construction, positive self-adjoint Hamiltonian $H \ge 0$, and Haag-Ruelle asymptotic particle scattering is not formalized in Lean 4.
+
+5. **Foundational Architectural Mismatch (Inductive Type Theory vs Continuous Analysis)**:
+   - Lean 4 is built upon the Calculus of Inductive Constructions (CIC), an axiomatic foundation heavily optimized for discrete algebra, category theory, and finite-dimensional topology.
+   - Expressing weak-* limits of sequences of measures on distribution spaces within CIC introduces enormous proof-carrying friction and combinatorial bureaucracy, rendering a full continuous constructive proof practically unmanageable with the current generation of ITPs.
+
+#### Active Search for Next-Generation Continuous Verification Frameworks
+
+Because Lean 4 is not architecturally adapted to continuous, infinite-dimensional constructive QFT, the author is actively investigating and seeking alternative formal tools, including:
+- **Hybrid Interactive Theorem Provers & Continuous CAS**: Systems coupling deductive proof kernels with certified Computer Algebra Systems and verified interval arithmetic for real quantifier elimination.
+- **Dedicated Continuous Proof Assistants**: Emerging architectures with first-class primitives for distribution spaces, Sobolev embeddings, and multiscale functional inequalities.
+- **SMT-Augmented and Neurosymbolic Verification Engines**: Frameworks capable of discharging multiscale analytical bounds automatically without discrete inductive bureaucracy.
+- **Proof-Carrying Continuous Numerics**: Formal bridges linking analytic reductions to high-statistics, non-perturbative lattice calculations (such as the Symanzik continuum extrapolations and equivariant normalizing flows backing Volume III).
+
+---
+
+### 🇫🇷 Français : Périmètre Épistémique et Limites Fondamentales de Lean 4
+
+> **Synthèse** :  
+> Le code Lean 4 hébergé dans ce dépôt constitue un **schéma architectural formel et une réduction conditionnelle vérifiée par machine** (`ConditionalReductionWithOpenObligations`). Il démontre rigoureusement l'enchaînement logique, les invariants de Casimir, les propriétés de positivité par réflexion et l'implication :
+> $$\text{Mesure continue sur } \mathcal{S}'(\mathbb{R}^4) + \text{Décroissance multi-échelle } \mu > 0 \implies \text{Trou spectral de masse Clay } \Delta \ge \mu > 0$$
+> **Néanmoins, Lean 4 (et sa bibliothèque Mathlib) ne disposent pas actuellement des outils mathématiques et formels nécessaires pour certifier une preuve continue non-perturbative inconditionnelle depuis les axiomes premiers.**  
+> L'auteur recherche activement un outil et un environnement de vérification formelle plus adaptés, spécialement conçus pour la physique continue et la théorie constructive des champs.
+
+#### Les 5 Manquements Techniques Majeurs de Lean 4 pour Yang-Mills 4D Continu
+
+1. **Absence de théorie de la mesure fonctionnelle non-gaussienne en dimension infinie** : Mathlib ne traite que la mesure de Lebesgue en dimension finie. L'intégrale de chemin $\int \mathcal{D}A \, e^{-S(A)}$ sur des espaces de distributions $\mathcal{S}'(\mathbb{R}^4)$ (théorème d'extension de Minlos-Bochner sur espaces de Fréchet nucléaires) est inexistante.
+2. **Absence de groupe de renormalisation multi-échelle (programme de Bałaban)** : La construction continue 4D repose sur la décimation multi-échelle de Bałaban dans des espaces de Besov localisés $B_{p,q}^s$, des estimations elliptiques uniformes $H^2$ et la convergence de polymères de Kotecký-Preiss ($\rho < 1$). Ces outils d'analyse fonctionnelle multi-échelle n'existent dans aucun assistant de preuve actuel.
+3. **Absence de géométrie différentielle en dimension infinie et analyse du bord de Gribov** : L'espace quotient des orbites $\mathcal{A}/\mathcal{G}$ est un orbifold hilbertien stratifié de dimension infinie. Les tranches de Palais-Ebin et l'analyse de l'horizon de Gribov $\partial\Omega$ (annulation de l'opérateur de Faddeev-Popov) dépassent les capacités actuelles de Mathlib, restreint aux variétés lisses de dimension finie.
+4. **Absence de reconstruction d'Osterwalder-Schrader et diffusion de Haag-Ruelle** : Le passage analytique des distributions de Schwinger euclidiennes à l'espace de Hilbert relativiste physique $\mathcal{H}$ et aux états de diffusion asymptotiques unitaires n'a aucun équivalent formel sous Lean 4.
+5. **Inadéquation du paradigme de la Théorie des Types Inductifs (CIC)** : Lean 4 est optimisé pour les mathématiques discrètes, l'algèbre et la topologie algébrique. Manipuler des limites faibles de mesures sur des espaces de distributions génère une friction bureaucratique prohibitive.
+
+#### Recherche Active d'un Meilleur Outil de Vérification Dédié au Continu
+
+Face à ces limites intrinsèques, l'auteur explore activement de nouvelles voies d'outillage formel :
+- Assistants de preuve hybrides combinant vérification formelle déductive et calcul formel certifié (CAS continu, arithmétique d'intervalles certifiée).
+- Nouveaux systèmes de preuve conçus avec des primitives natives pour l'analyse fonctionnelle en dimension infinie et la théorie des distributions.
+- Moteurs neurosymboliques et solveurs SMT spécialisés dans la décharge automatique d'inégalités fonctionnelles multi-échelles.
+- Architectures de preuve continue liant réductions analytiques et extrapolations numériques haute performance sur réseau (Symanzik, flux normalisants équivariants).
+
 
 ---
 

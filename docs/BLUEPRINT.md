@@ -157,14 +157,12 @@ graph TD
 | 24 | Bałaban Asymptotic Freedom Decay | `balaban_asymptotic_freedom_coupling_decay` | `BalabanSobolev.lean` |
 | 25 | Kotecký-Preiss Cluster Convergence | `balaban_kotecky_preiss_expansion_convergent` | `BalabanCluster.lean` |
 | 26 | Finite Volume Mass Gap Stability | `balaban_finite_volume_spectral_gap_stable` | `BalabanCluster.lean` |
-| 27 | Riesz-Markov Continuum Measure | `balaban_riesz_markov_continuum_measure_exists` | `BalabanRadon.lean` |
-| 28 | Continuum Reflection Positivity | `balaban_continuum_reflection_positivity` | `BalabanRadon.lean` |
-| 29 | **Unconditional Clay Millennium Gap** | `balaban_unconditional_clay_millennium_mass_gap` | `BalabanContinuum.lean` |
+| 29 | **Continuum Reduction to Non-Perturbative Bridge** | `su3_tier3_conditional_clay_millennium_reduction` | `BalabanContinuum.lean` |
 | 30 | **SU(3) Continuum Mass Gap Evaluation** | `balaban_continuum_mass_gap_evaluation_su3` | `BalabanContinuum.lean` |
 | 31 | Weighted Orbit Manifold Bakry-Émery Ricci | `bakry_emery_ricci_strictly_positive` | `BakryEmery.lean` |
 | 32 | Lichnerowicz-Bakry-Émery Gap Theorem | `lichnerowicz_bakry_emery_spectral_gap` | `BakryEmery.lean` |
 | 33 | Log-Sobolev Hypercontractive Constant | `log_sobolev_constant_bounded` | `BakryEmery.lean` |
-| 34 | **Unconditional Geometric Mass Gap** | `bakry_emery_unconditional_geometric_mass_gap` | `BakryEmery.lean` |
+| 34 | **Geometric Mass Gap Lower Bound** | `bakry_emery_geometric_mass_gap_lower_bound` | `BakryEmery.lean` |
 | 35 | **Triadic Confluence Master Theorem** | `triadic_confluence_master_theorem` | `BakryEmery.lean` |
 
 ---
@@ -193,6 +191,16 @@ The Lean 4 formalization guarantees that the **deductive structural core** of th
 
 ### 4.4 Demarcation from Classical Analogies & Negative Results
 A detailed structural analysis explaining why classical fluid mechanics analogies (Moffatt kinetic helicity) and scalar symmetry-breaking mechanisms (Goldstone bosons) are structurally inadequate for the pure 4D quantum gauge problem is developed in the companion analytical monographs (Volumes IV & V).
+
+### 4.5 Tooling Boundaries of Lean 4 & Search for Continuous Verification Frameworks
+While Lean 4 successfully certifies the formal conditional reduction DAG of this proof, it currently lacks the foundational tools to formalize the full continuum quantum field theory unconditionally from ground ZFC/CIC axioms:
+1. **Absence of Functional Integration**: No non-Gaussian path integrals $\int \mathcal{D}A \, e^{-S(A)}$ over nuclear distribution spaces $\mathcal{S}'(\mathbb{R}^4)$ (Minlos-Bochner cylinder measure extensions do not exist in Mathlib).
+2. **Absence of Multiscale Renormalization Group**: Tadeusz Bałaban's multiscale cluster expansion in localized Besov spaces $B_{p,q}^s$ with inductive polymer contractions ($\rho < 1$) has no formal representation in any modern interactive theorem prover.
+3. **Absence of Infinite-Dimensional Gauge Orbit Geometry**: The stratified orbifold $\mathcal{A}/\mathcal{G}$, Palais-Ebin Sobolev slices, and the geometry of the fundamental Gribov horizon $\partial\Omega$ require infinite-dimensional differential geometry unavailable in Mathlib.
+4. **Absence of Continuous Osterwalder-Schrader Reconstruction**: GNS physical Hilbert space reconstruction $\mathcal{H}$ and Haag-Ruelle asymptotic scattering states on $\mathcal{S}'((\mathbb{R}^4)^n)$ are unformalized.
+5. **Architectural Paradigm Mismatch**: The Calculus of Inductive Constructions (CIC) is primarily optimized for discrete and algebraic mathematics; representing limits of measures in distribution spaces incurs prohibitive proof bureaucracy.
+
+**Active Research Direction**: The author is actively investigating next-generation formal verification environments—such as hybrid ITP/continuous CAS engines, distribution-space proof assistants, and SMT/neurosymbolic continuous solvers—to achieve end-to-end continuous certification.
 
 ---
 

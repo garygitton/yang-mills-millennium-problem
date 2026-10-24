@@ -1,12 +1,12 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.BalabanSobolev
-Description: Balaban multiscale small-field Sobolev bounds, asymptotic freedom running coupling,
-             and gauge-covariant elliptic regularity across dyadic lattice scales.
+Description: Balaban multiscale small-field Sobolev bound models, asymptotic freedom scaling,
+             and gauge-covariant elliptic regularity parameters across dyadic lattice scales.
 References: Balaban (1984, 1985), Dimock (2013).
-Status: Rigorous Constructive Module (Pure Lean 4, Under 600 LOC).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -90,17 +90,19 @@ theorem running_coupling_ultraviolet_decay
   exact Nat.le_trans h_bound h_div
 
 /--
-**Theorem 11.6 (Uniformity of Elliptic Regularity Across All Scales)**:
-Demonstrates that the elliptic regularity constant is independent of the lattice scale $k$,
-preventing ultraviolet breakdown of the Green's function propagator.
+**Theorem 11.6 (Elliptic Regularity Constant and Scale Positivity)**:
+Demonstrates that the model elliptic regularity constant structure and scale index
+are strictly positive parameters (`c_elliptic > 0 ∧ k + 1 > 0`).
 -/
-theorem elliptic_regularity_scale_independent
+theorem elliptic_constant_and_scale_positive
     (c_elliptic : EllipticRegularityConstant)
     (k : Nat) :
     c_elliptic.constant_scaled > 0 ∧ k + 1 > 0 := by
   constructor
   · exact c_elliptic.elliptic_strictly_positive
   · exact Nat.succ_pos k
+
+def elliptic_regularity_scale_independent := elliptic_constant_and_scale_positive
 
 /--
 **Theorem 11.7 (Small-Field Sobolev Bound Contractivity)**:

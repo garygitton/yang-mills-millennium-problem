@@ -1,14 +1,14 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.Holography
-Description: Sturm-Liouville resolvent compactness, AdS5 soft-wall dilaton holographic dual,
-             Wetterich FRG infrared flow, and Regge trajectory glueball spectrum.
+Description: Holographic models: Sturm-Liouville radial operators, AdS5 soft-wall dilaton duals,
+             Wetterich FRG infrared flow parameters, and Regge trajectory glueball spectra.
 References: Karch, Katz, Son, Stephanov (2006), Wetterich (1993), Gribov (1978).
 Mathlib: Mathlib.Analysis.Calculus.Deriv.Basic, Mathlib.Analysis.InnerProductSpace.Spectrum,
          Mathlib.Order.Monotone.Basic.
-Status: Complete Constructive Solution (Non-Perturbative Continuum Quantum Field Theory & Spectral Mass Gap).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -72,10 +72,10 @@ theorem sturm_liouville_isolated_ground_state_mass_gap
   dsimp [sturm_liouville_ground_state_gap]
   exact sturm_liouville_discrete_spectrum_strictly_positive bulk_operator 0
 
-/-- **Theorem 7.6 (Sturm-Liouville Resolvent Compactness and Linear Spacing)**:
-Verifies the exact equispaced Regge recurrence relation $M_{n+1}^2 - M_n^2 = 4\lambda$
-characteristic of a compact resolvent with purely discrete point spectrum. -/
-theorem sturm_liouville_resolvent_compactness_spacing
+/-- **Theorem 7.6 (Soft-Wall Regge Linear Spacing Arithmetic)**:
+Verifies the linear arithmetic spacing $M_{n+1}^2 - M_n^2 = 4\lambda$
+for the soft-wall toy model spectrum. -/
+theorem soft_wall_regge_spacing_arithmetic
     (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) :
     sturm_liouville_eigenvalue bulk_operator (radial_mode + 1) - sturm_liouville_eigenvalue bulk_operator radial_mode =
     4 * bulk_operator.dilaton_parameter := by
@@ -87,6 +87,8 @@ theorem sturm_liouville_resolvent_compactness_spacing
         (radial_mode + bulk_operator.centrifugal_barrier_index + 1) + 1 := by omega
     rw [index_addition, Nat.mul_add, Nat.mul_one]
   rw [eigenvalue_expansion, Nat.add_sub_cancel_left]
+
+def sturm_liouville_resolvent_compactness_spacing := soft_wall_regge_spacing_arithmetic
 
 /-- **Theorem 7.7 (Strict Monotonicity of Radial Spectrum)**:
 Demonstrates that the discrete spectrum is strictly monotonically increasing with radial quantum

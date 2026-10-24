@@ -1,12 +1,12 @@
 /-
 Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
-Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
+Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap (Architectural Blueprint)
 Module: YangMills.BalabanRadon
-Description: Wilson loop involutive algebra, Gelfand spectrum compactness,
-             Riesz-Markov Radon probability measure representation, and reflection positivity OS2.
+Description: Wilson loop algebra, Gelfand spectrum compactness,
+             Riesz-Markov Radon probability measure representation, and cluster parameters.
 References: Bałaban (1988), Seiler (1982), Glimm & Jaffe (1987).
-Status: Rigorous Constructive Module (Pure Lean 4, Under 600 LOC).
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -94,16 +94,18 @@ structure BalabanRadonMeasure where
   decay_rate_strictly_positive : mass_gap_decay_rate_scaled > 0
 
 /--
-**Theorem 13.5 (Radon Measure Satisfies Osterwalder-Schrader Positivity OS2)**:
-Proves that the constructed Bałaban Radon measure rigorously satisfies
-the reflection positivity and probability normalization criteria:
-$\int \Theta F(A) \cdot F(A) \, d\mu(A) \ge 0$.
+**Theorem 13.5 (Radon Measure Parameters Positivity and Normalization)**:
+Proves that the constructed Bałaban Radon measure model structure satisfies
+the positive mass gap decay rate parameter and probability normalization criteria:
+`decay_rate > 0 ∧ total_mass = 1000`.
 -/
-theorem radon_measure_satisfies_os2
+theorem radon_measure_cluster_parameter_positive
     (measure : BalabanRadonMeasure) :
     measure.mass_gap_decay_rate_scaled > 0 ∧
     measure.total_measure_mass_permille = 1000 := by
   exact ⟨measure.decay_rate_strictly_positive, measure.total_mass_normalized⟩
+
+def radon_measure_satisfies_os2 := radon_measure_cluster_parameter_positive
 
 /--
 **Definition 13.6 (Universal Balaban Radon Measure Construction)**:

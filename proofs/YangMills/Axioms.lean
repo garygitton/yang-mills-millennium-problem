@@ -3,14 +3,16 @@ Copyright (c) 2026 Gary Gitton. All rights reserved.
 Author: Gary Gitton
 Title: Constructive 4D Yang-Mills Existence and Strictly Positive Mass Gap
 Module: YangMills.Axioms
-Description: Compact simple Lie gauge groups, Osterwalder-Schrader Euclidean QFT axioms (OS0-OS4),
-             GNS reconstruction theorem, variational Rayleigh quotient, and Clay Millennium Bridge Specification.
+Description: Specification of compact simple Lie gauge groups, Osterwalder-Schrader Euclidean QFT
+             axioms (OS0-OS4), variational Rayleigh quotient condition, and explicit open continuum obligations.
 References: Jaffe & Witten (2000), Osterwalder & Schrader (1973, 1975).
 Mathlib: Mathlib.LinearAlgebra.Matrix.SpecialUnitaryGroup, Mathlib.Analysis.Distribution.SchwartzSpace,
          Mathlib.Analysis.InnerProductSpace.Rayleigh, Mathlib.Topology.Algebra.Star.
-Status: Complete Constructive 4D Yang-Mills Existence and Mass Gap Solution.
-             Formal specification of compact simple gauge groups, Osterwalder-Schrader Euclidean QFT
-             axioms, GNS Hilbert space reconstruction, and Clay Millennium Problem criteria.
+Status: Formal Architectural Blueprint & Conditional Reduction Specification for 4D Yang-Mills Theory in Lean 4.
+Epistemic Boundary Note: Lean 4/Mathlib currently lacks the functional integration, infinite-dimensional
+                         differential geometry, and multiscale Besov RG machinery required for unconditional
+                         continuum certification. This repository serves as a machine-checked conditional reduction DAG;
+                         research is actively ongoing for next-generation continuous verification frameworks.
 -/
 
 import Mathlib.Analysis.Distribution.SchwartzSpace
@@ -33,90 +35,44 @@ structure CompactSimpleLieGroup where
   casimir_adjoint : Nat
   dual_coxeter_number : Nat
 
-def SU3 : CompactSimpleLieGroup := {
-  name := "SU(3)",
-  number_of_colors := 3,
-  rank := 2,
-  dimension := 8,
-  casimir_adjoint := 3,
-  dual_coxeter_number := 3
-}
+def SU3 : CompactSimpleLieGroup := { name := "SU(3)", number_of_colors := 3, rank := 2, dimension := 8, casimir_adjoint := 3, dual_coxeter_number := 3 }
+def SU2 : CompactSimpleLieGroup := { name := "SU(2)", number_of_colors := 2, rank := 1, dimension := 3, casimir_adjoint := 2, dual_coxeter_number := 2 }
+def G2Group : CompactSimpleLieGroup := { name := "G2", number_of_colors := 7, rank := 2, dimension := 14, casimir_adjoint := 4, dual_coxeter_number := 4 }
 
-def SU2 : CompactSimpleLieGroup := {
-  name := "SU(2)",
-  number_of_colors := 2,
-  rank := 1,
-  dimension := 3,
-  casimir_adjoint := 2,
-  dual_coxeter_number := 2
-}
-
-def G2Group : CompactSimpleLieGroup := {
-  name := "G2",
-  number_of_colors := 7,
-  rank := 2,
-  dimension := 14,
-  casimir_adjoint := 4,
-  dual_coxeter_number := 4
-}
-
-theorem su3_dimension_exact : SU3.dimension = 8 := by rfl
-theorem su3_rank_exact : SU3.rank = 2 := by rfl
+theorem su3_dimension_exact : SU3.dimension = 8 := rfl
+theorem su3_rank_exact : SU3.rank = 2 := rfl
 theorem su3_casimir_positive : SU3.casimir_adjoint > 0 := by decide
 theorem su3_rank_positive : SU3.rank > 0 := by decide
-
-theorem su2_dimension_exact : SU2.dimension = 3 := by rfl
+theorem su2_dimension_exact : SU2.dimension = 3 := rfl
 theorem su2_casimir_positive : SU2.casimir_adjoint > 0 := by decide
-theorem g2_dimension_exact : G2Group.dimension = 14 := by rfl
+theorem g2_dimension_exact : G2Group.dimension = 14 := rfl
 theorem g2_casimir_positive : G2Group.casimir_adjoint > 0 := by decide
 
 def HasDimensionAndCasimirLowerBounds (group : CompactSimpleLieGroup) : Prop :=
   group.dimension ≥ 3 ∧ group.casimir_adjoint ≥ 2
 
-theorem su3_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU3 := by
-  dsimp [HasDimensionAndCasimirLowerBounds, SU3]
-  decide
+theorem su3_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU3 := by decide
+theorem su2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU2 := by decide
+theorem g2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds G2Group := by decide
 
-theorem su2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds SU2 := by
-  dsimp [HasDimensionAndCasimirLowerBounds, SU2]
-  decide
-
-theorem g2_has_dimension_and_casimir_bounds : HasDimensionAndCasimirLowerBounds G2Group := by
-  dsimp [HasDimensionAndCasimirLowerBounds, G2Group]
-  decide
-
-def U1AbelianGroup : CompactSimpleLieGroup := {
-  name := "U(1)",
-  number_of_colors := 1,
-  rank := 0,
-  dimension := 1,
-  casimir_adjoint := 0,
-  dual_coxeter_number := 0
-}
+def U1AbelianGroup : CompactSimpleLieGroup :=
+  { name := "U(1)", number_of_colors := 1, rank := 0, dimension := 1, casimir_adjoint := 0, dual_coxeter_number := 0 }
 
 theorem adversarial_u1_cannot_satisfy_non_abelian_bounds :
     ¬ HasDimensionAndCasimirLowerBounds U1AbelianGroup := by
-  dsimp [HasDimensionAndCasimirLowerBounds, U1AbelianGroup]
-  intro h
-  rcases h with ⟨h_dim, h_casimir⟩
-  omega
+  intro ⟨_, h_casimir⟩; omega
 
 theorem makeenko_migdal_su3_relation :
-    SU3.dimension = SU3.number_of_colors * SU3.number_of_colors - 1 ∧ SU3.dimension > 0 := by
-  decide
-
+    SU3.dimension = SU3.number_of_colors * SU3.number_of_colors - 1 ∧ SU3.dimension > 0 := by decide
 theorem makeenko_migdal_su2_relation :
-    SU2.dimension = SU2.number_of_colors * SU2.number_of_colors - 1 ∧ SU2.dimension > 0 := by
-  decide
+    SU2.dimension = SU2.number_of_colors * SU2.number_of_colors - 1 ∧ SU2.dimension > 0 := by decide
 
 /-- **Definition 1.2 (Explicit su(2) Lie Algebra Carrier)**:
 Constructive vector space carrier over $\mathbb{Z}$ with basis $\{T_1, T_2, T_3\}$
 and canonical Lie commutator bracket $[T_a, T_b] = \sum_c \varepsilon_{abc} T_c$.
 Mathlib analogue: `LieAlgebra`, `LieBracket`. -/
 structure Su2LieAlgebraElement where
-  c1 : Int
-  c2 : Int
-  c3 : Int
+  c1 : Int; c2 : Int; c3 : Int
 deriving DecidableEq, Repr
 
 def su2_zero : Su2LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 0 }
@@ -124,28 +80,19 @@ def su2_t1 : Su2LieAlgebraElement := { c1 := 1, c2 := 0, c3 := 0 }
 def su2_t2 : Su2LieAlgebraElement := { c1 := 0, c2 := 1, c3 := 0 }
 def su2_t3 : Su2LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 1 }
 
-def su2_bracket (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement := {
-  c1 := X.c2 * Y.c3 - X.c3 * Y.c2,
-  c2 := X.c3 * Y.c1 - X.c1 * Y.c3,
-  c3 := X.c1 * Y.c2 - X.c2 * Y.c1
-}
+def su2_bracket (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement :=
+  { c1 := X.c2 * Y.c3 - X.c3 * Y.c2, c2 := X.c3 * Y.c1 - X.c1 * Y.c3, c3 := X.c1 * Y.c2 - X.c2 * Y.c1 }
 
-theorem su2_bracket_t1_t2_exact : su2_bracket su2_t1 su2_t2 = su2_t3 := by
-  rfl
-
-theorem su2_bracket_t2_t1_exact : su2_bracket su2_t2 su2_t1 = { c1 := 0, c2 := 0, c3 := -1 } := by
-  rfl
+theorem su2_bracket_t1_t2_exact : su2_bracket su2_t1 su2_t2 = su2_t3 := rfl
+theorem su2_bracket_t2_t1_exact : su2_bracket su2_t2 su2_t1 = { c1 := 0, c2 := 0, c3 := -1 } := rfl
 
 theorem su2_is_constructively_non_abelian :
     ∃ (X Y : Su2LieAlgebraElement), su2_bracket X Y ≠ su2_zero := by
   have h_ne : su2_bracket su2_t1 su2_t2 ≠ su2_zero := by decide
   exact ⟨su2_t1, su2_t2, h_ne⟩
 
-def su2_add (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement := {
-  c1 := X.c1 + Y.c1,
-  c2 := X.c2 + Y.c2,
-  c3 := X.c3 + Y.c3
-}
+def su2_add (X Y : Su2LieAlgebraElement) : Su2LieAlgebraElement :=
+  { c1 := X.c1 + Y.c1, c2 := X.c2 + Y.c2, c3 := X.c3 + Y.c3 }
 
 theorem su2_bracket_antisymmetric (X Y : Su2LieAlgebraElement) :
     su2_add (su2_bracket X Y) (su2_bracket Y X) = su2_zero := by
@@ -167,30 +114,15 @@ theorem su2_jacobi_identity (X Y Z : Su2LieAlgebraElement) :
   congr 1 <;> ring
 
 /-- **Definition 1.3 (Explicit su(3) Lie Algebra Element)**:
-8-dimensional vector space carrier over $\mathbb{Z}$ in the Gell-Mann basis.
-Structure constants $f_{abc}$ satisfy $[T_a, T_b] = \sum_c f_{abc} T_c$ with $f_{123} = 1$. -/
+8-dimensional vector space carrier over $\mathbb{Z}$ in the Gell-Mann basis. -/
 structure Su3LieAlgebraElement where
-  c1 : Int
-  c2 : Int
-  c3 : Int
-  c4 : Int
-  c5 : Int
-  c6 : Int
-  c7 : Int
-  c8 : Int
+  c1 : Int; c2 : Int; c3 : Int; c4 : Int; c5 : Int; c6 : Int; c7 : Int; c8 : Int
 deriving DecidableEq, Repr
 
-def su3_zero : Su3LieAlgebraElement :=
-  { c1 := 0, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
-
-def su3_t1 : Su3LieAlgebraElement :=
-  { c1 := 1, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
-
-def su3_t2 : Su3LieAlgebraElement :=
-  { c1 := 0, c2 := 1, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
-
-def su3_t3 : Su3LieAlgebraElement :=
-  { c1 := 0, c2 := 0, c3 := 1, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+def su3_zero : Su3LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+def su3_t1 : Su3LieAlgebraElement := { c1 := 1, c2 := 0, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+def su3_t2 : Su3LieAlgebraElement := { c1 := 0, c2 := 1, c3 := 0, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
+def su3_t3 : Su3LieAlgebraElement := { c1 := 0, c2 := 0, c3 := 1, c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
 
 /-- Canonical embedding of the su(2) isospin subalgebra into su(3). -/
 def embed_su2_in_su3 (X : Su2LieAlgebraElement) : Su3LieAlgebraElement :=
@@ -198,16 +130,13 @@ def embed_su2_in_su3 (X : Su2LieAlgebraElement) : Su3LieAlgebraElement :=
 
 /-- Evaluation of the Gell-Mann commutator on the isospin sector: [T_1, T_2] = T_3. -/
 def su3_isospin_bracket (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement :=
-  { c1 := X.c2 * Y.c3 - X.c3 * Y.c2,
-    c2 := X.c3 * Y.c1 - X.c1 * Y.c3,
-    c3 := X.c1 * Y.c2 - X.c2 * Y.c1,
+  { c1 := X.c2 * Y.c3 - X.c3 * Y.c2, c2 := X.c3 * Y.c1 - X.c1 * Y.c3, c3 := X.c1 * Y.c2 - X.c2 * Y.c1,
     c4 := 0, c5 := 0, c6 := 0, c7 := 0, c8 := 0 }
 
-def su3_add (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement := {
-  c1 := X.c1 + Y.c1, c2 := X.c2 + Y.c2, c3 := X.c3 + Y.c3,
-  c4 := X.c4 + Y.c4, c5 := X.c5 + Y.c5, c6 := X.c6 + Y.c6,
-  c7 := X.c7 + Y.c7, c8 := X.c8 + Y.c8
-}
+def su3_add (X Y : Su3LieAlgebraElement) : Su3LieAlgebraElement :=
+  { c1 := X.c1 + Y.c1, c2 := X.c2 + Y.c2, c3 := X.c3 + Y.c3,
+    c4 := X.c4 + Y.c4, c5 := X.c5 + Y.c5, c6 := X.c6 + Y.c6,
+    c7 := X.c7 + Y.c7, c8 := X.c8 + Y.c8 }
 
 theorem su3_isospin_jacobi_identity (X Y Z : Su3LieAlgebraElement) :
     su3_add (su3_isospin_bracket X (su3_isospin_bracket Y Z))
@@ -220,8 +149,7 @@ theorem su3_isospin_jacobi_identity (X Y Z : Su3LieAlgebraElement) :
   dsimp
   congr 1 <;> ring
 
-theorem su3_bracket_t1_t2_exact : su3_isospin_bracket su3_t1 su3_t2 = su3_t3 := by
-  rfl
+theorem su3_bracket_t1_t2_exact : su3_isospin_bracket su3_t1 su3_t2 = su3_t3 := rfl
 
 theorem su3_is_constructively_non_abelian :
     ∃ (X Y : Su3LieAlgebraElement), su3_isospin_bracket X Y ≠ su3_zero := by
@@ -308,7 +236,8 @@ def apply_isometry (g : EuclideanIsometry) (x : EuclideanSpacetimePoint) : Eucli
   { spacetime_position := fun i =>
       let xi := x.spacetime_position (g.rotation_index i)
       let ti := g.translation.spacetime_position i
-      { numerator := xi.numerator + ti.numerator, scale_power := xi.scale_power + ti.scale_power } }
+      { numerator := xi.numerator * (2 ^ ti.scale_power : Nat) + ti.numerator * (2 ^ xi.scale_power : Nat),
+        scale_power := xi.scale_power + ti.scale_power } }
 
 def transform_test_function (g : EuclideanIsometry) (f : SchwartzTestFunction) : SchwartzTestFunction :=
   { evaluate := fun x => f.evaluate (apply_isometry g x),
@@ -487,6 +416,55 @@ theorem rayleigh_quotient_implies_spectral_mass_gap
       have h_int_le : (gap : Int) ≤ (λ : Int) := by nlinarith
       omega
 
+def ExactEigenvalueSpectrum
+    (H : PhysicalHilbertSpace ContinuousScalarField)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState) : Set Nat :=
+  { λ : Nat | λ = 0 ∨ ∃ (ψ : form.DomainState),
+      H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0 ∧
+      H.inner_product (form.inclusion ψ) (form.inclusion ψ) > 0 ∧
+      form.eval_form ψ ψ = (λ : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ) }
+
+theorem exact_eigenvalue_in_discrete_spectrum
+    (H : PhysicalHilbertSpace ContinuousScalarField)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (λ : Nat) (h : λ ∈ ExactEigenvalueSpectrum H form vacuum) :
+    λ ∈ DiscreteSpectrum H form vacuum := by
+  rcases h with h_zero | h_excited
+  · have h0 : λ = 0 := h_zero
+    left
+    exact h0
+  · rcases h_excited with ⟨ψ, ho, hn, heq⟩
+    have h_le : form.eval_form ψ ψ ≤ (λ : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ) := le_of_eq heq
+    right
+    exact ⟨ψ, ho, hn, h_le⟩
+
+theorem spectral_gap_strictly_excludes_intermediate_eigenvalues
+    (H : PhysicalHilbertSpace ContinuousScalarField)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (gap : Nat)
+    (h_gap : HasSpectralMassGap H form vacuum gap)
+    (λ : Nat) (h_ev : λ ∈ ExactEigenvalueSpectrum H form vacuum) :
+    λ = 0 ∨ λ ≥ gap :=
+  h_gap.2 λ (exact_eigenvalue_in_discrete_spectrum H form vacuum λ h_ev)
+
+theorem ground_state_spectral_gap_non_degenerate
+    (H : PhysicalHilbertSpace ContinuousScalarField)
+    (form : ClosedQuadraticForm H)
+    (vacuum : form.DomainState)
+    (gap : Nat)
+    (rq : RayleighQuotientCondition H form vacuum gap)
+    (ψ : form.DomainState)
+    (h_ortho : H.inner_product (form.inclusion vacuum) (form.inclusion ψ) = 0)
+    (h_norm : H.inner_product (form.inclusion ψ) (form.inclusion ψ) > 0) :
+    form.eval_form ψ ψ > 0 := by
+  have h_rq := rq.2 ψ h_ortho
+  have h_pos : (gap : Int) * H.inner_product (form.inclusion ψ) (form.inclusion ψ) > 0 :=
+    mul_pos (by omega) h_norm
+  linarith
+
 def HasConstructiveSpectralGap (H : PhysicalHilbertSpace) (form : ClosedQuadraticForm H)
     (vacuum : form.DomainState) (spectral_gap : Nat) : Prop :=
   spectral_gap > 0 ∧ HasSpectralMassGap H form vacuum spectral_gap
@@ -498,9 +476,8 @@ theorem energy_difference_spectral_gap
     (decay : Nat)
     (h_decay_pos : decay > 0)
     (h_gap : HasSpectralMassGap H form vacuum decay) :
-    HasConstructiveSpectralGap H form vacuum decay := by
-  dsimp [HasConstructiveSpectralGap]
-  exact ⟨h_decay_pos, h_gap⟩
+    HasConstructiveSpectralGap H form vacuum decay :=
+  ⟨h_decay_pos, h_gap⟩
 
 def ClayMillenniumProblemSpecification (group : CompactSimpleLieGroup) : Prop :=
   ∃ (theory : OsterwalderSchraderQuantumFieldTheory)
@@ -547,11 +524,30 @@ theorem rayleigh_quotient_spectral_gap_bridge
 def osterwalder_schrader_spectral_gap_bridge := @rayleigh_quotient_spectral_gap_bridge
 def conditional_clay_millennium_mass_gap_reduction := @rayleigh_quotient_spectral_gap_bridge
 def clay_millennium_mass_gap_reduction := conditional_clay_millennium_mass_gap_reduction
-def os0_euclidean_invariance := @euclidean_time_reflection_involution
-def os1_reflection_positivity := @euclidean_time_reflection_fixed_point_on_boundary
-def os2_permutation_symmetry := @euclidean_time_reflection_involution
-def os3_cluster_decomposition := @conditional_clay_millennium_mass_gap_reduction
-def os4_tempered_regularity := @boundary_contact_test_function_strictly_rejected
+def temporal_reflection_involution := @euclidean_time_reflection_involution
+def temporal_reflection_boundary_fixed_point := @euclidean_time_reflection_fixed_point_on_boundary
+def boundary_contact_vanishing := @boundary_contact_test_function_strictly_rejected
+
+/-- **Definition 1.16 (Tier-3 Constructive Continuum Bridge for 4D Yang-Mills)**:
+Formal specification of the constructive continuum bridge required by Jaffe & Witten (2000)
+for a certified continuum reduction of the 4D Yang-Mills Millennium problem. -/
+structure Tier3ConstructiveContinuumBridge (group : CompactSimpleLieGroup) : Prop where
+  measure_exists : ∃ (theory : OsterwalderSchraderQuantumFieldTheory),
+    theory.gauge_group.name = group.name ∧ theory.spacetime_dimension = 4 ∧ theory.vacuum_cluster_decay > 0 ∧
+    NonPerturbativeExponentialClusterDecay theory ∧
+    (∃ (f g : SchwartzTestFunction),
+      let decoupled_rank1 : Int := Int.mul f.spacetime_integral g.spacetime_integral
+      theory.axioms.schwinger.eval_two_point f g ≠ decoupled_rank1) ∧
+    (∀ (f : SchwartzTestFunction), HasPositiveTimeSupport f →
+      theory.axioms.schwinger.eval_two_point (reflect_test_function f) f ≥ 0)
+  hamiltonian_continuous_spectral_gap : ∀ (H : PhysicalHilbertSpace) (form : ClosedQuadraticForm H) (vac : form.DomainState) (decay : Nat),
+    RayleighQuotientCondition H form vac decay → HasSpectralMassGap H form vac decay
+
+/-- **Definition 1.17 (Non-Perturbative Continuum Hypothesis)**:
+Packaging of the open non-perturbative continuum existence and decay hypotheses for gauge group G. -/
+structure NonPerturbativeContinuumHypothesis (group : CompactSimpleLieGroup) : Prop where
+  continuum_bridge : Tier3ConstructiveContinuumBridge group
+  rayleigh_gap_lower_bound : ∃ (c : Nat), c > 0
 
 /-- **Definition 1.11 (Continuum Gauge Field)**:
 A non-abelian gauge field A is a Lie-algebra valued 1-form on 4D spacetime,
