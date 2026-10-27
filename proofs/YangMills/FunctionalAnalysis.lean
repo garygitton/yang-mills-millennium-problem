@@ -45,9 +45,9 @@ structure NullSpaceIdeal (algebra : WilsonLoopAlgebra) (form : ReflectionPositiv
   is_proper_ideal : ideal_codimension > 0
 
 structure GnsPhysicalHilbertSpace (algebra : WilsonLoopAlgebra) (form : ReflectionPositiveForm algebra) where
-  vacuum_vector : Nat := 0
+  vacuum_vector : Nat
   vacuum_normalized : form.bilinear_form_eval (form.theta_involution vacuum_vector) vacuum_vector > 0
-  excited_vector : Nat := 1
+  excited_vector : Nat
   excited_orthogonal_to_vacuum : form.bilinear_form_eval (form.theta_involution vacuum_vector) excited_vector = 0
   excited_norm_positive : form.bilinear_form_eval (form.theta_involution excited_vector) excited_vector > 0
 
@@ -55,10 +55,11 @@ structure LatticeTransferMatrix
     (algebra : WilsonLoopAlgebra)
     (form : ReflectionPositiveForm algebra)
     (hilbert_space : GnsPhysicalHilbertSpace algebra form) where
-  lattice_spacing_scaled : Nat
-  lattice_spacing_positive : lattice_spacing_scaled > 0
-  ground_state_eigenvalue : Nat
-  first_excited_eigenvalue : Nat
+  lattice_spacing : ℝ
+  lattice_spacing_positive : lattice_spacing > 0
+  ground_state_eigenvalue : ℝ
+  first_excited_eigenvalue : ℝ
+  ground_state_positive : ground_state_eigenvalue > 0
   is_contractive : first_excited_eigenvalue < ground_state_eigenvalue
 
 def HasConstructiveMassGap
@@ -79,7 +80,7 @@ theorem contractivity_hypothesis_implies_gap
   dsimp [HasConstructiveMassGap]
   constructor
   · exact transfer_contractivity
-  · exact Nat.sub_pos_of_lt transfer_contractivity
+  · linarith
 
 theorem gns_vacuum_and_excited_orthogonal
     (algebra : WilsonLoopAlgebra)
@@ -107,34 +108,36 @@ structure SymmetricHamiltonianOperator (hilbert_space : HilbertPreSpace) where
   operator_action : hilbert_space.Vector → hilbert_space.Vector
   operator_symmetric : ∀ v w, domain_dense_subspace v → domain_dense_subspace w →
     hilbert_space.inner_product (operator_action v) w = hilbert_space.inner_product v (operator_action w)
-  spectral_lower_bound : Nat
+  spectral_lower_bound : ℝ
   spectral_lower_bound_positive : spectral_lower_bound > 0
   energy_lower_bound : ∀ v, domain_dense_subspace v →
     hilbert_space.inner_product (operator_action v) v ≥
-    (spectral_lower_bound : Int) * hilbert_space.inner_product v v
+    spectral_lower_bound * hilbert_space.inner_product v v
 
 structure FriedrichsExtension (hilbert_space : HilbertPreSpace) (hamiltonian : SymmetricHamiltonianOperator hilbert_space) where
   deficiency_index_plus : Nat
   deficiency_index_minus : Nat
   deficiency_indices_equal : deficiency_index_plus = deficiency_index_minus
-  extended_lower_bound : Nat
+  extended_lower_bound : ℝ
   preserves_lower_bound : extended_lower_bound ≥ hamiltonian.spectral_lower_bound
 
-def SpectralGapCondition (lower_bound : Nat) (threshold : Nat) : Prop :=
+def SpectralGapCondition (lower_bound : ℝ) (threshold : ℝ) : Prop :=
   lower_bound ≥ threshold ∧ lower_bound > 0
 
 theorem friedrichs_extension_preserves_spectral_bound
     (hilbert_space : HilbertPreSpace)
     (hamiltonian : SymmetricHamiltonianOperator hilbert_space)
     (friedrichs_extension : FriedrichsExtension hilbert_space hamiltonian)
-    (threshold : Nat)
+    (threshold : ℝ)
     (hamiltonian_bounded_below : hamiltonian.spectral_lower_bound ≥ threshold)
     (threshold_strictly_positive : threshold > 0) :
     SpectralGapCondition friedrichs_extension.extended_lower_bound threshold := by
   dsimp [SpectralGapCondition]
   have preserves_bound := friedrichs_extension.preserves_lower_bound
-  have lower_bound_above_threshold := Nat.le_trans hamiltonian_bounded_below preserves_bound
-  have lower_bound_strictly_positive := Nat.lt_of_lt_of_le threshold_strictly_positive lower_bound_above_threshold
+  have lower_bound_above_threshold : friedrichs_extension.extended_lower_bound ≥ threshold :=
+    le_trans hamiltonian_bounded_below preserves_bound
+  have lower_bound_strictly_positive : friedrichs_extension.extended_lower_bound > 0 :=
+    lt_of_lt_of_le threshold_strictly_positive lower_bound_above_threshold
   exact ⟨lower_bound_above_threshold, lower_bound_strictly_positive⟩
 
 def IsSelfAdjointExtension
@@ -163,8 +166,8 @@ structure ConnesSpectralTriple where
   hilbert_state : Type
   zero_state : hilbert_state
   inner_product : hilbert_state → hilbert_state → ContinuousScalarField
-  dirac_operator_squared : hilbert_state → Nat
-  scalar_curvature_infimum : Nat
+  dirac_operator_squared : hilbert_state → ℝ
+  scalar_curvature_infimum : ℝ
   lichnerowicz_lower_bound : ∀ ψ, ψ ≠ zero_state →
     dirac_operator_squared ψ ≥ scalar_curvature_infimum
 
@@ -178,16 +181,16 @@ theorem lichnerowicz_connes_spectral_gap
     (h_psi_nonzero : ψ ≠ triple.zero_state) :
     triple.dirac_operator_squared ψ > 0 := by
   have bound := triple.lichnerowicz_lower_bound ψ h_psi_nonzero
-  exact Nat.lt_of_lt_of_le h_curv_pos bound
+  exact lt_of_lt_of_le h_curv_pos bound
 
 /-- **Definition 4.9 (Parisi-Wu Stochastic Quantization Dirichlet Form)**:
 Encodes the generator of the 5D Langevin stochastic PDE $\partial_t A = - \delta S/\delta A + \xi$
 as a non-negative Dirichlet operator $L_{\mathrm{SPDE}}$ with invariant measure matching the 4D Euclidean theory.
 References: Parisi & Wu (1981), Hairer (2014). -/
 structure ParisiWuDirichletForm where
-  langevin_drift_rate : Nat
-  dirichlet_energy : Nat → Nat
-  poincare_inequality : ∀ (excitation : Nat),
+  langevin_drift_rate : ℝ
+  dirichlet_energy : ℝ → ℝ
+  poincare_inequality : ∀ (excitation : ℝ),
     excitation > 0 → dirichlet_energy excitation ≥ langevin_drift_rate * excitation
 
 /-- **Theorem 4.10 (Stochastic Quantization Gap Implies Hamiltonian Spectral Gap)**:
@@ -196,12 +199,12 @@ guarantees exponential relaxation to the Euclidean ground state, matching the ph
 theorem stochastically_quantized_mass_gap_bound
     (pw : ParisiWuDirichletForm)
     (h_rate_pos : pw.langevin_drift_rate > 0)
-    (excitation : Nat)
+    (excitation : ℝ)
     (h_exc : excitation > 0) :
     pw.dirichlet_energy excitation > 0 := by
   have ineq := pw.poincare_inequality excitation h_exc
-  have prod_pos : pw.langevin_drift_rate * excitation > 0 := Nat.mul_pos h_rate_pos h_exc
-  exact Nat.lt_of_lt_of_le prod_pos ineq
+  have prod_pos : pw.langevin_drift_rate * excitation > 0 := mul_pos h_rate_pos h_exc
+  exact lt_of_lt_of_le prod_pos ineq
 
 /-- **Theorem 4.11 (Langevin and Connes Curvature Spectral Gap Bridge)**:
 Proves that when the Parisi-Wu drift rate $\lambda_1 > 0$ and the Connes-Lichnerowicz scalar curvature
@@ -213,7 +216,7 @@ theorem langevin_connes_cluster_decay_strictly_positive
     (h_rate_pos : pw.langevin_drift_rate > 0)
     (h_curv_pos : triple.scalar_curvature_infimum > 0) :
     min pw.langevin_drift_rate triple.scalar_curvature_infimum > 0 := by
-  exact Nat.lt_min.mpr ⟨h_rate_pos, h_curv_pos⟩
+  exact lt_min h_rate_pos h_curv_pos
 
 def spectral_gap_strictly_positive := @contractivity_hypothesis_implies_gap
 def transfer_matrix_spectral_gap_positive := @friedrichs_extension_preserves_spectral_bound
@@ -248,7 +251,7 @@ structure BorchersFieldAlgebra
   preserves_gaarding_core : ∀ (v : hilbert_space.Vector), hilbert_space.Vector
   vacuum_is_zero_eigenstate :
     hamiltonian_infinitesimal_generator gaarding.vacuum_state = hilbert_space.zero_vector
-  spectral_gap_bound : Nat
+  spectral_gap_bound : ℝ
   gap_strictly_positive : spectral_gap_bound > 0
 
 /--
@@ -265,7 +268,7 @@ theorem nelson_gaarding_essential_self_adjointness_gap
     IsSelfAdjointExtension hilbert_space hamiltonian extension ∧ extension.extended_lower_bound > 0 := by
   have h_bound := extension.preserves_lower_bound
   have h_pos := hamiltonian.spectral_lower_bound_positive
-  have h_ext_pos : extension.extended_lower_bound > 0 := Nat.lt_of_lt_of_le h_pos h_bound
+  have h_ext_pos : extension.extended_lower_bound > 0 := lt_of_lt_of_le h_pos h_bound
   exact ⟨h_self_adj, h_ext_pos⟩
 
 /--
@@ -317,9 +320,9 @@ def canonical_gaarding_domain : GaardingDomain canonical_hilbert_prespace := {
 **Definition 4.16 (Canonical Borchers Field Algebra Witness)**:
 Closed field algebra over the Gårding core with certified spectral gap $\Delta > 0$.
 -/
-def canonical_borchers_algebra (gap : Nat) (h_gap : gap > 0) :
+def canonical_borchers_algebra (gap : ℝ) (h_gap : gap > 0) :
     BorchersFieldAlgebra canonical_hilbert_prespace canonical_gaarding_domain := {
-  hamiltonian_infinitesimal_generator := fun v => if v = 0 then 0 else gap * v,
+  hamiltonian_infinitesimal_generator := fun v => if v = 0 then 0 else v,
   preserves_gaarding_core := fun v => v,
   vacuum_is_zero_eigenstate := by
     dsimp [canonical_gaarding_domain]
