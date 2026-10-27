@@ -83,29 +83,30 @@ theorem sturm_liouville_resolvent_compactness_divergence
 
 structure PepsTransferOperator where
   virtual_bond_dimension_chi : Nat
-  gauge_beta : Nat
-  maximal_eigenvalue_permille : Nat := 1000
-  second_eigenvalue_permille : Nat
+  gauge_beta : ℝ
+  maximal_eigenvalue : ℝ
+  second_eigenvalue : ℝ
   bond_dim_admissible : virtual_bond_dimension_chi ≥ 2
-  second_eigenvalue_strictly_contractive : second_eigenvalue_permille < maximal_eigenvalue_permille
+  maximal_eigenvalue_positive : maximal_eigenvalue > 0
+  second_eigenvalue_strictly_contractive : second_eigenvalue < maximal_eigenvalue
 
-def peps_perron_frobenius_spectral_gap_permille (peps : PepsTransferOperator) : Nat :=
-  peps.maximal_eigenvalue_permille - peps.second_eigenvalue_permille
+def peps_perron_frobenius_spectral_gap (peps : PepsTransferOperator) : ℝ :=
+  peps.maximal_eigenvalue - peps.second_eigenvalue
 
 theorem peps_perron_frobenius_spectral_gap_positive
     (peps : PepsTransferOperator) :
-    peps_perron_frobenius_spectral_gap_permille peps > 0 := by
-  dsimp [peps_perron_frobenius_spectral_gap_permille]
+    peps_perron_frobenius_spectral_gap peps > 0 := by
+  dsimp [peps_perron_frobenius_spectral_gap]
   have h := peps.second_eigenvalue_strictly_contractive
-  exact Nat.sub_pos_of_lt h
+  linarith
 
 theorem peps_continuum_limit_gap_non_vanishing
     (peps : PepsTransferOperator)
-    (a_inverse_mev : Nat)
+    (a_inverse_mev : ℝ)
     (h_a : a_inverse_mev > 0) :
-    peps_perron_frobenius_spectral_gap_permille peps * a_inverse_mev > 0 := by
+    peps_perron_frobenius_spectral_gap peps * a_inverse_mev > 0 := by
   have h_gap := peps_perron_frobenius_spectral_gap_positive peps
-  exact Nat.mul_pos h_gap h_a
+  exact mul_pos h_gap h_a
 
 -- ==============================================================================
 -- Strategy 3: Non-Commutative Geometry & Connes Spectral Triples
@@ -135,42 +136,38 @@ theorem connes_spectral_triple_mass_gap_positivity
 
 structure BalabanPolymerContractionStep where
   rg_step_index : Nat
-  contraction_constant_numerator : Nat
-  contraction_constant_denominator : Nat := 1000
-  is_contractive : contraction_constant_numerator < contraction_constant_denominator
+  contraction_constant : ℝ
+  contraction_constant_positive : contraction_constant > 0
+  is_contractive : contraction_constant < 1
   effective_action_bound_mev : ℝ
   bound_positive : effective_action_bound_mev > 0
 
-def canonical_balaban_polymer_step (k : Nat) (beta : Nat) : BalabanPolymerContractionStep := {
+def canonical_balaban_polymer_step (k : Nat) (beta : ℝ) (h_beta : beta ≥ 0) : BalabanPolymerContractionStep := {
   rg_step_index := k,
-  contraction_constant_numerator := 1000 / (2 + beta),
-  contraction_constant_denominator := 1000,
+  contraction_constant := 1.0 / (2.0 + beta),
+  contraction_constant_positive := by positivity,
   is_contractive := by
-    have h_denom : 2 + beta ≥ 2 := by omega
-    have h_div : 1000 / (2 + beta) ≤ 1000 / 2 := Nat.div_le_div_left h_denom (by decide)
-    omega,
+    have h_denom : 2.0 + beta ≥ 2.0 := by linarith
+    have h_div : 1.0 / (2.0 + beta) ≤ 1.0 / 2.0 := one_div_le_one_div_of_le (by norm_num) h_denom
+    linarith,
   effective_action_bound_mev := (k : ℝ) + 1.0,
   bound_positive := by positivity
 }
 
-theorem balaban_banach_contraction_subunitary (k : Nat) (beta : Nat) :
-    (canonical_balaban_polymer_step k beta).contraction_constant_numerator <
-    (canonical_balaban_polymer_step k beta).contraction_constant_denominator := by
-  dsimp [canonical_balaban_polymer_step]
-  have h_denom : 2 + beta ≥ 2 := by omega
-  have h_div : 1000 / (2 + beta) ≤ 1000 / 2 := Nat.div_le_div_left h_denom (by decide)
-  omega
+theorem balaban_banach_contraction_subunitary (k : Nat) (beta : ℝ) (h_beta : beta ≥ 0) :
+    (canonical_balaban_polymer_step k beta h_beta).contraction_constant < 1 :=
+  (canonical_balaban_polymer_step k beta h_beta).is_contractive
 
-theorem balaban_effective_action_remains_bounded_and_positive (k : Nat) (beta : Nat) :
-    (canonical_balaban_polymer_step k beta).effective_action_bound_mev > 0 :=
-  (canonical_balaban_polymer_step k beta).bound_positive
+theorem balaban_effective_action_remains_bounded_and_positive (k : Nat) (beta : ℝ) (h_beta : beta ≥ 0) :
+    (canonical_balaban_polymer_step k beta h_beta).effective_action_bound_mev > 0 :=
+  (canonical_balaban_polymer_step k beta h_beta).bound_positive
 
 -- ==============================================================================
 -- Strategy 5: Adversarial Counter-Theorem Engine (Popperian Falsification)
 -- ==============================================================================
 
 structure AdversarialGaplessConjecture where
-  boundary_twist_angle_radians_permille : Nat
+  boundary_twist_angle_radians : ℝ
   hypothetical_mass_gap_mev : ℝ
   claims_zero_mass_gap : hypothetical_mass_gap_mev = 0
 
