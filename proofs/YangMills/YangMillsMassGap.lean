@@ -60,25 +60,27 @@ theorem su2_casimir_positive : SU2.casimir_adjoint > 0 := by decide
 theorem g2_dimension_exact : G2Group.dim = 14 := by rfl
 theorem g2_casimir_positive : G2Group.casimir_adjoint > 0 := by decide
 
-def adhm_moduli_dim (colors : Nat) (instanton_number : Nat) : Nat :=
-  4 * colors * instanton_number
+def adhm_moduli_dim (group : CompactSimpleGaugeGroup) (instanton_number : Nat) : Nat :=
+  4 * group.dual_coxeter * instanton_number
 
 theorem adhm_su3_moduli_dimension (k : Nat) :
-    adhm_moduli_dim 3 k = 12 * k := by
+    adhm_moduli_dim SU3 k = 12 * k := by
   rfl
 
 theorem adhm_su2_moduli_dimension (k : Nat) :
-    adhm_moduli_dim 2 k = 8 * k := by
+    adhm_moduli_dim SU2 k = 8 * k := by
+  rfl
+
+theorem adhm_g2_moduli_dimension (k : Nat) :
+    adhm_moduli_dim G2Group k = 16 * k := by
   rfl
 
 theorem adhm_su3_positive_for_non_trivial_instantons (k : Nat) (h : k ≥ 1) :
-    adhm_moduli_dim 3 k ≥ 12 := by
+    adhm_moduli_dim SU3 k ≥ 12 := by
   change 12 * k ≥ 12
   omega
 
-structure Spacetime4D where
-  dimension : Nat := 4
-  signature_positive : dimension = 4 := by rfl
+abbrev Spacetime4D := EuclideanSpace ℝ (Fin 4)
 
 structure LoopSpaceCurvature where
   ricci_curvature_scale_mev_squared : ℝ
@@ -99,7 +101,10 @@ theorem bochner_weitzenbock_curvature_bound
 structure TransferMatrixSpec where
   ground_state_weight : ℝ
   first_glueball_weight : ℝ
-  lattice_spacing_inverse_mev : ℝ := 1973.0
+  lattice_spacing_inverse_mev : ℝ
+  ground_state_positive : ground_state_weight > 0
+  first_glueball_positive : first_glueball_weight > 0
+  lattice_spacing_positive : lattice_spacing_inverse_mev > 0
 
 def TransferMatrixMassGap (T : TransferMatrixSpec) : ℝ :=
   T.ground_state_weight - T.first_glueball_weight
@@ -114,6 +119,7 @@ theorem transfer_matrix_spectral_gap_positivity
 structure BalabanScaleStep where
   scale_index : Nat
   contraction_factor : ℝ
+  contraction_positive : contraction_factor > 0
   contraction_subunitary : contraction_factor < 1
 
 theorem balaban_polymer_contraction_strictly_subunitary
@@ -125,11 +131,14 @@ structure OsterwalderSchraderQFT where
   spacetime_dim : Nat
   gauge_group : CompactSimpleGaugeGroup
   vacuum_cluster_decay_rate_mev : ℝ
+  spacetime_dim_exact : spacetime_dim = 4
   cluster_decay_strictly_positive : vacuum_cluster_decay_rate_mev > 0
 
 structure QFTHamiltonian where
   ground_state_energy_mev : ℝ
   first_excited_state_energy_mev : ℝ
+  ground_state_nonneg : ground_state_energy_mev ≥ 0
+  spectrum_ordered : ground_state_energy_mev ≤ first_excited_state_energy_mev
 
 def QFTHasMassGap (H : QFTHamiltonian) (delta_mev : ℝ) : Prop :=
   delta_mev > 0 ∧ H.first_excited_state_energy_mev - H.ground_state_energy_mev ≥ delta_mev
@@ -356,6 +365,7 @@ theorem ryu_takayanagi_area_law_confinement
 structure BalabanBesovStep where
   scale_level : Nat
   contraction_constant : ℝ
+  contraction_positive : contraction_constant > 0
   strictly_subunitary : contraction_constant < 1
 
 theorem balaban_besov_fixed_point_continuum_limit
