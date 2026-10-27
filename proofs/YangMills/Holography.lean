@@ -102,11 +102,11 @@ theorem sturm_liouville_eigenvalue_strictly_increasing
 Encapsulates the non-perturbative flow equation $\partial_k \Gamma_k = \frac{1}{2}\text{Tr}[(\Gamma_k^{(2)} + R_k)^{-1}\partial_k R_k]$
 in Landau gauge, incorporating the Gribov parameter $\gamma_G$ and dynamical gluon mass $m_g(k)$. -/
 structure WetterichFunctionalRenormalizationFlow (group : CompactSimpleLieGroup) where
-  ultraviolet_cutoff_scale : Nat
-  infrared_regulator_scale : Nat
-  dynamical_gluon_mass : Nat
-  ghost_dressing_infrared_exponent_scaled : Nat
-  gribov_parameter : Nat
+  ultraviolet_cutoff_scale : ℝ
+  infrared_regulator_scale : ℝ
+  dynamical_gluon_mass : ℝ
+  ghost_dressing_infrared_exponent_scaled : ℝ
+  gribov_parameter : ℝ
   gluon_mass_positive : dynamical_gluon_mass > 0
   gribov_parameter_positive : gribov_parameter > 0
 
@@ -145,9 +145,9 @@ theorem holographic_ground_state_strictly_positive
 The region in gauge field space where the Faddeev-Popov operator $-\partial_\mu D_\mu(A) > 0$
 is strictly positive definite, with boundary given by the first Gribov horizon $\partial\Omega$. -/
 structure GribovFundamentalDomain where
-  volume_scale : Nat
+  volume_scale : ℝ
   faddeev_popov_lowest_eigenvalue : ℝ
-  gribov_horizon_measure_scaled : Nat
+  gribov_horizon_measure_scaled : ℝ
   faddeev_popov_lowest_positive : faddeev_popov_lowest_eigenvalue > 0
   horizon_measure_zero : gribov_horizon_measure_scaled = 0
 
@@ -163,7 +163,7 @@ Two-gluon constituent bound state mass $M_{\text{glueball}} = 2 m_g(0)$ generate
 by the infrared freezing of the gluon propagator in the Wetterich flow. -/
 def constituent_glueball_spectral_gap
     {group : CompactSimpleLieGroup}
-    (flow : WetterichFunctionalRenormalizationFlow group) : Nat :=
+    (flow : WetterichFunctionalRenormalizationFlow group) : ℝ :=
   2 * flow.dynamical_gluon_mass
 
 /-- **Theorem 7.16 (FRG Dynamical Gluon Mass Induces Strictly Positive Glueball Gap)**:
@@ -175,7 +175,7 @@ theorem flow_gluon_mass_induces_glueball_gap
     constituent_glueball_spectral_gap flow > 0 := by
   dsimp [constituent_glueball_spectral_gap]
   have mass_positive := flow.gluon_mass_positive
-  omega
+  linarith
 
 /-- **Definition 7.17 (Holographic Renormalization Confluence Certificate)**:
 Binds the microscopic FRG Wetterich flow, the geometric AdS₅ soft-wall dual, and the
@@ -184,7 +184,7 @@ structure HolographicRenormalizationConfluenceCertificate (group : CompactSimple
   flow : WetterichFunctionalRenormalizationFlow group
   holographic : HolographicAdS5SoftWall
   gribov : GribovFundamentalDomain
-  holographic_mass_lower_bound : Nat
+  holographic_mass_lower_bound : ℝ
   flow_gap_exceeds_bound : constituent_glueball_spectral_gap flow ≥ holographic_mass_lower_bound
   bound_positive : holographic_mass_lower_bound > 0
 
@@ -207,13 +207,13 @@ theorem holographic_renormalization_certificate_projection
 The Chew-Frautschi relation $J(M^2) = \alpha_0 + \alpha' M^2$ with universal slope $\alpha' > 0$
 governing the angular momentum spectrum of bound glueball states. -/
 structure ReggeTrajectoryParameters where
-  intercept_alpha_zero : Nat
-  slope_alpha_prime : Nat
+  intercept_alpha_zero : ℝ
+  slope_alpha_prime : ℝ
   slope_alpha_prime_positive : slope_alpha_prime > 0
 
 /-- **Definition 7.20 (Regge Trajectory Invariant Mass Relation)**:
 Computes the angular momentum intercept $J = \alpha_0 + \alpha' M^2$. -/
-def regge_trajectory (parameters : ReggeTrajectoryParameters) (mass_squared : Nat) : Nat :=
+def regge_trajectory (parameters : ReggeTrajectoryParameters) (mass_squared : ℝ) : ℝ :=
   parameters.intercept_alpha_zero + parameters.slope_alpha_prime * mass_squared
 
 /-- **Theorem 7.21 (Popperian Falsification of Tachyonic or Gapless Holographic Modes)**:
@@ -223,7 +223,7 @@ theorem holographic_tachyonic_mode_preclusion
     (bulk : SturmLiouvilleBulkOperator) :
     ¬ (sturm_liouville_ground_state_gap bulk = 0) := by
   have h_pos := sturm_liouville_isolated_ground_state_mass_gap bulk
-  omega
+  linarith
 
 /-- **Theorem 7.22 (Popperian Falsification of Super-Unitary Pomeron Intercept)**:
 Proves that an unphysical super-unitary Pomeron intercept $\alpha_0 \ge 2$ contradicts
@@ -232,7 +232,8 @@ theorem froissart_bound_linear_regge_unitarity_falsification
     (params : ReggeTrajectoryParameters)
     (h_unitary : params.intercept_alpha_zero ≤ 1) :
     ¬ (params.intercept_alpha_zero ≥ 2) := by
-  omega
+  intro h_ge
+  linarith
 
 /-- **Theorem 7.23 (Sturm-Liouville Compact Resolvent Spectral Divergence)**:
 Proves that the radial eigenvalue sequence diverges asymptotically:
@@ -241,70 +242,72 @@ $(H - z)^{-1}$ is compact (Hilbert-Schmidt) and that the continuous spectrum
 is completely empty in the infrared. -/
 theorem sturm_liouville_resolvent_compactness_divergence
     (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) :
-    sturm_liouville_eigenvalue bulk_operator radial_mode ≥ 4 * bulk_operator.dilaton_parameter * (radial_mode + 1) := by
+    sturm_liouville_eigenvalue bulk_operator radial_mode ≥ 4 * bulk_operator.dilaton_parameter * ((radial_mode : ℝ) + 1) := by
   dsimp [sturm_liouville_eigenvalue]
-  have index_bound : radial_mode + bulk_operator.centrifugal_barrier_index + 1 ≥ radial_mode + 1 := by
-    have hc := bulk_operator.centrifugal_positive
-    omega
-  exact Nat.mul_le_mul_left (4 * bulk_operator.dilaton_parameter) index_bound
+  have _hc := bulk_operator.centrifugal_positive
+  have _h_pos : 4 * bulk_operator.dilaton_parameter ≥ 0 := by
+    have h4 : (4 : ℝ) > 0 := by norm_num
+    exact le_of_lt (mul_pos h4 bulk_operator.dilaton_positive)
+  nlinarith
 
 /-- **Definition 7.24 (Tensor-Network PEPS Transfer Operator in Holographic Slices)**:
 Represents the Projected Entangled Pair State (PEPS) transfer matrix on radial holographic slices,
 with virtual bond dimension $\chi \ge 2$ and Perron-Frobenius contractive second eigenvalue. -/
 structure PepsTransferOperator where
   virtual_bond_dimension_chi : Nat
-  gauge_beta : Nat
-  maximal_eigenvalue_permille : Nat := 1000
-  second_eigenvalue_permille : Nat
+  gauge_beta : ℝ
+  maximal_eigenvalue : ℝ
+  second_eigenvalue : ℝ
   bond_dim_admissible : virtual_bond_dimension_chi ≥ 2
-  second_eigenvalue_strictly_contractive : second_eigenvalue_permille < maximal_eigenvalue_permille
+  maximal_eigenvalue_positive : maximal_eigenvalue > 0
+  second_eigenvalue_strictly_contractive : second_eigenvalue < maximal_eigenvalue
 
 /-- **Definition 7.25 (PEPS Perron-Frobenius Spectral Gap)**:
 Computes the contractive spectral gap $\Delta_{\text{PEPS}} = \lambda_0 - \lambda_1 > 0$. -/
-def peps_perron_frobenius_spectral_gap_permille (peps : PepsTransferOperator) : Nat :=
-  peps.maximal_eigenvalue_permille - peps.second_eigenvalue_permille
+def peps_perron_frobenius_spectral_gap (peps : PepsTransferOperator) : ℝ :=
+  peps.maximal_eigenvalue - peps.second_eigenvalue
 
 /-- **Theorem 7.26 (PEPS Transfer Operator Spectral Gap Positivity)**:
 Proves that the contractive second eigenvalue in the tensor-network holographic representation
 rigorously enforces a strictly positive spectral gap. -/
 theorem peps_perron_frobenius_spectral_gap_positive
     (peps : PepsTransferOperator) :
-    peps_perron_frobenius_spectral_gap_permille peps > 0 := by
-  dsimp [peps_perron_frobenius_spectral_gap_permille]
+    peps_perron_frobenius_spectral_gap peps > 0 := by
+  dsimp [peps_perron_frobenius_spectral_gap]
   have h := peps.second_eigenvalue_strictly_contractive
-  omega
+  linarith
 
 /-- **Definition 7.27 (Canonical SU(3) Confluence Certificate Construction)**:
 Explicit non-perturbative construction binding the Wetterich flow, soft-wall AdS₅ geometry,
 and Gribov modular interior for the physical gauge group SU(3). -/
 def canonical_su3_confluence_certificate : HolographicRenormalizationConfluenceCertificate SU3 := {
   flow := {
-    ultraviolet_cutoff_scale := 10000,
-    infrared_regulator_scale := 1000,
-    dynamical_gluon_mass := 776,
-    ghost_dressing_infrared_exponent_scaled := 595,
-    gribov_parameter := 680,
-    gluon_mass_positive := by decide,
-    gribov_parameter_positive := by decide
+    ultraviolet_cutoff_scale := 10000.0,
+    infrared_regulator_scale := 1000.0,
+    dynamical_gluon_mass := 776.0,
+    ghost_dressing_infrared_exponent_scaled := 595.0,
+    gribov_parameter := 680.0,
+    gluon_mass_positive := by norm_num,
+    gribov_parameter_positive := by norm_num
   },
   holographic := {
-    dilaton_slope_parameter := 388,
-    curvature_radius := 1,
-    dilaton_slope_positive := by decide,
-    curvature_radius_positive := by decide
+    dilaton_slope_parameter := 388.0,
+    curvature_radius := 1.0,
+    dilaton_slope_positive := by norm_num,
+    curvature_radius_positive := by norm_num
   },
   gribov := {
-    volume_scale := 128,
+    volume_scale := 128.0,
     faddeev_popov_lowest_eigenvalue := 450.0,
-    gribov_horizon_measure_scaled := 0,
+    gribov_horizon_measure_scaled := 0.0,
     faddeev_popov_lowest_positive := by norm_num,
     horizon_measure_zero := rfl
   },
-  holographic_mass_lower_bound := 1500,
+  holographic_mass_lower_bound := 1500.0,
   flow_gap_exceeds_bound := by
     dsimp [constituent_glueball_spectral_gap]
-    decide,
-  bound_positive := by decide
+    norm_num,
+  bound_positive := by norm_num
 }
 
 /-- **Theorem 7.28 (Canonical SU(3) Confluence Theorem)**:
@@ -323,14 +326,12 @@ spectrum of conformal $\mathcal{N}=4$ SYM and demonstrating that $\lambda > 0$ i
 indispensable for physical confinement. -/
 theorem conformal_zero_dilaton_spectrum_gapless
     (n : Nat)
-    (centrifugal : Nat)
-    (supposed_gap : Nat)
-    (h_gap_formula : supposed_gap = 4 * 0 * (n + centrifugal + 1))
+    (centrifugal : ℝ)
+    (supposed_gap : ℝ)
+    (h_gap_formula : supposed_gap = 4 * 0 * ((n : ℝ) + centrifugal + 1))
     (h_positive : supposed_gap > 0) :
     False := by
-  rw [Nat.mul_zero, Nat.zero_mul] at h_gap_formula
-  rw [h_gap_formula] at h_positive
-  contradiction
+  linarith
 
 end YangMills.Holography
 
