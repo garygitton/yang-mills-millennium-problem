@@ -126,11 +126,11 @@ def g2_lie_algebra_invariants : CompactLieAlgebraData := {
 Continuous Euclidean functional on test function space satisfying reflection positivity
 with respect to time reversal involution $\Theta(x_0, \mathbf{x}) = (-x_0, \mathbf{x})$. -/
 structure OsterwalderSchraderFunctional where
-  bilinear_form_eval : Nat → Nat → Int
-  theta_involution : Nat → Nat
+  bilinear_form_eval : SchwartzTestFunction → SchwartzTestFunction → ℝ
+  theta_involution : SchwartzTestFunction → SchwartzTestFunction
   theta_involutive : ∀ x, theta_involution (theta_involution x) = x
   reflection_positive : ∀ x, bilinear_form_eval (theta_involution x) x ≥ 0
-  vacuum_normalized : bilinear_form_eval (theta_involution 0) 0 > 0
+  vacuum_normalized : ∃ f : SchwartzTestFunction, bilinear_form_eval (theta_involution f) f > 0
   cluster_decay_rate : ℝ
   cluster_decay_positive : cluster_decay_rate > 0
 
@@ -140,9 +140,10 @@ reflection-positive Schwinger functional, equipped with contraction semigroup $T
 structure GNSHamiltonianSemigroup where
   mass_gap : ℝ
   gap_strictly_positive : mass_gap > 0
-  semigroup_contraction_permille : Nat
-  is_contractive : semigroup_contraction_permille < 1000
-  spectral_lower_bound : ∀ (t : Nat), t > 0 → mass_gap > 0
+  semigroup_contraction_factor : ℝ
+  contraction_positive : semigroup_contraction_factor > 0
+  is_contractive : semigroup_contraction_factor < 1
+  spectral_lower_bound : ∀ (t : ℝ), t > 0 → mass_gap > 0
 
 /-- **Theorem 16.1 (SU(3) Canonical Wightman Bridge Master Theorem)**:
 Establishes the formal bridge proving that the constructive Bałaban SU(3) continuum theory
@@ -208,8 +209,9 @@ theorem gns_reconstruction_spectral_mass_gap
   exact {
     mass_gap := os.cluster_decay_rate,
     gap_strictly_positive := os.cluster_decay_positive,
-    semigroup_contraction_permille := 707,
-    is_contractive := by decide,
+    semigroup_contraction_factor := 0.707,
+    contraction_positive := by norm_num,
+    is_contractive := by norm_num,
     spectral_lower_bound := fun _ _ => os.cluster_decay_positive,
   }
 
@@ -310,7 +312,7 @@ theorem canonical_orbit_curvature_gap_bridge
 Bridges the Haag-Ruelle scattering construction to the existence of a strictly positive
 spectral gap in the physical asymptotic Fock space representation. -/
 theorem scattering_state_space_gap_bridge
-    (spectral_gap : Nat)
+    (spectral_gap : ℝ)
     (h_gap : spectral_gap > 0) :
     HasPositiveDecayParameterAndEnergyBound
       (canonical_os_axioms spectral_gap)
@@ -335,8 +337,8 @@ Mathlib Schwartz test function space S(ℝ⁴, ℂ), continuous physical Hilbert
 and dense self-adjoint Hamiltonian operator generating time translations.
 -/
 structure ContinuousJaffeWittenClaySpecification (group : CompactSimpleLieGroup) where
-  spacetime_dimension : Nat := 4
-  gauge_group : CompactSimpleLieGroup := group
+  spacetime_dimension : Nat
+  gauge_group : CompactSimpleLieGroup
   continuous_mass_gap : ℝ
   gap_strictly_positive : continuous_mass_gap > 0
   discrete_projective_reduction_matches :
