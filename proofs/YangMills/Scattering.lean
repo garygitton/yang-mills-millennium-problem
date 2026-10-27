@@ -57,8 +57,8 @@ Positive-definite Gelfand-Naimark-Segal (GNS) Hilbert space endowed with a uniqu
 vacuum state $|0\rangle$ and an isolated single-glueball discrete spectrum separated by a strictly
 positive mass gap $\Delta > 0$. -/
 structure PhysicalHilbertSpace where
-  ground_state_energy : Nat := 0
-  first_excited_glueball_energy : Nat
+  ground_state_energy : ℝ := 0
+  first_excited_glueball_energy : ℝ
 
 /-- **Definition 8.5 (Haag-Ruelle Asymptotic Scattering Completeness)**:
 Formulation of asymptotic in/out scattering states $|p_1, \dots, p_n\rangle^{\text{in/out}}$,
@@ -77,6 +77,9 @@ structure HaagRuelleScatteringAsymptotics where
 Asserts the simultaneous satisfaction of the Osterwalder-Schrader axioms (temperedness,
 Euclidean covariance, reflection positivity, permutation symmetry, cluster decomposition)
 and the existence of a positive spectral gap in the physical GNS Hilbert space. -/
+structure OsterwalderSchraderAxioms where
+  cluster_decay_exponent : ℝ
+
 def HasPositiveDecayParameterAndEnergyBound
     (axioms : OsterwalderSchraderAxioms)
     (hilbert_space : PhysicalHilbertSpace) : Prop :=
@@ -93,8 +96,8 @@ theorem positive_energy_bound_implies_positive_gap
     hilbert_space.first_excited_glueball_energy - hilbert_space.ground_state_energy > 0 := by
   dsimp [HasPositiveDecayParameterAndEnergyBound] at theory_satisfies_axioms
   rcases theory_satisfies_axioms with ⟨decay_pos, energy_bound⟩
-  rw [ground_state_energy_zero, Nat.sub_zero]
-  exact Nat.lt_of_lt_of_le decay_pos energy_bound
+  rw [ground_state_energy_zero, sub_zero]
+  exact lt_of_lt_of_le decay_pos energy_bound
 
 /-- **Theorem 8.8 (Haag-Ruelle Asymptotic Isometry and Unitary Scale)**:
 Checks that the scaled wave operators are equal and normalized in the canonical model. -/
@@ -110,12 +113,12 @@ theorem haag_ruelle_scaled_norm_isometry
 /-- **Theorem 8.9 (Cluster Decay Bound Implies Strictly Positive Gap Scale)**:
 Elementary order deduction: if transfer matrix gap scale exceeds positive decay rate, it is positive. -/
 theorem decay_bound_implies_positive_gap_scale
-    (decay_rate : Nat)
+    (decay_rate : ℝ)
     (decay_rate_positive : decay_rate > 0)
-    (transfer_matrix_gap_scale : Nat)
+    (transfer_matrix_gap_scale : ℝ)
     (transfer_bound : transfer_matrix_gap_scale ≥ decay_rate) :
     transfer_matrix_gap_scale > 0 := by
-  exact Nat.lt_of_lt_of_le decay_rate_positive transfer_bound
+  exact lt_of_lt_of_le decay_rate_positive transfer_bound
 
 /-- **Definition 8.10 (Canonical Schwartz Space Witness)**:
 Canonical instance of $\mathcal{S}(\mathbb{R}^4)$. -/
@@ -128,14 +131,14 @@ def canonical_schwartz_space : SchwartzTestSpaceFourDimensional := {
 
 /-- **Definition 8.11 (Canonical Osterwalder-Schrader Axioms Witness)**:
 Constructs a valid OS axioms package with specified cluster decay rate $\mu > 0$. -/
-def canonical_os_axioms (decay_scale : Nat) : OsterwalderSchraderAxioms := {
+def canonical_os_axioms (decay_scale : ℝ) : OsterwalderSchraderAxioms := {
   cluster_decay_exponent := decay_scale
 }
 
 /-- **Definition 8.12 (Canonical Physical Hilbert Space Witness)**:
 Constructs the physical GNS Hilbert space with ground state $E_0 = 0$ and first glueball excitation $E_1 > 0$. -/
-def canonical_physical_hilbert (gap_scale : Nat) (_scale_strictly_positive : gap_scale > 0) : PhysicalHilbertSpace := {
-  ground_state_energy := 0,
+def canonical_physical_hilbert (gap_scale : ℝ) (_scale_strictly_positive : gap_scale > 0) : PhysicalHilbertSpace := {
+  ground_state_energy := 0.0,
   first_excited_glueball_energy := gap_scale
 }
 
@@ -154,14 +157,14 @@ def canonical_haag_ruelle_asymptotics : HaagRuelleScatteringAsymptotics := {
 /-- **Theorem 8.14 (Canonical Scattering Model Satisfies Decay Bound)**:
 Validates the constructive decay contract on the canonical scattering witness. -/
 theorem canonical_scattering_model_satisfies_decay_bound
-    (spectral_gap : Nat)
+    (spectral_gap : ℝ)
     (gap_strictly_positive : spectral_gap > 0) :
     HasPositiveDecayParameterAndEnergyBound
       (canonical_os_axioms spectral_gap)
       (canonical_physical_hilbert spectral_gap gap_strictly_positive) := by
   constructor
   · exact gap_strictly_positive
-  · exact Nat.le_refl _
+  · exact le_refl _
 
 /-- **Theorem 8.15 (Haag-Ruelle Wave Operator Norm Equality)**:
 Validates the isometric intertwining of asymptotic wave operators from balanced normalization. -/

@@ -335,10 +335,10 @@ scale factor $\Delta = 33$ admits an invariant Gårding domain and Borchers fiel
 with certified spectral gap $33 > 0$.
 -/
 theorem canonical_su3_nelson_gaarding_realization :
-    (canonical_borchers_algebra 33 (by decide)).spectral_gap_bound = 33 ∧
-    (canonical_borchers_algebra 33 (by decide)).spectral_gap_bound > 0 := by
+    (canonical_borchers_algebra 33 (by norm_num)).spectral_gap_bound = 33 ∧
+    (canonical_borchers_algebra 33 (by norm_num)).spectral_gap_bound > 0 := by
   dsimp [canonical_borchers_algebra]
-  decide
+  norm_num
 
 end YangMills.FunctionalAnalysis
 

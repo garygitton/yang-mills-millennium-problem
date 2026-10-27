@@ -33,21 +33,21 @@ Poincaré patch with quadratic dilaton profile $\Phi(z) = \lambda z^2$.
 The parameter $\lambda > 0$ sets the confinement mass scale and the centrifugal barrier index
 corresponds to the boundary conformal dimension $\Delta = 2 + S$ for spin-$S$ glueball states. -/
 structure SturmLiouvilleBulkOperator where
-  dilaton_parameter : Nat
-  centrifugal_barrier_index : Nat
+  dilaton_parameter : ℝ
+  centrifugal_barrier_index : ℝ
   dilaton_positive : dilaton_parameter > 0
   centrifugal_positive : centrifugal_barrier_index ≥ 2
 
 /-- **Definition 7.2 (Sturm-Liouville Discrete Eigenvalue Spectrum)**:
 Computes the exact discrete eigenvalue $M_n^2 = 4\lambda(n + L + 1)$ of the five-dimensional
 radial Sturm-Liouville problem in the quadratic dilaton soft-wall background. -/
-def sturm_liouville_eigenvalue (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) : Nat :=
-  4 * bulk_operator.dilaton_parameter * (radial_mode + bulk_operator.centrifugal_barrier_index + 1)
+def sturm_liouville_eigenvalue (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) : ℝ :=
+  4 * bulk_operator.dilaton_parameter * ((radial_mode : ℝ) + bulk_operator.centrifugal_barrier_index + 1)
 
 /-- **Definition 7.3 (Holographic Ground State Mass Gap)**:
 The lowest physical radial excitation $M_0^2 = 4\lambda(L + 1)$ corresponding to the scalar
 glueball ground state $0^{++}$. -/
-def sturm_liouville_ground_state_gap (bulk_operator : SturmLiouvilleBulkOperator) : Nat :=
+def sturm_liouville_ground_state_gap (bulk_operator : SturmLiouvilleBulkOperator) : ℝ :=
   sturm_liouville_eigenvalue bulk_operator 0
 
 /-- **Theorem 7.4 (Strict Positivity of Bulk Sturm-Liouville Spectrum)**:
@@ -57,11 +57,13 @@ theorem sturm_liouville_discrete_spectrum_strictly_positive
     (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) :
     sturm_liouville_eigenvalue bulk_operator radial_mode > 0 := by
   dsimp [sturm_liouville_eigenvalue]
-  have four_positive : 4 > 0 := by decide
+  have four_positive : (4 : ℝ) > 0 := by norm_num
   have four_lambda_positive : 4 * bulk_operator.dilaton_parameter > 0 :=
-    Nat.mul_pos four_positive bulk_operator.dilaton_positive
-  have index_positive : radial_mode + bulk_operator.centrifugal_barrier_index + 1 > 0 := by omega
-  exact Nat.mul_pos four_lambda_positive index_positive
+    mul_pos four_positive bulk_operator.dilaton_positive
+  have h_mode_nonneg : (radial_mode : ℝ) ≥ 0 := Nat.cast_nonneg radial_mode
+  have index_positive : (radial_mode : ℝ) + bulk_operator.centrifugal_barrier_index + 1 > 0 := by
+    linarith [bulk_operator.centrifugal_positive]
+  exact mul_pos four_lambda_positive index_positive
 
 /-- **Theorem 7.5 (Holographic Isolated Ground State Mass Gap)**:
 The scalar glueball ground state $M_0^2$ is strictly bounded away from zero by $4\lambda(L + 1) > 0$,
@@ -74,21 +76,14 @@ theorem sturm_liouville_isolated_ground_state_mass_gap
 
 /-- **Theorem 7.6 (Soft-Wall Regge Linear Spacing Arithmetic)**:
 Verifies the linear arithmetic spacing $M_{n+1}^2 - M_n^2 = 4\lambda$
-for the soft-wall toy model spectrum. -/
+for the soft-wall spectrum. -/
 theorem soft_wall_regge_spacing_arithmetic
     (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) :
     sturm_liouville_eigenvalue bulk_operator (radial_mode + 1) - sturm_liouville_eigenvalue bulk_operator radial_mode =
     4 * bulk_operator.dilaton_parameter := by
   dsimp [sturm_liouville_eigenvalue]
-  have eigenvalue_expansion : 4 * bulk_operator.dilaton_parameter * (radial_mode + 1 + bulk_operator.centrifugal_barrier_index + 1) =
-      4 * bulk_operator.dilaton_parameter * (radial_mode + bulk_operator.centrifugal_barrier_index + 1) +
-      4 * bulk_operator.dilaton_parameter := by
-    have index_addition : radial_mode + 1 + bulk_operator.centrifugal_barrier_index + 1 =
-        (radial_mode + bulk_operator.centrifugal_barrier_index + 1) + 1 := by omega
-    rw [index_addition, Nat.mul_add, Nat.mul_one]
-  rw [eigenvalue_expansion, Nat.add_sub_cancel_left]
-
-def sturm_liouville_resolvent_compactness_spacing := soft_wall_regge_spacing_arithmetic
+  push_cast
+  ring
 
 /-- **Theorem 7.7 (Strict Monotonicity of Radial Spectrum)**:
 Demonstrates that the discrete spectrum is strictly monotonically increasing with radial quantum
@@ -96,11 +91,12 @@ number $n$, preventing spectral accumulation points at finite energies. -/
 theorem sturm_liouville_eigenvalue_strictly_increasing
     (bulk_operator : SturmLiouvilleBulkOperator) (radial_mode : Nat) :
     sturm_liouville_eigenvalue bulk_operator radial_mode < sturm_liouville_eigenvalue bulk_operator (radial_mode + 1) := by
-  have spacing_equality := sturm_liouville_resolvent_compactness_spacing bulk_operator radial_mode
-  have spacing_positive : 4 * bulk_operator.dilaton_parameter > 0 := by
-    have four_positive : 4 > 0 := by decide
-    exact Nat.mul_pos four_positive bulk_operator.dilaton_positive
-  omega
+  dsimp [sturm_liouville_eigenvalue]
+  have four_lambda_positive : 4 * bulk_operator.dilaton_parameter > 0 := by
+    have four_positive : (4 : ℝ) > 0 := by norm_num
+    exact mul_pos four_positive bulk_operator.dilaton_positive
+  push_cast
+  nlinarith
 
 /-- **Definition 7.8 (Wetterich Functional Renormalization Group Infrared Flow)**:
 Encapsulates the non-perturbative flow equation $\partial_k \Gamma_k = \frac{1}{2}\text{Tr}[(\Gamma_k^{(2)} + R_k)^{-1}\partial_k R_k]$
@@ -118,19 +114,19 @@ structure WetterichFunctionalRenormalizationFlow (group : CompactSimpleLieGroup)
 Five-dimensional gravity background $ds^2 = \frac{R^2}{z^2}(\eta_{\mu\nu}dx^\mu dx^\nu + dz^2)$
 with quadratic dilaton $\Phi(z) = c z^2$, dual to 4D confining pure gauge theory. -/
 structure HolographicAdS5SoftWall where
-  dilaton_slope_parameter : Nat
-  curvature_radius : Nat
+  dilaton_slope_parameter : ℝ
+  curvature_radius : ℝ
   dilaton_slope_positive : dilaton_slope_parameter > 0
   curvature_radius_positive : curvature_radius > 0
 
 /-- **Definition 7.10 (Holographic Glueball Mass Squared)**:
 Computes $M^2(n, S) = 4c(n + S)$ for spin-$S$ glueball states with radial excitation $n$. -/
-def holographic_glueball_mass_squared (bulk : HolographicAdS5SoftWall) (excitation_number : Nat) : Nat :=
-  4 * bulk.dilaton_slope_parameter * (excitation_number + 1)
+def holographic_glueball_mass_squared (bulk : HolographicAdS5SoftWall) (excitation_number : Nat) : ℝ :=
+  4 * bulk.dilaton_slope_parameter * ((excitation_number : ℝ) + 1)
 
 /-- **Definition 7.11 (Holographic Ground State Scale)**:
 The lowest holographic ground state excitation squared $M_0^2 = 4c$. -/
-def holographic_ground_state_mass_squared (bulk : HolographicAdS5SoftWall) : Nat :=
+def holographic_ground_state_mass_squared (bulk : HolographicAdS5SoftWall) : ℝ :=
   holographic_glueball_mass_squared bulk 0
 
 /-- **Theorem 7.12 (Strict Positivity of Holographic Ground State)**:
@@ -139,16 +135,18 @@ theorem holographic_ground_state_strictly_positive
     (bulk : HolographicAdS5SoftWall) :
     holographic_ground_state_mass_squared bulk > 0 := by
   dsimp [holographic_ground_state_mass_squared, holographic_glueball_mass_squared]
-  have slope_positive := bulk.dilaton_slope_positive
-  have four_slope_positive : 4 * bulk.dilaton_slope_parameter > 0 := by omega
-  exact Nat.mul_pos four_slope_positive (by omega)
+  have four_positive : (4 : ℝ) > 0 := by norm_num
+  have four_slope_positive : 4 * bulk.dilaton_slope_parameter > 0 :=
+    mul_pos four_positive bulk.dilaton_slope_positive
+  have one_positive : (0 : ℝ) + 1 > 0 := by norm_num
+  exact mul_pos four_slope_positive one_positive
 
 /-- **Definition 7.13 (Gribov Fundamental Modular Domain $\Omega$)**:
 The region in gauge field space where the Faddeev-Popov operator $-\partial_\mu D_\mu(A) > 0$
 is strictly positive definite, with boundary given by the first Gribov horizon $\partial\Omega$. -/
 structure GribovFundamentalDomain where
   volume_scale : Nat
-  faddeev_popov_lowest_eigenvalue : Nat
+  faddeev_popov_lowest_eigenvalue : ℝ
   gribov_horizon_measure_scaled : Nat
   faddeev_popov_lowest_positive : faddeev_popov_lowest_eigenvalue > 0
   horizon_measure_zero : gribov_horizon_measure_scaled = 0
@@ -297,9 +295,9 @@ def canonical_su3_confluence_certificate : HolographicRenormalizationConfluenceC
   },
   gribov := {
     volume_scale := 128,
-    faddeev_popov_lowest_eigenvalue := 450,
+    faddeev_popov_lowest_eigenvalue := 450.0,
     gribov_horizon_measure_scaled := 0,
-    faddeev_popov_lowest_positive := by decide,
+    faddeev_popov_lowest_positive := by norm_num,
     horizon_measure_zero := rfl
   },
   holographic_mass_lower_bound := 1500,

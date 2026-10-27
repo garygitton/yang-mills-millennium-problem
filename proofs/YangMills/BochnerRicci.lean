@@ -57,7 +57,7 @@ The Gribov fundamental region $\Omega \subset \mathcal{A}$ bounded by the horizo
 Domain states satisfy Dirichlet conditions $\psi|_{\partial \Omega} = 0$, guaranteeing
 the vanishing of the Bochner boundary flux integral. -/
 structure GribovFundamentalRegion (hilbert : RealHilbertSpace) where
-  faddeev_popov_lowest_eigenvalue : Nat
+  faddeev_popov_lowest_eigenvalue : ℝ
   faddeev_popov_strictly_positive : faddeev_popov_lowest_eigenvalue > 0
   dirichlet_boundary_subspace : hilbert.Vector → Prop
   boundary_flux_integral : hilbert.Vector → Nat
@@ -93,8 +93,6 @@ theorem scalar_sectional_curvature_nonnegative
   dsimp [geometry.sectional_curvature]
   have _h_nonneg := geometry.oneill_tensor.a_tensor_nonnegative u v
   exact Int.ofNat_zero_le (3 * geometry.oneill_tensor.a_tensor_norm_squared u v)
-
-def scalar_sectional_curvature_positivity := scalar_sectional_curvature_nonnegative
 
 /-- **Theorem 3.2b (Gribov Horizon Boundary Flux Vanishing for Dirichlet States)**:
 Proves that for any state in the Dirichlet domain of the Gribov horizon,

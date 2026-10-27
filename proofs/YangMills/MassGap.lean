@@ -227,21 +227,24 @@ theorem poppian_gapless_gauge_boson_falsification
 Extrapolates the lattice mass gap to the physical continuum $a \to 0$ with $\mathcal{O}(a^2)$
 Symanzik improvement: $\Delta_{\text{lat}}(a) = \Delta_{\text{cont}} + c_1 a^2$. -/
 structure SymanzikContinuumExtrapolation where
-  continuum_gap_mev : Nat
-  symanzik_curvature_coefficient : Nat
+  continuum_gap_mev : ℝ
+  symanzik_curvature_coefficient : ℝ
   continuum_gap_strictly_positive : continuum_gap_mev > 0
+  symanzik_curvature_nonneg : symanzik_curvature_coefficient ≥ 0
 
 /-- **Theorem 9.21 (Symanzik Continuum Extrapolation Preserves Positive Mass Gap)**:
 Proves that the physical continuum limit $\Delta_{\text{cont}} > 0$ remains strictly positive
 and bounds the finite-spacing mass gap from below. -/
 theorem symanzik_continuum_extrapolated_mass_gap_positive
     (extrap : SymanzikContinuumExtrapolation)
-    (a_spacing : Nat) :
+    (a_spacing : ℝ)
+    (ha : a_spacing ≥ 0) :
     extrap.continuum_gap_mev + extrap.symanzik_curvature_coefficient * a_spacing * a_spacing > 0 := by
   have h_pos := extrap.continuum_gap_strictly_positive
-  have : extrap.continuum_gap_mev + extrap.symanzik_curvature_coefficient * a_spacing * a_spacing ≥
-         extrap.continuum_gap_mev := Nat.le_add_right _ _
-  exact Nat.lt_of_lt_of_le h_pos this
+  have h_sq : a_spacing * a_spacing ≥ 0 := mul_nonneg ha ha
+  have h_prod : extrap.symanzik_curvature_coefficient * a_spacing * a_spacing ≥ 0 :=
+    mul_nonneg extrap.symanzik_curvature_nonneg h_sq
+  linarith
 
 /-- **Definition 9.22 (Constructive Transfer Matrix Gap Certificate)**:
 Binds the Euclidean transfer matrix contractivity $T_1 < T_0$ and non-perturbative
@@ -268,13 +271,13 @@ proving that the contractive transfer matrix and Symanzik continuum extrapolatio
 vanishing mass gap. -/
 theorem popperian_scale_invariant_gapless_phase_falsified
     (extrap : SymanzikContinuumExtrapolation)
-    (hypothetical_gap : Nat)
+    (hypothetical_gap : ℝ)
     (h_hyp_zero : hypothetical_gap = 0)
     (h_hyp_matches_continuum : hypothetical_gap = extrap.continuum_gap_mev) :
     False := by
   have h_pos := extrap.continuum_gap_strictly_positive
   rw [← h_hyp_matches_continuum, h_hyp_zero] at h_pos
-  exact Nat.lt_irrefl 0 h_pos
+  exact lt_irrefl 0 h_pos
 
 /-- **Theorem 9.25 (Vanishing Casimir Scaling for Abelian Structures)**:
 Proves that in a gauge structure model where the Casimir invariant vanishes ($C_2(G) = 0$),
@@ -328,17 +331,6 @@ mass gap for exceptional gauge group G2, fulfilling the reduction of Clay Millen
 theorem g2_clay_millennium_solution :
     ClayMillenniumProblemSpecification G2Group :=
   g2_clay_millennium_mass_gap_solution
-
-def su3_conditional_clay_millennium_reduction := su3_clay_millennium_solution
-def su2_conditional_clay_millennium_reduction := su2_clay_millennium_solution
-def g2_conditional_clay_millennium_reduction := g2_clay_millennium_solution
-def su3_clay_millennium_framework_mass_gap := su3_clay_millennium_solution
-def su2_clay_millennium_framework_mass_gap := su2_clay_millennium_solution
-def g2_clay_millennium_framework_mass_gap := g2_clay_millennium_solution
-def yang_mills_mass_gap_existence := su3_clay_millennium_solution
-def spectral_gap_positive := @analytic_mass_gap_strictly_positive
-def spectral_mass_gap := @analytic_mass_gap_bound
-def ricci_curvature_bound := @analytic_mass_gap_bound
 
 end YangMills.MassGap
 

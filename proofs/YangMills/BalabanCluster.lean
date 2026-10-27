@@ -181,34 +181,34 @@ $|\langle \mathcal{O}(0) \mathcal{O}(x) \rangle_c| \le C \cdot \exp(-M \cdot |x|
 scaled on spatial separation coordinates.
 -/
 structure ClusterDecayEnvelope where
-  mass_gap_exponent : Nat
-  envelope_prefactor_permille : Nat := 1000
+  mass_gap_exponent : ℝ
+  envelope_prefactor : ℝ := 1.0
   gap_strictly_positive : mass_gap_exponent > 0
 
 /--
 **Theorem 12.10 (Cluster Decay Exponent Positivity Along Spatial Geodesics)**:
-Proves that for any non-zero spatial separation $d \ge 1$, the integrated decay exponent
+Proves that for any non-zero spatial separation $d > 0$, the integrated decay exponent
 $M \cdot d$ is strictly positive, ensuring uniform exponential dampening of long-range correlations.
 -/
 theorem cluster_decay_exponent_strictly_positive
     (env : ClusterDecayEnvelope)
-    (dist : Nat)
-    (h_dist : dist ≥ 1) :
-    env.mass_gap_exponent * dist > 0 := by
-  exact Nat.mul_pos env.gap_strictly_positive h_dist
+    (dist : ℝ)
+    (h_dist : dist > 0) :
+    env.mass_gap_exponent * dist > 0 :=
+  mul_pos env.gap_strictly_positive h_dist
 
 /--
 **Theorem 12.9 (Thermodynamic Cluster Decomposition Exponent Positivity)**:
 Proves that a positive transfer matrix spectral gap $\mu_0 > 0$ yields a positive decay factor
-$\mu_0 \cdot d > 0$ for all spatial distances $d \ge 1$.
+$\mu_0 \cdot d > 0$ for all spatial distances $d > 0$.
 -/
 theorem thermodynamic_cluster_decay_bound
-    (base_gap : Nat)
-    (dist : Nat)
+    (base_gap : ℝ)
+    (dist : ℝ)
     (h_gap : base_gap > 0)
-    (h_dist : dist ≥ 1) :
-    base_gap * dist > 0 := by
-  exact Nat.mul_pos h_gap h_dist
+    (h_dist : dist > 0) :
+    base_gap * dist > 0 :=
+  mul_pos h_gap h_dist
 
 /--
 **Theorem 12.11 (Popperian Falsification of Vanishing Mass Gap Cluster Decay)**:
@@ -216,20 +216,20 @@ Falsifies any hypothesis asserting that a massless theory (m = 0) can instantiat
 exponential cluster decay envelope, proving that m = 0 strictly contradicts m > 0.
 -/
 theorem zero_mass_gap_cluster_decay_falsification
-    (mass_exponent : Nat)
+    (mass_exponent : ℝ)
     (h_zero : mass_exponent = 0) :
     ¬ (mass_exponent > 0) := by
   rw [h_zero]
-  exact Nat.not_lt_zero 0
+  exact lt_irrefl 0
 
 /--
 **Theorem 12.12 (Massless Cluster Separation Yields Trivial Zero Exponent)**:
-Proves that in the absence of a mass gap, spatial separation d ≥ 1 produces zero dampening (0 · d = 0),
+Proves that in the absence of a mass gap, spatial separation d > 0 produces zero dampening (0 · d = 0),
 formally confirming that long-range exponential dampening strictly requires Δ > 0.
 -/
 theorem massless_cluster_separation_exponent_vanishes
-    (dist : Nat) :
-    0 * dist = 0 := by
-  exact Nat.zero_mul dist
+    (dist : ℝ) :
+    0 * dist = 0 :=
+  zero_mul dist
 
 end YangMills.BalabanCluster

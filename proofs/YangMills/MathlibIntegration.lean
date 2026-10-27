@@ -116,15 +116,16 @@ certifying that the continuum limit existence axiom is satisfied over ℝ⁴ wit
 theorem continuous_mathlib_schwartz_embedding_bridge
     (group : CompactSimpleLieGroup)
     (h_cas : group.casimir_adjoint > 0)
-    (energy_scale : Nat)
+    (energy_scale : ℝ)
     (h_scale : energy_scale > 0)
     (spec : ContinuousJaffeWittenClaySpecification group)
-    (h_match : spec.continuous_mass_gap = 11 * group.casimir_adjoint * energy_scale) :
+    (h_match : spec.continuous_mass_gap = 11 * (group.casimir_adjoint : ℝ) * energy_scale) :
     spec.continuous_mass_gap > 0 := by
   rw [h_match]
-  have h11 : 11 > 0 := by decide
-  have h_c2 : 11 * group.casimir_adjoint > 0 := Nat.mul_pos h11 h_cas
-  exact Nat.mul_pos h_c2 h_scale
+  have h11 : (11 : ℝ) > 0 := by norm_num
+  have h_cas_real : (group.casimir_adjoint : ℝ) > 0 := Nat.cast_pos.mpr h_cas
+  have h_c2 : (11 : ℝ) * (group.casimir_adjoint : ℝ) > 0 := mul_pos h11 h_cas_real
+  exact mul_pos h_c2 h_scale
 
 /--
 **Definition 18.4 (Canonical Projective Inductive Limit Witness)**:
