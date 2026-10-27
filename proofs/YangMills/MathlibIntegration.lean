@@ -83,12 +83,12 @@ for all resolution levels $k \in \mathbb{N}$.
 -/
 theorem dyadic_spectral_resolution_scaling
     (limit_space : ProjectiveInductiveLimitSchwartz)
-    (gap : Nat)
+    (gap : ℝ)
     (h_gap : gap > 0)
     (k : Nat) :
-    gap * (2^k) > 0 := by
-  have h2 : 2^k > 0 := limit_space.is_dense_pre_frechet k
-  exact Nat.mul_pos h_gap h2
+    gap * ((2 : ℝ)^k) > 0 := by
+  have h2 : ((2 : ℝ)^k) > 0 := by positivity
+  exact mul_pos h_gap h2
 
 /--
 **Theorem 18.2b (Continuous Test Function Rayleigh Quotient Lower Bound)**:
@@ -99,12 +99,12 @@ theorem continuous_rayleigh_quotient_variational_gap
     (H : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
     (form : Axioms.ClosedQuadraticForm H)
     (vacuum : form.DomainState)
-    (gap : Nat)
+    (gap : ℝ)
     (rq : Axioms.RayleighQuotientCondition H form vacuum gap)
     (excited : form.DomainState)
     (h_ortho : H.inner_product (form.inclusion vacuum) (form.inclusion excited) = 0)
     (h_norm_pos : H.inner_product (form.inclusion excited) (form.inclusion excited) > 0) :
-    form.eval_form excited excited ≥ (gap : Int) * H.inner_product (form.inclusion excited) (form.inclusion excited) ∧
+    form.eval_form excited excited ≥ gap * H.inner_product (form.inclusion excited) (form.inclusion excited) ∧
     form.eval_form excited excited > 0 :=
   Axioms.rayleigh_quotient_implies_eigenvalue_gap H form vacuum gap rq excited h_ortho h_norm_pos
 
@@ -181,7 +181,7 @@ structure DiscreteToRealHilbertEmbedding
   embed : H_disc.State → H_real.State
   embed_zero : embed H_disc.zero_state = H_real.zero_state
   norm_scaling_preserved : ∀ ψ, H_real.inner_product (embed ψ) (embed ψ) ≥ 0
-  norm_embedding_scale : Nat
+  norm_embedding_scale : ℝ
   scale_positive : norm_embedding_scale > 0
 
 /--
@@ -195,10 +195,10 @@ theorem real_hilbert_space_mass_gap_extension
     (H_disc : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
     (H_real : ContinuousRealHilbertSpace)
     (ext : DiscreteToRealHilbertEmbedding H_disc H_real)
-    (discrete_gap : Nat)
+    (discrete_gap : ℝ)
     (h_disc_gap : discrete_gap > 0) :
     discrete_gap * ext.norm_embedding_scale > 0 :=
-  Nat.mul_pos h_disc_gap ext.scale_positive
+  mul_pos h_disc_gap ext.scale_positive
 
 /--
 **Definition 18.8 (Continuous Friedrichs Form and Spectral Bound)**:
@@ -210,9 +210,9 @@ References: Friedrichs (1934), Kato (1966), Reed & Simon (Vol. II, Thm. X.23).
 -/
 structure ContinuousFriedrichsSpectralOperator (H : ContinuousRealHilbertSpace) where
   vacuum : H.State
-  base_gap : Nat
+  base_gap : ℝ
   h_base_gap : base_gap > 0
-  coercivity_scale : Nat
+  coercivity_scale : ℝ
   h_coercivity : coercivity_scale > 0
   rayleigh_lower_bound : ∀ (ψ : H.State),
     H.inner_product vacuum ψ = 0 →
@@ -227,7 +227,7 @@ theorem continuous_friedrichs_spectrum_gap_positive
     (H : ContinuousRealHilbertSpace)
     (op : ContinuousFriedrichsSpectralOperator H) :
     op.base_gap * op.coercivity_scale > 0 :=
-  Nat.mul_pos op.h_base_gap op.h_coercivity
+  mul_pos op.h_base_gap op.h_coercivity
 
 end YangMills.MathlibIntegration
 

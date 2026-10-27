@@ -554,7 +554,7 @@ theorem continuous_real_hilbert_extension_evaluation
     (H_disc : Axioms.PhysicalHilbertSpace Axioms.ContinuousScalarField)
     (H_real : MathlibIntegration.ContinuousRealHilbertSpace)
     (ext : MathlibIntegration.DiscreteToRealHilbertEmbedding H_disc H_real)
-    (discrete_gap : Nat)
+    (discrete_gap : ℝ)
     (h_disc_gap : discrete_gap > 0) :
     discrete_gap * ext.norm_embedding_scale > 0 :=
   MathlibIntegration.real_hilbert_space_mass_gap_extension H_disc H_real ext discrete_gap h_disc_gap
@@ -563,9 +563,9 @@ theorem continuous_real_hilbert_extension_evaluation
 **Theorem 10.33 (Non-Linear Callan-Symanzik Asymptotic Freedom Running Coupling Certificate)**:
 Certifies that the integrated running coupling denominator remains strictly positive for all scales.
 -/
-theorem callan_symanzik_running_coupling_denominator_evaluation (t : Nat) :
+theorem callan_symanzik_running_coupling_denominator_evaluation (t : ℝ) (h_t : t ≥ 0) :
     Renormalization.callan_symanzik_running_coupling_denominator 33 1 t > 0 :=
-  Renormalization.running_coupling_denominator_strictly_positive 33 1 t
+  Renormalization.running_coupling_denominator_strictly_positive 33 1 t (by norm_num) (by norm_num) h_t
 
 /--
 **Theorem 10.34 (Dashen Point θ = π Mass Gap Stability Certificate)**:
@@ -580,10 +580,10 @@ theorem dashen_point_theta_pi_gap_evaluation :
 **Theorem 10.35 (Asymptotic Freedom Effective Coupling Monotone Decay Certificate)**:
 Certifies monotonic decrease of running gauge coupling under renormalization group flow.
 -/
-theorem running_coupling_quotient_monotone_decay_evaluation (t1 t2 : Nat) (h_le : t1 ≤ t2) :
+theorem running_coupling_quotient_monotone_decay_evaluation (t1 t2 : ℝ) (h_t1 : t1 ≥ 0) (h_le : t1 ≤ t2) :
     1 / Renormalization.callan_symanzik_running_coupling_denominator 33 1 t2 ≤
     1 / Renormalization.callan_symanzik_running_coupling_denominator 33 1 t1 :=
-  Renormalization.running_coupling_quotient_monotone_decay 33 1 t1 t2 (by norm_num) (by norm_num) h_le
+  Renormalization.running_coupling_quotient_monotone_decay 33 1 t1 t2 (by norm_num) (by norm_num) h_t1 h_le
 
 /--
 **Theorem 10.36 (G₂ Exceptional Lie Group Gauge Group Certificate)**:
