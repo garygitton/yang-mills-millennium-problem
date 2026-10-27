@@ -138,7 +138,7 @@ structure BalabanPolymerContractionStep where
   contraction_constant_numerator : Nat
   contraction_constant_denominator : Nat := 1000
   is_contractive : contraction_constant_numerator < contraction_constant_denominator
-  effective_action_bound_mev : Nat
+  effective_action_bound_mev : ℝ
   bound_positive : effective_action_bound_mev > 0
 
 def canonical_balaban_polymer_step (k : Nat) (beta : Nat) : BalabanPolymerContractionStep := {
@@ -149,8 +149,8 @@ def canonical_balaban_polymer_step (k : Nat) (beta : Nat) : BalabanPolymerContra
     have h_denom : 2 + beta ≥ 2 := by omega
     have h_div : 1000 / (2 + beta) ≤ 1000 / 2 := Nat.div_le_div_left h_denom (by decide)
     omega,
-  effective_action_bound_mev := k + 1,
-  bound_positive := by omega
+  effective_action_bound_mev := (k : ℝ) + 1.0,
+  bound_positive := by positivity
 }
 
 theorem balaban_banach_contraction_subunitary (k : Nat) (beta : Nat) :
@@ -162,9 +162,8 @@ theorem balaban_banach_contraction_subunitary (k : Nat) (beta : Nat) :
   omega
 
 theorem balaban_effective_action_remains_bounded_and_positive (k : Nat) (beta : Nat) :
-    (canonical_balaban_polymer_step k beta).effective_action_bound_mev > 0 := by
-  dsimp [canonical_balaban_polymer_step]
-  omega
+    (canonical_balaban_polymer_step k beta).effective_action_bound_mev > 0 :=
+  (canonical_balaban_polymer_step k beta).bound_positive
 
 -- ==============================================================================
 -- Strategy 5: Adversarial Counter-Theorem Engine (Popperian Falsification)
@@ -172,17 +171,17 @@ theorem balaban_effective_action_remains_bounded_and_positive (k : Nat) (beta : 
 
 structure AdversarialGaplessConjecture where
   boundary_twist_angle_radians_permille : Nat
-  hypothetical_mass_gap_mev : Nat
+  hypothetical_mass_gap_mev : ℝ
   claims_zero_mass_gap : hypothetical_mass_gap_mev = 0
 
 theorem popperian_boundary_twist_gapless_conjecture_falsified
     (conj : AdversarialGaplessConjecture)
-    (proven_bulk_gap_mev : Nat)
+    (proven_bulk_gap_mev : ℝ)
     (h_bulk : proven_bulk_gap_mev > 0)
     (h_equality : conj.hypothetical_mass_gap_mev = proven_bulk_gap_mev) :
     False := by
   have h_zero := conj.claims_zero_mass_gap
   rw [h_zero] at h_equality
-  omega
+  linarith
 
 end YangMillsInnovations

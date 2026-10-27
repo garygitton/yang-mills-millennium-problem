@@ -302,7 +302,7 @@ theorem canonical_orbit_curvature_gap_bridge
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector)
     (h_ricci_pos : bochner_operator.geometry.ricci_condensate_scale > 0)
-    (h_norm_pos : (hilbert.norm_squared v).natAbs > 0) :
+    (h_norm_pos : hilbert.norm_squared v > 0) :
     bochner_operator.hodge_laplacian_form v > 0 :=
   condensate_scale_positivity_implies_hodge_positivity hilbert bochner_operator v vector_non_zero h_ricci_pos h_norm_pos
 

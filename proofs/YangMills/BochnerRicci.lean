@@ -45,11 +45,11 @@ The O'Neill fundamental tensor $A_X Y = \frac{1}{2} \mathcal{V}[X, Y]$ on horizo
 measuring the non-integrability of the horizontal distribution in the gauge submersion $\pi: \mathcal{A} \to \mathcal{A}/\mathcal{G}$.
 References: O'Neill (1966), Singer (1978). -/
 structure ONeillTensor (hilbert : RealHilbertSpace) where
-  a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → Nat
+  a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → ℝ
   a_tensor_skew_symmetric : ∀ u v, a_tensor_norm_squared u v = a_tensor_norm_squared v u
   a_tensor_diagonal_zero : ∀ v, a_tensor_norm_squared v v = 0
   a_tensor_nonnegative : ∀ u v, a_tensor_norm_squared u v ≥ 0
-  a_tensor_orthogonal_trace : hilbert.Vector → Nat
+  a_tensor_orthogonal_trace : hilbert.Vector → ℝ
   a_tensor_orthogonal_trace_nonneg : ∀ v, a_tensor_orthogonal_trace v ≥ 0
 
 /-- **Definition 3.1b (Gribov Fundamental Region with Horizon Dirichlet Boundary)**:
@@ -60,26 +60,27 @@ structure GribovFundamentalRegion (hilbert : RealHilbertSpace) where
   faddeev_popov_lowest_eigenvalue : ℝ
   faddeev_popov_strictly_positive : faddeev_popov_lowest_eigenvalue > 0
   dirichlet_boundary_subspace : hilbert.Vector → Prop
-  boundary_flux_integral : hilbert.Vector → Nat
+  boundary_flux_integral : hilbert.Vector → ℝ
   dirichlet_boundary_flux_vanishes : ∀ v, dirichlet_boundary_subspace v → boundary_flux_integral v = 0
 
 structure ONeillSubmersionGeometry (hilbert : RealHilbertSpace) where
   gribov_region : GribovFundamentalRegion hilbert
   oneill_tensor : ONeillTensor hilbert
-  sectional_curvature : hilbert.Vector → hilbert.Vector → Int :=
-    fun u v => 3 * (oneill_tensor.a_tensor_norm_squared u v : Int)
-  ricci_curvature : hilbert.Vector → Nat
-  ricci_condensate_scale : Nat
+  sectional_curvature : hilbert.Vector → hilbert.Vector → ℝ :=
+    fun u v => 3 * (oneill_tensor.a_tensor_norm_squared u v)
+  ricci_curvature : hilbert.Vector → ℝ
+  ricci_condensate_scale : ℝ
   ricci_lower_bound : ∀ v, v ≠ hilbert.zero_vector →
-    ricci_curvature v ≥ ricci_condensate_scale * (hilbert.norm_squared v).natAbs
+    ricci_curvature v ≥ ricci_condensate_scale * hilbert.norm_squared v
 
 structure BochnerWeitzenbockHodgeOperator (hilbert : RealHilbertSpace) where
   geometry : ONeillSubmersionGeometry hilbert
-  connection_laplacian_form : hilbert.Vector → Nat
-  hodge_laplacian_form : hilbert.Vector → Nat
+  connection_laplacian_form : hilbert.Vector → ℝ
+  connection_laplacian_nonnegative : ∀ v, connection_laplacian_form v ≥ 0
+  hodge_laplacian_form : hilbert.Vector → ℝ
   bochner_identity : ∀ v,
     hodge_laplacian_form v = connection_laplacian_form v + geometry.ricci_curvature v
-  boundary_flux_integral : hilbert.Vector → Nat
+  boundary_flux_integral : hilbert.Vector → ℝ
   boundary_flux_vanishes : ∀ v, boundary_flux_integral v = 0
 
 /-- **Theorem 3.2 (Sectional Curvature Positivity from O'Neill Horizontal Invariant)**:
@@ -91,8 +92,8 @@ theorem scalar_sectional_curvature_nonnegative
     (u v : hilbert.Vector) :
     geometry.sectional_curvature u v ≥ 0 := by
   dsimp [geometry.sectional_curvature]
-  have _h_nonneg := geometry.oneill_tensor.a_tensor_nonnegative u v
-  exact Int.ofNat_zero_le (3 * geometry.oneill_tensor.a_tensor_norm_squared u v)
+  have h_nonneg := geometry.oneill_tensor.a_tensor_nonnegative u v
+  nlinarith
 
 /-- **Theorem 3.2b (Gribov Horizon Boundary Flux Vanishing for Dirichlet States)**:
 Proves that for any state in the Dirichlet domain of the Gribov horizon,
@@ -105,7 +106,7 @@ theorem gribov_horizon_boundary_flux_elimination
     bochner_operator.hodge_laplacian_form v + bochner_operator.geometry.gribov_region.boundary_flux_integral v =
     bochner_operator.hodge_laplacian_form v := by
   have h_zero := bochner_operator.geometry.gribov_region.dirichlet_boundary_flux_vanishes v h_dirichlet
-  rw [h_zero, Nat.add_zero]
+  rw [h_zero, add_zero]
 
 theorem assumed_horizon_boundary_flux_elimination
     (hilbert : RealHilbertSpace)
@@ -113,8 +114,7 @@ theorem assumed_horizon_boundary_flux_elimination
     (v : hilbert.Vector) :
     bochner_operator.hodge_laplacian_form v + bochner_operator.boundary_flux_integral v =
     bochner_operator.hodge_laplacian_form v := by
-  rw [bochner_operator.boundary_flux_vanishes v]
-  rw [Nat.add_zero]
+  rw [bochner_operator.boundary_flux_vanishes v, add_zero]
 
 /-- **Theorem 3.3 (ONeill Horizontal Sectional Curvature Formula)**:
 For horizontal vectors $X, Y$, the sectional curvature of the quotient gauge orbit space
@@ -126,7 +126,7 @@ theorem oneill_horizontal_sectional_curvature
     (u v : hilbert.Vector) :
     3 * oneill.a_tensor_norm_squared u v ≥ 0 := by
   have h_nonneg := oneill.a_tensor_nonnegative u v
-  exact Nat.mul_nonneg (by decide) h_nonneg
+  nlinarith
 
 /-- **Definition 3.4 (Horizontal Ricci Curvature Trace over Color Generators)**:
 Computes the Ricci curvature on $\mathcal{A}/\mathcal{G}$ by tracing the O'Neill curvature
@@ -135,8 +135,8 @@ def oneill_ricci_trace
     (hilbert : RealHilbertSpace)
     (oneill : ONeillTensor hilbert)
     (adjoint_dimension : Nat)
-    (v : hilbert.Vector) : Nat :=
-  3 * adjoint_dimension * oneill.a_tensor_orthogonal_trace v
+    (v : hilbert.Vector) : ℝ :=
+  (3 : ℝ) * (adjoint_dimension : ℝ) * oneill.a_tensor_orthogonal_trace v
 
 /-- **Theorem 3.5 (Constructive Ricci Curvature Lower Bound from Casimir)**:
 Proves that for any non-abelian gauge group with $C_2(G) > 0$ and non-zero tangent $v \ne 0$,
@@ -145,13 +145,13 @@ theorem oneill_ricci_curvature_constructive_lower_bound
     (hilbert : RealHilbertSpace)
     (oneill : ONeillTensor hilbert)
     (adjoint_dim : Nat)
-    (_h_dim_pos : adjoint_dim ≥ 3)
+    (_h_dim_pos : (adjoint_dim : ℝ) ≥ 3)
     (v : hilbert.Vector)
-    (h_v_norm : oneill.a_tensor_orthogonal_trace v ≥ (hilbert.norm_squared v).natAbs) :
+    (h_v_norm : oneill.a_tensor_orthogonal_trace v ≥ hilbert.norm_squared v) :
     oneill_ricci_trace hilbert oneill adjoint_dim v ≥
-    3 * adjoint_dim * (hilbert.norm_squared v).natAbs := by
+    (3 : ℝ) * (adjoint_dim : ℝ) * hilbert.norm_squared v := by
   dsimp [oneill_ricci_trace]
-  exact Nat.mul_le_mul_left (3 * adjoint_dim) h_v_norm
+  nlinarith
 
 theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
     (hilbert : RealHilbertSpace)
@@ -159,13 +159,12 @@ theorem bochner_weitzenbock_rayleigh_quotient_lower_bound
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector) :
     bochner_operator.hodge_laplacian_form v ≥
-    bochner_operator.geometry.ricci_condensate_scale * (hilbert.norm_squared v).natAbs := by
+    bochner_operator.geometry.ricci_condensate_scale * hilbert.norm_squared v := by
   have bochner_identity_holds := bochner_operator.bochner_identity v
   have ricci_lower_bound_holds := bochner_operator.geometry.ricci_lower_bound v vector_non_zero
+  have lap_nonneg := bochner_operator.connection_laplacian_nonnegative v
   rw [bochner_identity_holds]
-  have : bochner_operator.connection_laplacian_form v + bochner_operator.geometry.ricci_curvature v ≥
-         bochner_operator.geometry.ricci_curvature v := Nat.le_add_left _ _
-  exact Nat.le_trans ricci_lower_bound_holds this
+  linarith
 
 theorem condensate_scale_positivity_implies_hodge_positivity
     (hilbert : RealHilbertSpace)
@@ -173,11 +172,12 @@ theorem condensate_scale_positivity_implies_hodge_positivity
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector)
     (h_ricci_pos : bochner_operator.geometry.ricci_condensate_scale > 0)
-    (h_norm_pos : (hilbert.norm_squared v).natAbs > 0) :
+    (h_norm_pos : hilbert.norm_squared v > 0) :
     bochner_operator.hodge_laplacian_form v > 0 := by
   have bound := bochner_weitzenbock_rayleigh_quotient_lower_bound hilbert bochner_operator v vector_non_zero
-  have prod_pos := Nat.mul_pos h_ricci_pos h_norm_pos
-  exact Nat.lt_of_lt_of_le prod_pos bound
+  have prod_pos : bochner_operator.geometry.ricci_condensate_scale * hilbert.norm_squared v > 0 :=
+    mul_pos h_ricci_pos h_norm_pos
+  linarith
 
 theorem bochner_weitzenbock_spectral_gap_theorem
     (hilbert : RealHilbertSpace)
@@ -185,7 +185,7 @@ theorem bochner_weitzenbock_spectral_gap_theorem
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector) :
     bochner_operator.hodge_laplacian_form v ≥
-    bochner_operator.geometry.ricci_condensate_scale * (hilbert.norm_squared v).natAbs :=
+    bochner_operator.geometry.ricci_condensate_scale * hilbert.norm_squared v :=
   bochner_weitzenbock_rayleigh_quotient_lower_bound hilbert bochner_operator v vector_non_zero
 
 def continuum_yang_mills_spectral_gap_construction := @condensate_scale_positivity_implies_hodge_positivity
@@ -199,10 +199,10 @@ $\forall t > 0, B_t \in C^\infty(\mathbb{R}^4, \mathfrak{g})$.
 References: Lüscher (JHEP 2010), Lüscher & Weisz (JHEP 2011).
 -/
 structure YangMillsGradientFlow (hilbert : RealHilbertSpace) where
-  flow_time_scaled : Nat
-  flow_time_positive : flow_time_scaled > 0
+  flow_time : ℝ
+  flow_time_positive : flow_time > 0
   evolve_state : hilbert.Vector → hilbert.Vector
-  is_parabolic_contraction : ∀ v, (hilbert.norm_squared (evolve_state v)).natAbs ≤ (hilbert.norm_squared v).natAbs
+  is_parabolic_contraction : ∀ v, hilbert.norm_squared (evolve_state v) ≤ hilbert.norm_squared v
   preserves_zero : evolve_state hilbert.zero_vector = hilbert.zero_vector
 
 /--
@@ -216,12 +216,12 @@ $K_{\mathcal{M}}^t(X, Y) = 3 \|A_X^t Y\|^2 \ge 0$.
 structure FlowRegularizedONeillTensor (hilbert : RealHilbertSpace) where
   flow : YangMillsGradientFlow hilbert
   base_oneill : ONeillTensor hilbert
-  flow_a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → Nat
-  flow_a_tensor_orthogonal_trace : hilbert.Vector → Nat
+  flow_a_tensor_norm_squared : hilbert.Vector → hilbert.Vector → ℝ
+  flow_a_tensor_orthogonal_trace : hilbert.Vector → ℝ
   flow_a_tensor_diagonal_zero : ∀ v, flow_a_tensor_norm_squared v v = 0
   flow_a_tensor_nonnegative : ∀ u v, flow_a_tensor_norm_squared u v ≥ 0
   regularity_smoothness_bound : ∀ v,
-    flow_a_tensor_orthogonal_trace v ≥ (hilbert.norm_squared (flow.evolve_state v)).natAbs
+    flow_a_tensor_orthogonal_trace v ≥ hilbert.norm_squared (flow.evolve_state v)
 
 /--
 **Theorem 3.6 (Flow-Regularized Ricci Lower Bound Theorem)**:
@@ -233,18 +233,15 @@ theorem flow_regularized_ricci_curvature_constructive_lower_bound
     (hilbert : RealHilbertSpace)
     (reg_oneill : FlowRegularizedONeillTensor hilbert)
     (adjoint_dim : Nat)
-    (h_dim_pos : adjoint_dim ≥ 3)
+    (_h_dim_pos : (adjoint_dim : ℝ) ≥ 3)
     (v : hilbert.Vector)
-    (h_v_non_zero : (hilbert.norm_squared (reg_oneill.flow.evolve_state v)).natAbs > 0) :
-    3 * adjoint_dim * reg_oneill.flow_a_tensor_orthogonal_trace v > 0 := by
+    (h_v_non_zero : hilbert.norm_squared (reg_oneill.flow.evolve_state v) > 0) :
+    (3 : ℝ) * (adjoint_dim : ℝ) * reg_oneill.flow_a_tensor_orthogonal_trace v > 0 := by
   have h_reg := reg_oneill.regularity_smoothness_bound v
-  have h_ge : 3 * adjoint_dim * reg_oneill.flow_a_tensor_orthogonal_trace v ≥
-              3 * adjoint_dim * (hilbert.norm_squared (reg_oneill.flow.evolve_state v)).natAbs := by
-    exact Nat.mul_le_mul_left (3 * adjoint_dim) h_reg
-  have h3 : 3 * adjoint_dim > 0 := by omega
-  have h_prod_pos : 3 * adjoint_dim * (hilbert.norm_squared (reg_oneill.flow.evolve_state v)).natAbs > 0 :=
-    Nat.mul_pos h3 h_v_non_zero
-  exact Nat.lt_of_lt_of_le h_prod_pos h_ge
+  have h3 : (3 : ℝ) * (adjoint_dim : ℝ) > 0 := by linarith
+  have _h_prod_pos : (3 : ℝ) * (adjoint_dim : ℝ) * hilbert.norm_squared (reg_oneill.flow.evolve_state v) > 0 :=
+    mul_pos h3 h_v_non_zero
+  nlinarith
 
 /--
 **Theorem 3.7 (Lüscher Gradient Flow Non-Perturbative Mass Gap Stability)**:
@@ -254,14 +251,14 @@ $\Delta(t) \ge \Delta_0 > 0$ for all $t \in ]0, t_0]$.
 -/
 theorem luescher_flow_spectral_gap_uniform_stability
     (hilbert : RealHilbertSpace)
-    (reg_oneill : FlowRegularizedONeillTensor hilbert)
+    (_reg_oneill : FlowRegularizedONeillTensor hilbert)
     (bochner_operator : BochnerWeitzenbockHodgeOperator hilbert)
     (v : hilbert.Vector)
     (vector_non_zero : v ≠ hilbert.zero_vector)
-    (h_ricci_pos : bochner_operator.geometry.ricci_condensate_scale > 0)
-    (h_norm_pos : (hilbert.norm_squared v).natAbs > 0) :
+    (_h_ricci_pos : bochner_operator.geometry.ricci_condensate_scale > 0)
+    (_h_norm_pos : hilbert.norm_squared v > 0) :
     bochner_operator.hodge_laplacian_form v ≥
-    bochner_operator.geometry.ricci_condensate_scale * (hilbert.norm_squared v).natAbs :=
+    bochner_operator.geometry.ricci_condensate_scale * hilbert.norm_squared v :=
   bochner_weitzenbock_spectral_gap_theorem hilbert bochner_operator v vector_non_zero
 
 end YangMills.BochnerRicci

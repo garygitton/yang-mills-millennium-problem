@@ -62,6 +62,18 @@ import YangMills.BakryEmery
 import YangMills.ClaySpecification
 import YangMills.MathlibIntegration
 
+-- Module 17: Kerr-Schild Double Copy & Ryu-Takayanagi Entanglement Confinement
+import YangMills.KerrSchildDoubleCopyRyuTakayanagi
+
+-- Module 18: Sobolev Compact Embedding & Rellich-Kondrachov Resolvent
+import YangMills.SobolevCompactEmbedding
+
+-- Module 19: Sturm-Liouville Resolvent Compactness & Dilaton Spectral Gap
+import YangMills.SturmLiouvilleResolvent
+
+-- Module 20: Yang-Mills Spectral Mass Gap Master Theorem
+import YangMills.YangMillsMassGap
+
 /-- Canonical profile type aliases for Mathlib Yang-Mills alignment -/
 def WightmanQFT := @YangMills.Axioms.WightmanQFT
 def GaugeField := @YangMills.Axioms.GaugeField
