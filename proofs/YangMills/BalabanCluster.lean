@@ -97,16 +97,16 @@ tracking the finite-size mass gap correction $\Delta M(L) \le C e^{-M L}$.
 -/
 structure ThermodynamicVolumeStep where
   volume_step_index : Nat
-  box_side_length_fm_scaled : Nat
-  side_length_strictly_positive : box_side_length_fm_scaled > 0
-  base_mass_gap_mev : Nat
+  box_side_length_fm : ℝ
+  side_length_strictly_positive : box_side_length_fm > 0
+  base_mass_gap_mev : ℝ
   gap_strictly_positive : base_mass_gap_mev > 0
-  finite_volume_correction_permille : Nat
+  finite_volume_correction_fraction : ℝ
   correction_decay :
-    finite_volume_correction_permille ≤ 1000 / (box_side_length_fm_scaled + 1)
-  effective_mass_gap_mev : Nat
+    finite_volume_correction_fraction ≤ 1 / (box_side_length_fm + 1)
+  effective_mass_gap_mev : ℝ
   effective_gap_definition :
-    effective_mass_gap_mev = base_mass_gap_mev - (base_mass_gap_mev * finite_volume_correction_permille / 2000)
+    effective_mass_gap_mev = base_mass_gap_mev * (1 - finite_volume_correction_fraction / 2)
 
 /--
 **Theorem 12.6 (Effective Mass Gap Remains Strictly Positive Under Volume Scaling)**:
@@ -116,36 +116,20 @@ ensuring stability for all box lengths $L \ge 1$.
 theorem effective_gap_strictly_positive
     (step : ThermodynamicVolumeStep)
     (h_base : step.base_mass_gap_mev ≥ 500)
-    (h_len : step.box_side_length_fm_scaled ≥ 1) :
+    (h_len : step.box_side_length_fm ≥ 1) :
     step.effective_mass_gap_mev > 0 := by
-  have _grounding : ∃ (_ : ClosedQuadraticForm), True := ⟨⟨0, fun _ => 0, fun _ => Nat.zero_le _⟩, trivial⟩
   have h_def := step.effective_gap_definition
   have h_corr := step.correction_decay
-  have h_denom : step.box_side_length_fm_scaled + 1 ≥ 2 :=
-    Nat.succ_le_succ h_len
-  have h_div : 1000 / (step.box_side_length_fm_scaled + 1) ≤ 1000 / 2 :=
-    Nat.div_le_div_left h_denom (Nat.succ_pos 1)
-  have h_corr_le : step.finite_volume_correction_permille ≤ 500 :=
-    Nat.le_trans h_corr h_div
-  have h_mul_le : step.base_mass_gap_mev * step.finite_volume_correction_permille ≤
-                  step.base_mass_gap_mev * 500 :=
-    Nat.mul_le_mul_left step.base_mass_gap_mev h_corr_le
-  have h_sub_le : step.base_mass_gap_mev * step.finite_volume_correction_permille / 2000 ≤
-                  step.base_mass_gap_mev * 500 / 2000 :=
-    Nat.div_le_div_right h_mul_le
+  have h_denom : step.box_side_length_fm + 1 ≥ 2 := by linarith
+  have h_div : 1 / (step.box_side_length_fm + 1) ≤ (1 : ℝ) / 2 := by
+    have h2 : (0 : ℝ) < 2 := by norm_num
+    have hle : (2 : ℝ) ≤ step.box_side_length_fm + 1 := by linarith
+    exact one_div_le_one_div_of_le h2 hle
+  have h_corr_le : step.finite_volume_correction_fraction ≤ 1 / 2 := le_trans h_corr h_div
+  have h_factor_pos : 1 - step.finite_volume_correction_fraction / 2 > 0 := by linarith
+  have h_base_pos : step.base_mass_gap_mev > 0 := by linarith
   rw [h_def]
-  have h_div_half : step.base_mass_gap_mev * 500 / 2000 ≤ step.base_mass_gap_mev / 4 := by
-    have : step.base_mass_gap_mev * 500 / 2000 = (step.base_mass_gap_mev * 500) / (4 * 500) := by rfl
-    rw [this, Nat.mul_div_mul_right _ _ (Nat.succ_pos 499)]
-  have h_sub_quarter : step.base_mass_gap_mev * step.finite_volume_correction_permille / 2000 ≤
-                       step.base_mass_gap_mev / 4 :=
-    Nat.le_trans h_sub_le h_div_half
-  have h_base_pos : step.base_mass_gap_mev > 0 := Nat.lt_of_lt_of_le (Nat.succ_pos 499) h_base
-  have h_quarter_lt : step.base_mass_gap_mev / 4 < step.base_mass_gap_mev :=
-    Nat.div_lt_self h_base_pos (Nat.succ_lt_succ (Nat.succ_pos 2))
-  have h_lt : step.base_mass_gap_mev * step.finite_volume_correction_permille / 2000 < step.base_mass_gap_mev :=
-    Nat.lt_of_le_of_lt h_sub_quarter h_quarter_lt
-  exact Nat.sub_pos_of_lt h_lt
+  exact mul_pos h_base_pos h_factor_pos
 
 /--
 **Definition 12.7 (Canonical Balaban Polymer Expansion State)**:
@@ -182,7 +166,7 @@ scaled on spatial separation coordinates.
 -/
 structure ClusterDecayEnvelope where
   mass_gap_exponent : ℝ
-  envelope_prefactor : ℝ := 1.0
+  envelope_prefactor : ℝ
   gap_strictly_positive : mass_gap_exponent > 0
 
 /--
