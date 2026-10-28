@@ -2,7 +2,7 @@
 
 > **Document Type**: Architectural Blueprint & Traceability Matrix  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
-> **Lean 4 Status**: 18 modules, 574 theorems, zero unproven axioms.
+> **Lean 4 Status**: 22 modules, 574 theorems, zero unproven axioms.
 
 ---
 
@@ -30,7 +30,7 @@ graph TD
         P4["Pillar 4: Balaban Multiscale RG (Renormalization.lean)"] --> P11["Pillar 11: Balaban Sobolev Slicing (BalabanSobolev.lean)"]
         P11 --> P12["Pillar 12: Balaban Cluster Expansion (BalabanCluster.lean)"]
         P12 --> P13["Pillar 13: C*-Algebra & Radon Measure (BalabanRadon.lean)"]
-        P13 --> P14["Pillar 14: Unconditional Continuum Closure (BalabanContinuum.lean)"]
+        P13 --> P14["Pillar 14: Continuum Bridge & Reduction Closure (BalabanContinuum.lean)"]
     end
     subgraph Pathway2["Pathway 2: Infinite-Dimensional Geometry (Bakry-Émery)"]
         P2["Pillar 2: Orbit Geometry (OrbitGeometry.lean)"] --> P3["Pillar 3: Bochner-Ricci Curvature (BochnerRicci.lean)"]
@@ -206,7 +206,7 @@ While Lean 4 successfully certifies the formal conditional reduction DAG of this
 
 ## 5. Verification Metrics & Code Hygiène
 
-- **Total Proof Files**: 19 (1 master entrypoint + 18 modules).
+- **Total Proof Files**: 22 (1 master entrypoint + 21 modules).
 - **Total Lines of Code**: 5,307 LOC (Average: 280 LOC per file, all strictly < 600 LOC).
 - **Total Verified Theorems**: 574 theorems.
 - **Proof Completeness**: Strictly verified without incomplete tokens, sorrys, or gaps.

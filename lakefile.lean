@@ -2,7 +2,7 @@ import Lake
 open Lake DSL
 
 package «yang-mills-millennium-problem» where
-  version := v!"1.6.0"
+  version := v!"1.7.0"
   description := "Formal Blueprint and Machine-Checked Verification of 4D Yang-Mills Conditional Reduction"
   keywords := #["mathematics", "physics", "yang-mills", "mass-gap", "formal-verification", "lean4", "constructive-qft"]
   author := "Gary Gitton"

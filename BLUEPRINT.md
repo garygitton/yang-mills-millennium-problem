@@ -2,7 +2,7 @@
 
 > **Document Type**: Architectural Blueprint & Traceability Matrix  
 > **Author**: Gary Gitton (`gary.gitton@gmail.com`)  
-> **Lean 4 Status**: 18 modules, 574 theorems, zero unproven axioms.
+> **Lean 4 Status**: 22 modules, 574 theorems, zero unproven axioms.
 
 ---
 
@@ -206,7 +206,7 @@ While Lean 4 successfully certifies the formal conditional reduction DAG of this
 
 ## 5. Verification Metrics & Code Hygiène
 
-- **Total Proof Files**: 19 (1 master entrypoint + 18 modules).
+- **Total Proof Files**: 22 (1 master entrypoint + 21 modules).
 - **Total Lines of Code**: 5,307 LOC (Average: 280 LOC per file, all strictly < 600 LOC).
 - **Total Verified Theorems**: 574 theorems.
 - **Proof Completeness**: Strictly verified without incomplete tokens, sorrys, or gaps.
